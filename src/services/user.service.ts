@@ -6,4 +6,9 @@ export class UserService {
   constructor() {
     this.userRepository = new UserRepository();
   }
+
+  async getUser(userId: string) {
+    const user = await this.userRepository.getUser(userId);
+    return user;
+  }
 }
