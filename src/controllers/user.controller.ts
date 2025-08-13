@@ -5,8 +5,6 @@ const service = new UserService();
 
 export async function getUser(req: Request, res: Response): Promise<void> {
   const userId = req.params.id;
-  res.json({
-    name: "John Doe",
-    id: userId,
-  });
+  const user = service.getUser(userId);
+  res.json(user);
 }
