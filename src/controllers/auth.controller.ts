@@ -29,8 +29,6 @@ export async function signin(req: Request, res: Response) {
   try {
     const user = await authService.signin(email, password);
 
-    console.log(user);
-
     if (user) {
       res.status(200).json(user);
     } else {

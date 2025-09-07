@@ -60,17 +60,16 @@ export default class AuthService {
       encryptedPassword,
       process.env.PASSWORD_SECRET as string
     );
-    const decryptedPassword = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+    const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
 
     return decryptedPassword;
   }
 
   async hashPassword(password: string): Promise<string> {
-    return await bcrypt
-      .hash(password, Number(process.env.BCRYPT_SALT_ROUNDS) || 10)
-      .then((hash) => {
-        return hash;
-      });
+    return await bcrypt.hash(
+      password,
+      Number(process.env.BCRYPT_SALT_ROUNDS) || 10
+    );
   }
 
   async createCustomer(customerData: CustomerType) {

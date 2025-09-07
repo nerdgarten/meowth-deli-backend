@@ -4,7 +4,6 @@ import { CustomerType, RestaurantType } from "../types/auth.type.js";
 
 export default class AuthRepository {
   findUserByEmailAndPassword(email: string, password: string) {
-    console.log(email, password);
     return database.user.findFirst({
       where: {
         email,
@@ -69,7 +68,7 @@ export default class AuthRepository {
     fee_rate?: number;
     accepted_term_of_service?: boolean;
     accepted_pdpa?: boolean;
-    accpeted_cookie_tracking?: boolean;
+    accepted_cookie_tracking?: boolean;
   }) {
     return database.user.create({
       data: {
@@ -77,7 +76,7 @@ export default class AuthRepository {
         password: userData.password,
         accepted_term_of_service: userData.accepted_term_of_service || false,
         accepted_pdpa: userData.accepted_pdpa || false,
-        accepted_cookie_tracking: userData.accpeted_cookie_tracking || false,
+        accepted_cookie_tracking: userData.accepted_cookie_tracking || false,
         roles: {
           create: {
             role: "driver",

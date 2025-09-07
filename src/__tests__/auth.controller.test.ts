@@ -192,7 +192,7 @@ describe("Auth Controller", () => {
         tel: "1234567890",
         accepted_term_of_service: true,
         accepted_pdpa: true,
-        accpeted_cookie_tracking: false,
+        accepted_cookie_tracking: false,
       };
       const mockCustomer = {
         id: 1,
@@ -272,7 +272,7 @@ describe("Auth Controller", () => {
         fee_rate: 0.15,
         accepted_term_of_service: true,
         accepted_pdpa: true,
-        accpeted_cookie_tracking: false,
+        accepted_cookie_tracking: false,
       };
       const mockDriver = {
         id: 2,
@@ -333,7 +333,7 @@ describe("Auth Controller", () => {
         fee_rate: 0.12,
         accepted_term_of_service: true,
         accepted_pdpa: true,
-        accpeted_cookie_tracking: false,
+        accepted_cookie_tracking: false,
       };
       const mockRestaurant = {
         id: 3,
