@@ -46,12 +46,23 @@ pnpm install
 
 ### 3. Environment Setup
 
-Create a `.env` file in the root directory:
+Copy the example environment file and update as needed:
+
+```bash
+cp .env.example .env
+```
+
+Or create a `.env` file in the root directory with the following variables:
 
 ```env
 DATABASE_URL="postgresql://root:12345@localhost:5434/nerdgarten"
 JWT_SECRET="secretkey"
 PASSWORD_SECRET="secretkey"
+
+POSTGRES_USER="root"
+POSTGRES_PASSWORD="12345"
+
+PORT=3000
 ```
 
 ### 4. Database Setup
