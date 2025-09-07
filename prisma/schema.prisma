@@ -5,7 +5,7 @@ datasource db {
 
 generator client {
     provider = "prisma-client-js"
-    output   = "./generated/prisma"
+    output   = "../src/generated/prisma"
 }
 
 // ---------------- ENUMS ----------------
@@ -58,7 +58,7 @@ model User {
     password                 String
     accepted_term_of_service Boolean @default(false)
     accepted_pdpa            Boolean @default(false)
-    accpeted_cookie_tracking Boolean @default(false)
+    accepted_cookie_tracking Boolean @default(false)
 
     roles             UserRole[]
     customer          Customer?
