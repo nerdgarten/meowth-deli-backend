@@ -1,8 +1,10 @@
-import express from "express";
-import type { Express } from "express";
-import { StatusCodes } from "http-status-codes";
+import bodyParser from "body-parser";
 import cors from "cors";
+import express from "express";
+import { StatusCodes } from "http-status-codes";
+
 import { RouterManager } from "./routes";
+import type { Express } from "express";
 
 const app: Express = express();
 
@@ -12,7 +14,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
 const routerManager = new RouterManager();
 

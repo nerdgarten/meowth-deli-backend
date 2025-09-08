@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import AuthService from "@/services/auth.service";
 import { StatusCodes } from "http-status-codes";
+
+import AuthService from "@/services/auth.service";
 import { AppError } from "@/types/error";
 
 export class AuthController {

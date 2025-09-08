@@ -1,5 +1,3 @@
-import { UserRole } from "@/types/role";
-
 export interface IBaseUser {
   email: string;
   password: string;

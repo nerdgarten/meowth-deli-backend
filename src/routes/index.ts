@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { AuthRouter } from "./auth.route";
 
 export class RouterManager {

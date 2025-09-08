@@ -10,6 +10,6 @@ export interface SignInBody extends IBaseUser {
   role: UserRole;
 }
 
-export interface CustomerSignUpBody extends ICustomer {}
-export interface DriverSignUpBody extends IDriver {}
-export interface RestaurantSignUpBody extends IRestaurant {}
+export type CustomerSignUpBody = ICustomer;
+export type DriverSignUpBody = IDriver;
+export type RestaurantSignUpBody = IRestaurant;

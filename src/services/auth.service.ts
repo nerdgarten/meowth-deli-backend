@@ -1,6 +1,8 @@
-import AuthRepository from "@/repositories/auth.repository";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
+
+import AuthRepository from "@/repositories/auth.repository";
 import {
   CustomerSignUpBody,
   DriverSignUpBody,
@@ -8,7 +10,6 @@ import {
   SignInBody,
 } from "@/types/auth/post";
 import { AppError } from "@/types/error";
-import { StatusCodes } from "http-status-codes";
 import { UserRole } from "@/types/role";
 
 export default class AuthService {
