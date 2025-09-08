@@ -22,7 +22,11 @@ export class AuthRouter extends BaseRouter {
   private setUpRoutes() {
     this.router.post(
       "/signin",
-      this.authController.signin.bind(this.authController)
+      this.authController.signIn.bind(this.authController)
+    );
+    this.router.post(
+      "/signup/customer",
+      this.authController.signUpCustomer.bind(this.authController)
     );
   }
 }

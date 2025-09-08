@@ -1,11 +1,15 @@
 import AuthRepository from "@/repositories/auth.repository";
 import jwt from "jsonwebtoken";
-import CryptoJS from "crypto-js";
 import bcrypt from "bcrypt";
-import { ICustomer, IDriver, IRestaurant, UserRole } from "@/types/auth.type";
-import { SignInBody } from "@/types/auth/post";
+import {
+  CustomerSignUpBody,
+  DriverSignUpBody,
+  RestaurantSignUpBody,
+  SignInBody,
+} from "@/types/auth/post";
 import { AppError } from "@/types/error";
 import { StatusCodes } from "http-status-codes";
+import { UserRole } from "@/types/role";
 
 export default class AuthService {
   private authRepository: AuthRepository;
@@ -14,8 +18,8 @@ export default class AuthService {
     this.authRepository = new AuthRepository();
   }
 
-  async signin(body: SignInBody, role: UserRole) {
-    const { email, password } = body;
+  async signIn(body: SignInBody) {
+    const { email, password, role } = body;
 
     const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
@@ -33,7 +37,7 @@ export default class AuthService {
         email: user.email,
         role,
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET as string,
       {
         expiresIn: "1h",
       }
@@ -46,27 +50,35 @@ export default class AuthService {
     };
   }
 
-  // async signin(email: string, password: string, role: UserRole = "customer") {
-  //   const user = await this.authRepository.findUserByEmail(email);
+  async createCustomerUser(body: CustomerSignUpBody) {
+    const createdUser = await this.authRepository.createCustomerUser(body);
 
-  //   if (!user) {
-  //     return null;
-  //   }
+    return {
+      id: createdUser.id,
+      email: createdUser.email,
+      role: UserRole.Customer,
+    };
+  }
 
-  //   const isMatch = await bcrypt.compare(password, user.password);
+  async createDriverUser(body: DriverSignUpBody) {
+    const createdUser = await this.authRepository.createDriverUser(body);
 
-  //   if (!isMatch) {
-  //     return null;
-  //   }
+    return {
+      id: createdUser.id,
+      email: createdUser.email,
+      role: UserRole.Driver,
+    };
+  }
 
-  //   const token = jwt.sign(
-  //     { id: user.id, email: user.email, role },
-  //     process.env.JWT_SECRET as string,
-  //     { expiresIn: "1h" }
-  //   );
+  async createRestaurantUser(body: RestaurantSignUpBody) {
+    const createdUser = await this.authRepository.createRestaurantUser(body);
 
-  //   return { id: user.id, email: user.email, token };
-  // }
+    return {
+      id: createdUser.id,
+      email: createdUser.email,
+      role: UserRole.Restaurant,
+    };
+  }
 
   // checkUserExists(email: string) {
   //   return this.authRepository.findUserByEmail(email);
