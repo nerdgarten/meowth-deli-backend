@@ -55,7 +55,7 @@ describe("Auth Controller", () => {
 
     // Replace the AuthService constructor to return our mock
     (AuthService as jest.MockedClass<typeof AuthService>).mockImplementation(
-      () => mockAuthService
+      () => mockAuthService,
     );
   });
 
@@ -90,14 +90,14 @@ describe("Auth Controller", () => {
         user: mockUser,
       });
       expect(mockAuthService.checkUserExists).toHaveBeenCalledWith(
-        userData.email
+        userData.email,
       );
       expect(mockAuthService.hashPassword).toHaveBeenCalledWith(
-        userData.password
+        userData.password,
       );
       expect(mockAuthService.createUser).toHaveBeenCalledWith(
         userData.email,
-        "hashedPassword"
+        "hashedPassword",
       );
     });
 
@@ -156,7 +156,7 @@ describe("Auth Controller", () => {
       expect(response.body).toEqual(mockUserResponse);
       expect(mockAuthService.signin).toHaveBeenCalledWith(
         userData.email,
-        userData.password
+        userData.password,
       );
     });
 
@@ -230,7 +230,7 @@ describe("Auth Controller", () => {
         },
       });
       expect(mockAuthService.checkUserExists).toHaveBeenCalledWith(
-        customerData.email
+        customerData.email,
       );
       expect(mockAuthService.createCustomer).toHaveBeenCalledWith(customerData);
     });
@@ -314,7 +314,7 @@ describe("Auth Controller", () => {
         },
       });
       expect(mockAuthService.checkUserExists).toHaveBeenCalledWith(
-        driverData.email
+        driverData.email,
       );
       expect(mockAuthService.createDriver).toHaveBeenCalledWith(driverData);
     });
@@ -375,10 +375,10 @@ describe("Auth Controller", () => {
         },
       });
       expect(mockAuthService.checkUserExists).toHaveBeenCalledWith(
-        restaurantData.email
+        restaurantData.email,
       );
       expect(mockAuthService.createRestaurant).toHaveBeenCalledWith(
-        restaurantData
+        restaurantData,
       );
     });
   });

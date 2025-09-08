@@ -1,10 +1,9 @@
-import database from "../config/db.js";
-import { Restaurant } from "../generated/prisma/index.js";
-import { CustomerType, RestaurantType } from "../types/auth.type.js";
+import { prisma } from "@/libs/prisma";
+import { ICustomer, IDriver, IRestaurant } from "@/types/user";
 
 export default class AuthRepository {
   findUserByEmailAndPassword(email: string, password: string) {
-    return database.user.findFirst({
+    return prisma.user.findFirst({
       where: {
         email,
         password,
@@ -13,30 +12,21 @@ export default class AuthRepository {
   }
 
   findUserByEmail(email: string) {
-    return database.user.findFirst({
+    return prisma.user.findFirst({
       where: {
         email,
       },
     });
   }
 
-  createUser(email: string, password: string) {
-    return database.user.create({
+  createCustomerUser(customer: ICustomer) {
+    return prisma.user.create({
       data: {
-        email,
-        password,
-      },
-    });
-  }
-
-  async createCustomer(userData: CustomerType) {
-    return database.user.create({
-      data: {
-        email: userData.email,
-        password: userData.password,
-        accepted_term_of_service: userData.accepted_term_of_service || false,
-        accepted_pdpa: userData.accepted_pdpa || false,
-        accepted_cookie_tracking: userData.accepted_cookie_tracking || false,
+        email: customer.email,
+        password: customer.password,
+        accepted_term_of_service: customer.accepted_term_of_service || false,
+        accepted_pdpa: customer.accepted_pdpa || false,
+        accepted_cookie_tracking: customer.accepted_cookie_tracking || false,
         roles: {
           create: {
             role: "customer",
@@ -44,9 +34,9 @@ export default class AuthRepository {
         },
         customer: {
           create: {
-            firstname: userData.firstname,
-            lastname: userData.lastname,
-            tel: userData.tel,
+            firstname: customer.firstname,
+            lastname: customer.lastname,
+            tel: customer.tel,
           },
         },
       },
@@ -57,26 +47,14 @@ export default class AuthRepository {
     });
   }
 
-  async createDriver(userData: {
-    email: string;
-    password: string;
-    firstname: string;
-    lastname?: string;
-    tel: string;
-    vehicle: string;
-    licence: string;
-    fee_rate?: number;
-    accepted_term_of_service?: boolean;
-    accepted_pdpa?: boolean;
-    accepted_cookie_tracking?: boolean;
-  }) {
-    return database.user.create({
+  createDriverUser(driver: IDriver) {
+    return prisma.user.create({
       data: {
-        email: userData.email,
-        password: userData.password,
-        accepted_term_of_service: userData.accepted_term_of_service || false,
-        accepted_pdpa: userData.accepted_pdpa || false,
-        accepted_cookie_tracking: userData.accepted_cookie_tracking || false,
+        email: driver.email,
+        password: driver.password,
+        accepted_term_of_service: driver.accepted_term_of_service || false,
+        accepted_pdpa: driver.accepted_pdpa || false,
+        accepted_cookie_tracking: driver.accepted_cookie_tracking || false,
         roles: {
           create: {
             role: "driver",
@@ -84,12 +62,12 @@ export default class AuthRepository {
         },
         driver: {
           create: {
-            firstname: userData.firstname,
-            lastname: userData.lastname,
-            tel: userData.tel,
-            vehicle: userData.vehicle,
-            licence: userData.licence,
-            fee_rate: userData.fee_rate || 0.1,
+            firstname: driver.firstname,
+            lastname: driver.lastname,
+            tel: driver.tel,
+            vehicle: driver.vehicle,
+            licence: driver.licence,
+            fee_rate: driver.fee_rate || 0.1,
           },
         },
       },
@@ -100,14 +78,14 @@ export default class AuthRepository {
     });
   }
 
-  async createRestaurant(userData: RestaurantType) {
-    return database.user.create({
+  createRestaurantUser(restaurant: IRestaurant) {
+    return prisma.user.create({
       data: {
-        email: userData.email,
-        password: userData.password,
-        accepted_term_of_service: userData.accepted_term_of_service || false,
-        accepted_pdpa: userData.accepted_pdpa || false,
-        accepted_cookie_tracking: userData.accepted_cookie_tracking || false,
+        email: restaurant.email,
+        password: restaurant.password,
+        accepted_term_of_service: restaurant.accepted_term_of_service || false,
+        accepted_pdpa: restaurant.accepted_pdpa || false,
+        accepted_cookie_tracking: restaurant.accepted_cookie_tracking || false,
         roles: {
           create: {
             role: "restaurant",
@@ -115,11 +93,11 @@ export default class AuthRepository {
         },
         restaurant: {
           create: {
-            name: userData.name,
-            tel: userData.tel,
-            location: userData.location,
-            detail: userData.detail,
-            fee_rate: userData.fee_rate || 0.1,
+            name: restaurant.name,
+            tel: restaurant.tel,
+            location: restaurant.location,
+            detail: restaurant.detail,
+            fee_rate: restaurant.fee_rate || 0.1,
           },
         },
       },
