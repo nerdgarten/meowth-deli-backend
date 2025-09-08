@@ -1,7 +1,8 @@
 import express from "express";
 import type { Express } from "express";
-import authRouter from "./routes/auth.route";
 import { StatusCodes } from "http-status-codes";
+import cors from "cors";
+import { RouterManager } from "./routes";
 
 const app: Express = express();
 
@@ -10,10 +11,18 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(cors());
 app.use(express.json());
+
+const routerManager = new RouterManager();
+
+app.use(routerManager.getRouter());
 app.get("/healthz", (req, res) => {
-  res.status(StatusCodes.OK).send("OK");
+  res.status(StatusCodes.OK).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+  });
 });
-app.use("/auth", authRouter);
 
 export default app;

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import AuthService from "@/services/auth.service";
 import { StatusCodes } from "http-status-codes";
+import { AppError } from "@/types/error";
 
 const authService = new AuthService();
 
@@ -205,5 +206,30 @@ export async function signupRestaurant(req: Request, res: Response) {
   } catch (error) {
     console.error("Error creating restaurant:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+}
+
+export class AuthController {
+  private authService: AuthService;
+
+  constructor() {
+    this.authService = new AuthService();
+  }
+
+  async signin(req: Request, res: Response) {
+    try {
+      const user = await this.authService.signin(req.body);
+
+      res.status(StatusCodes.OK).json(user);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+      }
+
+      console.error("Unexpected error during signin:", error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
   }
 }

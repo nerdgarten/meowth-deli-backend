@@ -3,6 +3,9 @@ import jwt from "jsonwebtoken";
 import CryptoJS from "crypto-js";
 import bcrypt from "bcrypt";
 import { ICustomer, IDriver, IRestaurant, UserRole } from "@/types/auth.type";
+import { SignInBody } from "@/types/auth/post";
+import { AppError } from "@/types/error";
+import { StatusCodes } from "http-status-codes";
 
 export default class AuthService {
   private authRepository: AuthRepository;
@@ -11,83 +14,115 @@ export default class AuthService {
     this.authRepository = new AuthRepository();
   }
 
-  async signin(email: string, password: string, role: UserRole = "customer") {
-    const user = await this.authRepository.findUserByEmail(email);
+  async signin(body: SignInBody, role: UserRole) {
+    const { email, password } = body;
 
+    const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
-      return null;
+      throw new AppError("User not found", StatusCodes.NOT_FOUND);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
-      return null;
+      throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
     }
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1h" }
+      {
+        id: user.id,
+        email: user.email,
+        role,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "1h",
+      }
     );
 
-    return { id: user.id, email: user.email, token };
+    return {
+      id: user.id,
+      email: user.email,
+      token,
+    };
   }
 
-  checkUserExists(email: string) {
-    return this.authRepository.findUserByEmail(email);
-  }
+  // async signin(email: string, password: string, role: UserRole = "customer") {
+  //   const user = await this.authRepository.findUserByEmail(email);
 
-  createUser(email: string, password: string) {
-    return this.authRepository.createUser(email, password);
-  }
+  //   if (!user) {
+  //     return null;
+  //   }
 
-  encryptPassword(password: string): string {
-    const encryptedPassword = CryptoJS.AES.encrypt(
-      password,
-      process.env.PASSWORD_SECRET as string
-    ).toString();
+  //   const isMatch = await bcrypt.compare(password, user.password);
 
-    return encryptedPassword;
-  }
+  //   if (!isMatch) {
+  //     return null;
+  //   }
 
-  decryptPassword(encryptedPassword: string): string {
-    const bytes = CryptoJS.AES.decrypt(
-      encryptedPassword,
-      process.env.PASSWORD_SECRET as string
-    );
-    const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+  //   const token = jwt.sign(
+  //     { id: user.id, email: user.email, role },
+  //     process.env.JWT_SECRET as string,
+  //     { expiresIn: "1h" }
+  //   );
 
-    return decryptedPassword;
-  }
+  //   return { id: user.id, email: user.email, token };
+  // }
 
-  async hashPassword(password: string): Promise<string> {
-    return await bcrypt.hash(
-      password,
-      Number(process.env.BCRYPT_SALT_ROUNDS) || 10
-    );
-  }
+  // checkUserExists(email: string) {
+  //   return this.authRepository.findUserByEmail(email);
+  // }
 
-  async createCustomer(customerData: ICustomer) {
-    const hashedPassword = await this.hashPassword(customerData.password);
-    return this.authRepository.createCustomer({
-      ...customerData,
-      password: hashedPassword,
-    });
-  }
+  // createUser(email: string, password: string) {
+  //   return this.authRepository.createUser(email, password);
+  // }
 
-  async createDriver(driverData: IDriver) {
-    const hashedPassword = await this.hashPassword(driverData.password);
-    return this.authRepository.createDriver({
-      ...driverData,
-      password: hashedPassword,
-    });
-  }
+  // encryptPassword(password: string): string {
+  //   const encryptedPassword = CryptoJS.AES.encrypt(
+  //     password,
+  //     process.env.PASSWORD_SECRET as string
+  //   ).toString();
 
-  async createRestaurant(restaurantData: IRestaurant) {
-    const hashedPassword = await this.hashPassword(restaurantData.password);
-    return this.authRepository.createRestaurant({
-      ...restaurantData,
-      password: hashedPassword,
-    });
-  }
+  //   return encryptedPassword;
+  // }
+
+  // decryptPassword(encryptedPassword: string): string {
+  //   const bytes = CryptoJS.AES.decrypt(
+  //     encryptedPassword,
+  //     process.env.PASSWORD_SECRET as string
+  //   );
+  //   const decryptedPassword = bytes.toString(CryptoJS.enc.Utf8);
+
+  //   return decryptedPassword;
+  // }
+
+  // async hashPassword(password: string): Promise<string> {
+  //   return await bcrypt.hash(
+  //     password,
+  //     Number(process.env.BCRYPT_SALT_ROUNDS) || 10
+  //   );
+  // }
+
+  // async createCustomer(customerData: ICustomer) {
+  //   const hashedPassword = await this.hashPassword(customerData.password);
+  //   return this.authRepository.createCustomer({
+  //     ...customerData,
+  //     password: hashedPassword,
+  //   });
+  // }
+
+  // async createDriver(driverData: IDriver) {
+  //   const hashedPassword = await this.hashPassword(driverData.password);
+  //   return this.authRepository.createDriver({
+  //     ...driverData,
+  //     password: hashedPassword,
+  //   });
+  // }
+
+  // async createRestaurant(restaurantData: IRestaurant) {
+  //   const hashedPassword = await this.hashPassword(restaurantData.password);
+  //   return this.authRepository.createRestaurant({
+  //     ...restaurantData,
+  //     password: hashedPassword,
+  //   });
+  // }
 }
