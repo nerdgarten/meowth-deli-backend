@@ -1,6 +1,6 @@
 export type UserRole = "admin" | "customer" | "restaurant" | "driver";
 
-export interface CustomerType {
+export interface ICustomer {
   email: string;
   password: string;
   firstname: string;
@@ -11,7 +11,7 @@ export interface CustomerType {
   accepted_cookie_tracking?: boolean;
 }
 
-export interface DriverType {
+export interface IDriver {
   email: string;
   password: string;
   firstname: string;
@@ -25,7 +25,7 @@ export interface DriverType {
   accepted_cookie_tracking?: boolean;
 }
 
-export interface RestaurantType {
+export interface IRestaurant {
   email: string;
   password: string;
   name: string;

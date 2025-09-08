@@ -1,13 +1,8 @@
-import AuthRepository from "../repositories/auth.repository.js";
+import AuthRepository from "@/repositories/auth.repository";
 import jwt from "jsonwebtoken";
 import CryptoJS from "crypto-js";
 import bcrypt from "bcrypt";
-import {
-  CustomerType,
-  DriverType,
-  RestaurantType,
-  UserRole,
-} from "../types/auth.type.js";
+import { ICustomer, IDriver, IRestaurant, UserRole } from "@/types/auth.type";
 
 export default class AuthService {
   private authRepository: AuthRepository;
@@ -72,7 +67,7 @@ export default class AuthService {
     );
   }
 
-  async createCustomer(customerData: CustomerType) {
+  async createCustomer(customerData: ICustomer) {
     const hashedPassword = await this.hashPassword(customerData.password);
     return this.authRepository.createCustomer({
       ...customerData,
@@ -80,7 +75,7 @@ export default class AuthService {
     });
   }
 
-  async createDriver(driverData: DriverType) {
+  async createDriver(driverData: IDriver) {
     const hashedPassword = await this.hashPassword(driverData.password);
     return this.authRepository.createDriver({
       ...driverData,
@@ -88,7 +83,7 @@ export default class AuthService {
     });
   }
 
-  async createRestaurant(restaurantData: RestaurantType) {
+  async createRestaurant(restaurantData: IRestaurant) {
     const hashedPassword = await this.hashPassword(restaurantData.password);
     return this.authRepository.createRestaurant({
       ...restaurantData,

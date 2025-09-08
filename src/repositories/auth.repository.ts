@@ -1,10 +1,9 @@
-import database from "../config/db.js";
-import { Restaurant } from "../generated/prisma/index.js";
-import { CustomerType, RestaurantType } from "../types/auth.type.js";
+import { prisma } from "@/libs/prisma";
+import { ICustomer, IRestaurant } from "@/types/auth.type";
 
 export default class AuthRepository {
   findUserByEmailAndPassword(email: string, password: string) {
-    return database.user.findFirst({
+    return prisma.user.findFirst({
       where: {
         email,
         password,
@@ -13,7 +12,7 @@ export default class AuthRepository {
   }
 
   findUserByEmail(email: string) {
-    return database.user.findFirst({
+    return prisma.user.findFirst({
       where: {
         email,
       },
@@ -21,7 +20,7 @@ export default class AuthRepository {
   }
 
   createUser(email: string, password: string) {
-    return database.user.create({
+    return prisma.user.create({
       data: {
         email,
         password,
@@ -29,8 +28,8 @@ export default class AuthRepository {
     });
   }
 
-  async createCustomer(userData: CustomerType) {
-    return database.user.create({
+  async createCustomer(userData: ICustomer) {
+    return prisma.user.create({
       data: {
         email: userData.email,
         password: userData.password,
@@ -70,7 +69,7 @@ export default class AuthRepository {
     accepted_pdpa?: boolean;
     accepted_cookie_tracking?: boolean;
   }) {
-    return database.user.create({
+    return prisma.user.create({
       data: {
         email: userData.email,
         password: userData.password,
@@ -100,8 +99,8 @@ export default class AuthRepository {
     });
   }
 
-  async createRestaurant(userData: RestaurantType) {
-    return database.user.create({
+  async createRestaurant(userData: IRestaurant) {
+    return prisma.user.create({
       data: {
         email: userData.email,
         password: userData.password,

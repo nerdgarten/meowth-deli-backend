@@ -5,7 +5,7 @@ import {
   signupCustomer,
   signupDriver,
   signupRestaurant,
-} from "../controllers/auth.controller.js";
+} from "@/controllers/auth.controller";
 
 const router = Router();
 

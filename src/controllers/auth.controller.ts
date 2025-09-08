@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import AuthService from "../services/auth.service.js";
+import AuthService from "@/services/auth.service";
+import { StatusCodes } from "http-status-codes";
 
 const authService = new AuthService();
 
