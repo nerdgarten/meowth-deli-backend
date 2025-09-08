@@ -22,6 +22,8 @@ export class AuthController {
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
+
+        return;
       }
       console.error("Unexpected error during signin:", error);
 
@@ -39,6 +41,8 @@ export class AuthController {
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
+
+        return;
       }
       console.error("Unexpected error during signup:", error);
 
@@ -56,6 +60,8 @@ export class AuthController {
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
+
+        return;
       }
       console.error("Unexpected error during signup:", error);
 
@@ -73,6 +79,8 @@ export class AuthController {
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
+
+        return;
       }
       console.error("Unexpected error during signup:", error);
 
