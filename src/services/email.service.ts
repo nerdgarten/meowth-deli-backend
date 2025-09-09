@@ -1,9 +1,9 @@
 import nodemailer from 'nodemailer';
-// import createTransporter from "nodemailer";
-// import SmtpTransport from "nodemailer-smtp-transport";
-// import createTransporter from 'nodemailer';
-// import SMTPTransport from 'nodemailer/lib/smtp-transport';
 import emailConfig from '../config/email.js';
+import crypto from 'crypto';
+
+
+
 const generateVerificationEmail = (verificationUrl: string) =>  {
     return `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto; border: 1px solid #eee; padding: 24px;">
@@ -32,13 +32,18 @@ const transporter = nodemailer.createTransport({
     },
 });
 
-export const sendEmail = async (to: string, subject: string, text: string) => {
+
+export const buildToken = () =>{
+    return crypto.randomBytes(32).toString('hex');
+}
+
+export const sendEmail = async (to: string, subject: string, text: string, verify_link: string) => {
     const info = await transporter.sendMail(({
         from: `"Meowth Deli" <${emailConfig.user}>`, // sender address
         to: to,
         subject: subject,
         text: text, // plain‑text body
-        html: generateVerificationEmail("Test"), // HTML body
+        html: generateVerificationEmail(verify_link), // HTML body
     }));
     console.log("Email sent: ", info);
 }
