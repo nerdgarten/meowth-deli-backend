@@ -67,6 +67,7 @@ model User {
     notifications     Notification[]
     paymentMethods    PaymentMethod[]
     restaurantReviews RestaurantReview[]
+    verifyTokens      VerifyToken[]
 }
 
 model UserRole {
@@ -313,4 +314,13 @@ model DriverReview {
 
     customer Customer @relation(fields: [customer_id], references: [id])
     driver   Driver   @relation(fields: [driver_id], references: [id])
+}
+
+model VerifyToken {
+    user_id    Int
+    token      String   @id @unique
+    created_at DateTime @default(now())
+    expires_at DateTime
+
+    user User @relation(fields: [user_id], references: [id])
 }

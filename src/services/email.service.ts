@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import emailConfig from '../config/email.js';
 import crypto from 'crypto';
+import database from "../config/db.js";
 
 
 
@@ -38,12 +39,40 @@ export const buildToken = () =>{
 }
 
 export const sendEmail = async (to: string, subject: string, text: string, verify_link: string) => {
-    const info = await transporter.sendMail(({
-        from: `"Meowth Deli" <${emailConfig.user}>`, // sender address
-        to: to,
-        subject: subject,
-        text: text, // plain‑text body
-        html: generateVerificationEmail(verify_link), // HTML body
-    }));
-    console.log("Email sent: ", info);
+    try{
+        const info = await transporter.sendMail(({
+            from: `"Meowth Deli" <${emailConfig.user}>`,
+            to: to, //receiver address
+            subject: subject,
+            text: text,
+            html: generateVerificationEmail(verify_link), // HTML body
+        }));
+        console.log("Email sent: ", info);
+        return info;
+    }catch(err){
+        throw new Error("Failed to send email");
+    }
+}
+
+export const verifyToken = async (token: string) => {
+    try{
+        const user = await database.verifyToken.findUnique({
+            where: { token },
+        });
+        if(!user) throw new Error("Invalid token");
+        if(user.expires_at < new Date()) {
+            await database.verifyToken.delete({
+                where: { token }
+            });
+            throw new Error("Token expired");
+        }
+
+        await database.verifyToken.delete({
+            where: { token }
+        });
+        return true
+
+    }catch(err){
+        throw new Error("Failed to verify token");
+    }
 }
