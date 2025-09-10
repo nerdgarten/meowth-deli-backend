@@ -2,17 +2,23 @@ import emailConfig from "../config/email.js";
 import crypto from "crypto";
 import { generateVerificationEmail } from "../constant/email/email.js";
 import EmailRepository from "../repositories/email.repository.js";
+import nodemailer, { Transporter } from "nodemailer";
 
 export default class EmailService {
   private emailRepository: EmailRepository;
+  private transporter: Transporter;
 
   constructor() {
-    this.emailRepository = new EmailRepository(
-      emailConfig.host,
-      emailConfig.port,
-      emailConfig.user,
-      emailConfig.password
-    );
+    this.emailRepository = new EmailRepository();
+    this.transporter = nodemailer.createTransport({
+      host: emailConfig.host,
+      port: emailConfig.port,
+      secure: emailConfig.secure,
+      auth: {
+        user: emailConfig.user,
+        pass: emailConfig.password,
+      },
+    });
   }
 
   async buildToken(userId: number): Promise<string> {
@@ -21,15 +27,36 @@ export default class EmailService {
       await this.emailRepository.createToken(
         userId,
         token,
-        new Date(Date.now() + 3600000)
-      ); // 1 hour expiration
+        new Date(Date.now() + 3600000) // 1 hour expiration
+      );
       return token;
     } catch (err) {
       throw new Error("Failed to create token");
     }
   }
 
-  async sendVerfifationEmail(
+  async sendEmail(
+    from: string,
+    to: string,
+    subject: string,
+    text: string,
+    html: string
+  ) {
+    try {
+      const info = await this.transporter.sendMail({
+        from: from,
+        to: to,
+        subject: subject,
+        text: text,
+        html: html,
+      });
+      return info;
+    } catch (err) {
+      throw new Error("Failed to send email");
+    }
+  }
+
+  async sendVerificationEmail(
     to: string,
     subject: string,
     text: string,
@@ -37,7 +64,7 @@ export default class EmailService {
   ) {
     try {
       const from = `"Meowth Deli" <${emailConfig.user}>`;
-      const info = this.emailRepository.sendEmail(
+      const info = this.sendEmail(
         from,
         to,
         subject,
