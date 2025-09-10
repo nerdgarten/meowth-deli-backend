@@ -1,0 +1,499 @@
+{
+  "info": {
+    "name": "Meowth Deli - Admin Verification (Restaurant & Driver)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "b3b4c8d3-7e0c-4e64-9f77-0a1234567890"
+  },
+  "item": [
+    {
+      "name": "List restaurants (all)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/restaurants",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "restaurants"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List restaurants (pending)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/restaurants?status=pending",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "restaurants"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "pending"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List restaurants (approved)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/restaurants?status=approved",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "restaurants"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "approved"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List restaurants (rejected)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/restaurants?status=rejected",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "restaurants"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "rejected"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update restaurant status -> pending",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"pending\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/restaurants/1/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "restaurants",
+            "1",
+            "verify"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update restaurant status -> approved",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"approved\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/restaurants/1/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "restaurants",
+            "1",
+            "verify"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update restaurant status -> rejected",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"rejected\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/restaurants/1/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "restaurants",
+            "1",
+            "verify"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List drivers (all)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/drivers",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "drivers"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List drivers (pending)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/drivers?status=pending",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "drivers"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "pending"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List drivers (approved)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/drivers?status=approved",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "drivers"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "approved"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List drivers (rejected)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/drivers?status=rejected",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "drivers"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "rejected"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update driver status -> pending",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"pending\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/drivers/1/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "drivers",
+            "1",
+            "verify"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update driver status -> approved",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"approved\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/drivers/1/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "drivers",
+            "1",
+            "verify"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update driver status -> rejected",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"rejected\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/drivers/1/verify",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "drivers",
+            "1",
+            "verify"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List payments (all) - Legacy",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/payments",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "payments"
+          ]
+        }
+      }
+    },
+    {
+      "name": "List payments (pending)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/payments?status=pending",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "pending"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List payments (approved)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/payments?status=approved",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "approved"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "List payments (rejected)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/admin/payments?status=rejected",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "payments"
+          ],
+          "query": [
+            {
+              "key": "status",
+              "value": "rejected"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Verify payment -> approved",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"approved\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/payments/1/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "payments",
+            "1",
+            "status"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Verify payment -> rejected",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"status\": \"rejected\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/admin/payments/1/status",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "admin",
+            "payments",
+            "1",
+            "status"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    }
+  ]
+}
+
+
