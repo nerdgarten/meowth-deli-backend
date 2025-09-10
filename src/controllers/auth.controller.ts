@@ -89,4 +89,24 @@ export class AuthController {
       });
     }
   }
+
+  async verifyAdminStatus(req: Request, res: Response) {
+    try {
+      const token = req.cookies?.token as string | undefined;
+      const result = await this.authService.verifyAdminStatus(token);
+
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+
+        return;
+      }
+      console.error("Unexpected error during verify admin status:", error);
+
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
 }
