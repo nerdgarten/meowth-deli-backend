@@ -1,4 +1,4 @@
-export const generateVerificationEmail = (verificationUrl: string) =>  {
+export const generateVerificationEmail = (verificationUrl: string) => {
     return `
         <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto; border: 1px solid #eee; padding: 24px;">
             <h2 style="color: #4f46e5;">Meowth Deli Email Verification</h2>
@@ -14,4 +14,4 @@ export const generateVerificationEmail = (verificationUrl: string) =>  {
             <small style="color: #888;">&copy; ${new Date().getFullYear()} Meowth Deli</small>
         </div>
     `;
-}
+};
