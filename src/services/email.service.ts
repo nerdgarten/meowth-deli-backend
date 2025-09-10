@@ -2,7 +2,7 @@ import emailConfig from "../config/email.js";
 import crypto from "crypto";
 import { generateVerificationEmail } from "../constant/email/email.js";
 import EmailRepository from "../repositories/email.repository.js";
-import nodemailer, { Transporter } from "nodemailer";
+import { Transporter, createTransport} from "nodemailer";
 
 export default class EmailService {
   private emailRepository: EmailRepository;
@@ -10,10 +10,10 @@ export default class EmailService {
 
   constructor() {
     this.emailRepository = new EmailRepository();
-    this.transporter = nodemailer.createTransport({
+    this.transporter = createTransport({
       host: emailConfig.host,
       port: emailConfig.port,
-      secure: emailConfig.secure,
+      secure: emailConfig.secure, // true for 465, false for other ports
       auth: {
         user: emailConfig.user,
         pass: emailConfig.password,
