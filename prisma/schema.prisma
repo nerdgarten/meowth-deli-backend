@@ -40,7 +40,7 @@ enum PaymentType {
     creditcard
 }
 
-enum PaymentStatus {
+enum VerificationStatus {
     pending
     rejected
     success
@@ -105,15 +105,16 @@ model Location {
 }
 
 model Driver {
-    id          Int     @id
-    is_verified Boolean @default(false)
-    firstname   String
-    lastname    String?
-    image       String?
-    vehicle     String
-    fee_rate    Float   @default(0.1)
-    licence     String
-    tel         String
+    id                  Int                @id
+    verification_status VerificationStatus @default(pending)
+    is_available        Boolean            @default(false)
+    firstname           String
+    lastname            String?
+    image               String?
+    vehicle             String
+    fee_rate            Float              @default(0.1)
+    licence             String
+    tel                 String
 
     user     User            @relation(fields: [id], references: [id])
     location DriverLocation?
@@ -122,15 +123,15 @@ model Driver {
 }
 
 model Restaurant {
-    id           Int     @id
-    is_verified  Boolean @default(false)
-    is_available Boolean @default(false)
-    name         String
-    image        String?
-    fee_rate     Float   @default(0.1)
-    location     String
-    detail       String?
-    tel          String
+    id                  Int                @id
+    verification_status VerificationStatus @default(pending)
+    is_available        Boolean            @default(false)
+    name                String
+    image               String?
+    fee_rate            Float              @default(0.1)
+    location            String
+    detail              String?
+    tel                 String
 
     user      User                 @relation(fields: [id], references: [id])
     tags      RestaurantTag[]
@@ -254,11 +255,11 @@ model CouponUsage {
 }
 
 model Payment {
-    id                Int           @id @default(autoincrement())
+    id                Int                @id @default(autoincrement())
     order_id          Int
     payment_method_id Int
     image             String?
-    status            PaymentStatus @default(pending)
+    status            VerificationStatus @default(pending)
 
     order         Order         @relation(fields: [order_id], references: [id])
     paymentMethod PaymentMethod @relation(fields: [payment_method_id], references: [id])

@@ -78,7 +78,7 @@ describe("User Input Validation Tests", () => {
     requiredFields.forEach((field) => {
       expect(validCustomerData).toHaveProperty(field);
       expect(
-        validCustomerData[field as keyof typeof validCustomerData]
+        validCustomerData[field as keyof typeof validCustomerData],
       ).toBeTruthy();
     });
   });
@@ -105,7 +105,7 @@ describe("User Input Validation Tests", () => {
     requiredFields.forEach((field) => {
       expect(validDriverData).toHaveProperty(field);
       expect(
-        validDriverData[field as keyof typeof validDriverData]
+        validDriverData[field as keyof typeof validDriverData],
       ).toBeTruthy();
     });
   });
@@ -124,7 +124,7 @@ describe("User Input Validation Tests", () => {
     requiredFields.forEach((field) => {
       expect(validRestaurantData).toHaveProperty(field);
       expect(
-        validRestaurantData[field as keyof typeof validRestaurantData]
+        validRestaurantData[field as keyof typeof validRestaurantData],
       ).toBeTruthy();
     });
   });

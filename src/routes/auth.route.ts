@@ -1,18 +1,25 @@
-import { Router } from "express";
-import {
-  signin,
-  signup,
-  signupCustomer,
-  signupDriver,
-  signupRestaurant,
-} from "../controllers/auth.controller.js";
+import { AuthController } from "@/controllers/auth.controller";
 
-const router = Router();
+import { BaseRouter } from "./baseRouter";
 
-router.post("/signin", signin);
-router.post("/signup", signup);
-router.post("/signup/customer", signupCustomer);
-router.post("/signup/driver", signupDriver);
-router.post("/signup/restaurant", signupRestaurant);
+export class AuthRouter extends BaseRouter {
+  private authController: AuthController;
 
-export default router;
+  constructor() {
+    super({ prefix: "/auth" });
+
+    this.authController = new AuthController();
+    this.setUpRoutes();
+  }
+
+  private setUpRoutes() {
+    this.router.post(
+      "/signin",
+      this.authController.signIn.bind(this.authController),
+    );
+    this.router.post(
+      "/signup/customer",
+      this.authController.signUpCustomer.bind(this.authController),
+    );
+  }
+}
