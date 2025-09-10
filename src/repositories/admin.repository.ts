@@ -1,6 +1,5 @@
-import { Prisma, VerificationStatus } from "@/generated/prisma/client";
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
-import { AdminVerificationStatus, VerificationType } from "@/types/admin/verification";
 
 export default class AdminRepository {
   private readonly userSelect = {
@@ -9,61 +8,47 @@ export default class AdminRepository {
     roles: true
   } as const;
 
-  private mapStatus(status: AdminVerificationStatus): VerificationStatus {
-    const mapping: Record<AdminVerificationStatus, VerificationStatus> = {
-      [AdminVerificationStatus.APPROVED]: "success",
-      [AdminVerificationStatus.REJECTED]: "rejected",
-      [AdminVerificationStatus.PENDING]: "pending"
-    };
-    return mapping[status];
-  }
+  private readonly defaultOptions = {
+    include: { 
+      user: { 
+        select: {
+          id: true,
+          email: true,
+          roles: true
+        } 
+      } 
+    },
+    orderBy: { id: "desc" as const }
+  };
 
-  private buildWhereClause(status?: AdminVerificationStatus) {
-    if (!status) return undefined;
-    
-    return {
-      verification_status: this.mapStatus(status),
-      is_available: status === AdminVerificationStatus.APPROVED
-    };
-  }
-
-  private buildUpdateData(status: AdminVerificationStatus) {
-    return {
-      verification_status: this.mapStatus(status),
-      is_available: status === AdminVerificationStatus.APPROVED
-    };
-  }
-
-  async listRestaurantsByVerificationStatus(status?: AdminVerificationStatus) {
+  async listRestaurants(where?: Prisma.RestaurantWhereInput) {
     return prisma.restaurant.findMany({
-      where: this.buildWhereClause(status),
-      include: { user: { select: this.userSelect } },
-      orderBy: { id: "desc" }
+      where,
+      ...this.defaultOptions
     });
   }
 
-  async updateRestaurantVerificationStatus(restaurantId: number, status: AdminVerificationStatus) {
+  async updateRestaurant(restaurantId: number, data: Prisma.RestaurantUpdateInput) {
     return prisma.restaurant.update({
       where: { id: restaurantId },
-      data: this.buildUpdateData(status),
-      include: { user: { select: this.userSelect } }
+      data,
+      include: this.defaultOptions.include
     });
   }
 
-  async listDriversByVerificationStatus(status?: AdminVerificationStatus) {
+  // Driver methods
+  async listDrivers(where?: Prisma.DriverWhereInput) {
     return prisma.driver.findMany({
-      where: this.buildWhereClause(status),
-      include: { user: { select: this.userSelect } },
-      orderBy: { id: "desc" }
+      where,
+      ...this.defaultOptions
     });
   }
 
-  async updateDriverVerificationStatus(driverId: number, status: AdminVerificationStatus) {
+  async updateDriver(driverId: number, data: Prisma.DriverUpdateInput) {
     return prisma.driver.update({
       where: { id: driverId },
-      data: this.buildUpdateData(status),
-      include: { user: { select: this.userSelect } }
+      data,
+      include: this.defaultOptions.include
     });
   }
 }
-
