@@ -2,77 +2,46 @@ import nodemailer from 'nodemailer';
 import emailConfig from '../config/email.js';
 import crypto from 'crypto';
 import database from "../config/db.js";
+import { generateVerificationEmail } from '../constant/email/email.js';
+import EmailRepository from '../repositories/email.repository.js';
 
-
-
-const generateVerificationEmail = (verificationUrl: string) =>  {
-    return `
-        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: auto; border: 1px solid #eee; padding: 24px;">
-            <h2 style="color: #4f46e5;">Meowth Deli Email Verification</h2>
-            <p>Hello,</p>
-            <p>Thank you for registering. Please verify your email address by clicking the button below:</p>
-            <p style="text-align: center;">
-                <a href="${verificationUrl}" style="background: #4f46e5; color: #fff; padding: 12px 24px; border-radius: 6px; text-decoration: none; display: inline-block;">
-                    Verify Email
-                </a>
-            </p>
-            <p>If you did not request this, you can ignore this email.</p>
-            <hr style="margin: 24px 0;">
-            <small style="color: #888;">&copy; ${new Date().getFullYear()} Meowth Deli</small>
-        </div>
-    `;
-}
-
-const transporter = nodemailer.createTransport({ 
-    host: emailConfig.host,
-    port: emailConfig.port,
-    secure: false, // true for 465, false for other ports
-    auth: {
-        user: emailConfig.user  ,
-        pass: emailConfig.password
-    },
-});
-
-
-export const buildToken = () =>{
-    return crypto.randomBytes(32).toString('hex');
-}
-
-export const sendEmail = async (to: string, subject: string, text: string, verify_link: string) => {
-    try{
-        const info = await transporter.sendMail(({
-            from: `"Meowth Deli" <${emailConfig.user}>`,
-            to: to, //receiver address
-            subject: subject,
-            text: text,
-            html: generateVerificationEmail(verify_link), // HTML body
-        }));
-        console.log("Email sent: ", info);
-        return info;
-    }catch(err){
-        throw new Error("Failed to send email");
+export default class EmailService {
+    private emailRepository: EmailRepository;
+    constructor() {
+        this.emailRepository = new EmailRepository(
+            emailConfig.host,
+            emailConfig.port,
+            emailConfig.user,
+            emailConfig.password
+        );
     }
-}
-
-export const verifyToken = async (token: string) => {
-    try{
-        const user = await database.verifyToken.findUnique({
-            where: { token },
-        });
-        if(!user) throw new Error("Invalid token");
-        if(user.expires_at < new Date()) {
-            await database.verifyToken.delete({
-                where: { token }
-            });
-            throw new Error("Token expired");
+    async buildToken(userId: number): Promise<string> {
+        const token = crypto.randomBytes(32).toString('hex');
+        await this.emailRepository.createToken(userId, token, new Date(Date.now() + 3600000)); // 1 hour expiration
+        return token
+    }
+    async sendVerfifationEmail(to: string, subject: string, text: string, verificationUrl: string){
+        try{
+            const from = `"Meowth Deli" <${emailConfig.user}>`
+            const info = this.emailRepository.sendEmail(from, to, subject, text, generateVerificationEmail(verificationUrl));
+            console.log("Verification email sent: ", info);
+        }catch(err){
+            throw new Error("Failed to send email");
         }
-
-        await database.verifyToken.delete({
-            where: { token }
-        });
-        return true
-
-    }catch(err){
-        throw new Error("Failed to verify token");
     }
+    async verifyTokenExists(token: string) {
+        try{
+            const user = await this.emailRepository.findUniqueToken(token);
+            if(!user) throw new Error("Invalid token");
+            if(user.expires_at < new Date()) {
+                await this.emailRepository.deleteToken(token);
+                throw new Error("Token expired");
+            }
+            await this.emailRepository.deleteToken(token);
+            return true
+        }catch(err){
+            throw new Error("Failed to verify token");
+        }
+    }
+
 }
