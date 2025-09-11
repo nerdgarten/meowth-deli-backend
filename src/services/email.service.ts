@@ -71,7 +71,9 @@ export default class EmailService {
 
   async verifyTokenExists(token: string) {
     const user = await this.emailRepository.findUniqueToken(token);
-    if (!user) throw new AppError("Invalid token", StatusCodes.BAD_REQUEST);
+    if (!user) {
+      throw new AppError("Invalid token", StatusCodes.BAD_REQUEST);
+    }
     if (user.expires_at < new Date()) {
       await this.emailRepository.deleteToken(token);
       throw new AppError("Token expired", StatusCodes.BAD_REQUEST);

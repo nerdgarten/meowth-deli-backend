@@ -97,9 +97,7 @@ export default class AuthService {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
       id: number;
       email: string;
-      role?: string;
-      iat?: number;
-      exp?: number;
+      role: string;
     };
 
     if (decoded.role !== "admin") {
