@@ -41,7 +41,7 @@ export default class AuthService {
       process.env.JWT_SECRET as string,
       {
         expiresIn: "1h",
-      },
+      }
     );
 
     return {
@@ -52,7 +52,10 @@ export default class AuthService {
   }
 
   async createCustomerUser(body: CustomerSignUpBody) {
-    const createdUser = await this.authRepository.createCustomerUser(body);
+    const createdUser = await this.authRepository.createCustomerUser({
+      ...body,
+      password: await this.hashPassword(body.password),
+    });
 
     return {
       id: createdUser.id,
@@ -62,7 +65,10 @@ export default class AuthService {
   }
 
   async createDriverUser(body: DriverSignUpBody) {
-    const createdUser = await this.authRepository.createDriverUser(body);
+    const createdUser = await this.authRepository.createDriverUser({
+      ...body,
+      password: await this.hashPassword(body.password),
+    });
 
     return {
       id: createdUser.id,
@@ -72,7 +78,10 @@ export default class AuthService {
   }
 
   async createRestaurantUser(body: RestaurantSignUpBody) {
-    const createdUser = await this.authRepository.createRestaurantUser(body);
+    const createdUser = await this.authRepository.createRestaurantUser({
+      ...body,
+      password: await this.hashPassword(body.password),
+    });
 
     return {
       id: createdUser.id,
@@ -105,5 +114,11 @@ export default class AuthService {
       }
       throw new AppError("Unauthorized", StatusCodes.UNAUTHORIZED);
     }
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
   }
 }
