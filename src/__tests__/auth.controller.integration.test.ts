@@ -12,7 +12,7 @@ jest.mock("@/services/auth.service");
 
 const MockAuthService = AuthService as jest.MockedClass<typeof AuthService>;
 
-describe("AuthController", () => {
+describe("AuthController Integration Tests", () => {
   let app: express.Application;
   let authController: AuthController;
   let mockAuthService: jest.Mocked<AuthService>;
@@ -54,7 +54,7 @@ describe("AuthController", () => {
       next();
     });
 
-    // Setup routes using class methods
+    // Setup routes
     app.post("/auth/signin", (req, res) => authController.signIn(req, res));
     app.post("/auth/signup/customer", (req, res) =>
       authController.signUpCustomer(req, res)
@@ -139,6 +139,15 @@ describe("AuthController", () => {
 
       expect(response.body).toEqual({ message: "Internal server error" });
     });
+
+    it("should handle missing request body", async () => {
+      const response = await request(app)
+        .post("/auth/signin")
+        .send({})
+        .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+
+      expect(response.body).toEqual({ message: "Internal server error" });
+    });
   });
 
   describe("POST /auth/signup/customer", () => {
@@ -173,7 +182,7 @@ describe("AuthController", () => {
       );
     });
 
-    it("should handle service errors", async () => {
+    it("should handle duplicate email error", async () => {
       mockAuthService.createCustomerUser.mockRejectedValue(
         new AppError("Email already exists", StatusCodes.CONFLICT)
       );
@@ -197,6 +206,25 @@ describe("AuthController", () => {
         .expect(StatusCodes.INTERNAL_SERVER_ERROR);
 
       expect(response.body).toEqual({ message: "Internal server error" });
+    });
+
+    it("should handle invalid request data", async () => {
+      const invalidData = {
+        email: "invalid-email",
+        // missing required fields
+      };
+
+      // Mock service to reject invalid data
+      mockAuthService.createCustomerUser.mockRejectedValue(
+        new AppError("Invalid email format", StatusCodes.BAD_REQUEST)
+      );
+
+      const response = await request(app)
+        .post("/auth/signup/customer")
+        .send(invalidData)
+        .expect(StatusCodes.BAD_REQUEST);
+
+      expect(response.body).toEqual({ message: "Invalid email format" });
     });
   });
 
@@ -245,6 +273,19 @@ describe("AuthController", () => {
 
       expect(response.body).toEqual({ message: "Validation failed" });
     });
+
+    it("should return 500 for unexpected errors", async () => {
+      mockAuthService.createDriverUser.mockRejectedValue(
+        new Error("Unexpected error")
+      );
+
+      const response = await request(app)
+        .post("/auth/signup/driver")
+        .send(driverData)
+        .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+
+      expect(response.body).toEqual({ message: "Internal server error" });
+    });
   });
 
   describe("POST /auth/signup/restaurant", () => {
@@ -292,6 +333,19 @@ describe("AuthController", () => {
         .expect(StatusCodes.BAD_REQUEST);
 
       expect(response.body).toEqual({ message: "Invalid location" });
+    });
+
+    it("should return 500 for unexpected errors", async () => {
+      mockAuthService.createRestaurantUser.mockRejectedValue(
+        new Error("Database connection lost")
+      );
+
+      const response = await request(app)
+        .post("/auth/signup/restaurant")
+        .send(restaurantData)
+        .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+
+      expect(response.body).toEqual({ message: "Internal server error" });
     });
   });
 
@@ -343,6 +397,32 @@ describe("AuthController", () => {
       expect(mockAuthService.verifyAdminStatus).toHaveBeenCalledWith(
         "customer-token"
       );
+    });
+
+    it("should return 401 for invalid tokens", async () => {
+      mockAuthService.verifyAdminStatus.mockRejectedValue(
+        new AppError("Unauthorized", StatusCodes.UNAUTHORIZED)
+      );
+
+      const response = await request(app)
+        .get("/auth/verify-admin")
+        .set("Cookie", "token=invalid-token")
+        .expect(StatusCodes.UNAUTHORIZED);
+
+      expect(response.body).toEqual({ message: "Unauthorized" });
+    });
+
+    it("should return 500 for unexpected errors", async () => {
+      mockAuthService.verifyAdminStatus.mockRejectedValue(
+        new Error("JWT library error")
+      );
+
+      const response = await request(app)
+        .get("/auth/verify-admin")
+        .set("Cookie", "token=some-token")
+        .expect(StatusCodes.INTERNAL_SERVER_ERROR);
+
+      expect(response.body).toEqual({ message: "Internal server error" });
     });
   });
 });

@@ -1,8 +1,9 @@
+import { StatusCodes } from "http-status-codes";
+
+import { VerificationStatus } from "@/generated/prisma/client";
 import AdminRepository from "@/repositories/admin.repository";
 import { AdminVerificationStatus } from "@/types/admin/verification";
-import { VerificationStatus } from "@/generated/prisma/client";
 import { AppError } from "@/types/error";
-import { StatusCodes } from "http-status-codes";
 
 export default class AdminService {
   private adminRepository: AdminRepository;
@@ -25,25 +26,32 @@ export default class AdminService {
 
   private buildWhereClause(status?: AdminVerificationStatus) {
     if (!status) return undefined;
-    
+
     return {
       verification_status: this.mapStatus(status),
-      is_available: status === AdminVerificationStatus.APPROVED
+      is_available: status === AdminVerificationStatus.APPROVED,
     };
   }
 
   private buildUpdateData(status: AdminVerificationStatus) {
     return {
       verification_status: this.mapStatus(status),
-      is_available: status === AdminVerificationStatus.APPROVED
+      is_available: status === AdminVerificationStatus.APPROVED,
     };
   }
 
   private validateStatus(status: AdminVerificationStatus) {
-    const allowed: AdminVerificationStatus[] = [AdminVerificationStatus.PENDING, AdminVerificationStatus.APPROVED, AdminVerificationStatus.REJECTED];
-    
+    const allowed: AdminVerificationStatus[] = [
+      AdminVerificationStatus.PENDING,
+      AdminVerificationStatus.APPROVED,
+      AdminVerificationStatus.REJECTED,
+    ];
+
     if (!allowed.includes(status)) {
-      throw new AppError(`Invalid status. Allowed: ${allowed.join(", ")}`, StatusCodes.BAD_REQUEST);
+      throw new AppError(
+        `Invalid status. Allowed: ${allowed.join(", ")}`,
+        StatusCodes.BAD_REQUEST
+      );
     }
   }
 
@@ -55,18 +63,17 @@ export default class AdminService {
     return this.adminRepository.listRestaurants(whereClause);
   }
 
-  async verifyRestaurant(restaurantId: number, status: AdminVerificationStatus) {
+  async verifyRestaurant(
+    restaurantId: number,
+    status: AdminVerificationStatus
+  ) {
     this.validateStatus(status);
-    
-    try {
-      const updateData = this.buildUpdateData(status);
-      return await this.adminRepository.updateRestaurant(restaurantId, updateData);
-    } catch (error: any) {
-      if (error?.code === 'P2025') {
-        throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
-      }
-      throw new AppError(error.message || "Failed to verify restaurant", StatusCodes.INTERNAL_SERVER_ERROR);
-    }
+
+    const updateData = this.buildUpdateData(status);
+    return await this.adminRepository.updateRestaurant(
+      restaurantId,
+      updateData
+    );
   }
 
   async listDrivers(status?: AdminVerificationStatus) {
@@ -80,14 +87,7 @@ export default class AdminService {
   async verifyDriver(driverId: number, status: AdminVerificationStatus) {
     this.validateStatus(status);
 
-    try {
-      const updateData = this.buildUpdateData(status);
-      return await this.adminRepository.updateDriver(driverId, updateData);
-    } catch (error: any) {
-      if (error?.code === 'P2025') {
-        throw new AppError("Driver not found", StatusCodes.NOT_FOUND);
-      }
-      throw new AppError(error.message || "Failed to verify driver", StatusCodes.INTERNAL_SERVER_ERROR);
-    }
+    const updateData = this.buildUpdateData(status);
+    return await this.adminRepository.updateDriver(driverId, updateData);
   }
 }
