@@ -82,7 +82,7 @@ model UserRole {
 model Customer {
     id        Int     @id
     firstname String
-    lastname  String?
+    lastname  String
     image     String?
     tel       String
 
@@ -109,7 +109,7 @@ model Driver {
     verification_status VerificationStatus @default(pending)
     is_available        Boolean            @default(false)
     firstname           String
-    lastname            String?
+    lastname            String
     image               String?
     vehicle             String
     fee_rate            Float              @default(0.1)
