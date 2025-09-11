@@ -2,7 +2,9 @@ import emailConfig from "@/config/email.js";
 import crypto from "crypto";
 import { generateVerificationEmail } from "@/constant/email/email.js";
 import EmailRepository from "@/repositories/email.repository.js";
-import { Transporter, createTransport} from "nodemailer";
+import { Transporter, createTransport } from "nodemailer";
+import { AppError } from "@/types/error";
+import { StatusCodes } from "http-status-codes";
 
 export default class EmailService {
   private emailRepository: EmailRepository;
@@ -31,7 +33,10 @@ export default class EmailService {
       );
       return token;
     } catch (err) {
-      throw new Error("Failed to create token");
+      throw new AppError(
+        "Failed to create token",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
@@ -52,7 +57,10 @@ export default class EmailService {
       });
       return info;
     } catch (err) {
-      throw new Error("Failed to send email");
+      throw new AppError(
+        "Failed to send email",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
@@ -73,7 +81,10 @@ export default class EmailService {
       );
       console.log("Verification email sent: ", info);
     } catch (err) {
-      throw new Error("Failed to send email");
+      throw new AppError(
+        "Failed to send verification email",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
     }
   }
 
@@ -88,7 +99,10 @@ export default class EmailService {
       await this.emailRepository.deleteToken(token);
       return true;
     } catch (err) {
-      throw new Error("Failed to verify token");
+      throw new AppError(
+        "Failed to verify token",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
     }
   }
 }
