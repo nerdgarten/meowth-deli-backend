@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { AdminController } from "@/controllers/admin.controller";
+
 import { BaseRouter } from "./baseRouter";
 
 export class AdminRouter extends BaseRouter {

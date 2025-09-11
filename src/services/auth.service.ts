@@ -91,33 +91,26 @@ export default class AuthService {
   }
 
   async verifyAdminStatus(token: string | undefined) {
-    try {
-      if (!token) {
-        throw new AppError("Unauthorized", StatusCodes.UNAUTHORIZED);
-      }
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-        id: number;
-        email: string;
-        role?: string;
-        iat?: number;
-        exp?: number;
-      };
-
-      if (decoded.role !== "admin") {
-        throw new AppError("Forbidden", StatusCodes.FORBIDDEN);
-      }
-
-      return { isAdmin: true, userId: decoded.id, email: decoded.email };
-    } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      }
+    if (!token) {
       throw new AppError("Unauthorized", StatusCodes.UNAUTHORIZED);
     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: number;
+      email: string;
+      role?: string;
+      iat?: number;
+      exp?: number;
+    };
+
+    if (decoded.role !== "admin") {
+      throw new AppError("Forbidden", StatusCodes.FORBIDDEN);
+    }
+
+    return { isAdmin: true, userId: decoded.id, email: decoded.email };
   }
 
   async hashPassword(password: string): Promise<string> {
-    const saltRounds = 10;
+    const saltRounds = parseInt(process.env.SALT_ROUNDS as string, 10);
     const hashedPassword = await bcrypt.hash(password, saltRounds);
     return hashedPassword;
   }
