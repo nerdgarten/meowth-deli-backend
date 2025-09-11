@@ -22,6 +22,4 @@ export class RouterManager {
   public getRouter(): Router {
     return this.router;
   }
-  
 }
-
