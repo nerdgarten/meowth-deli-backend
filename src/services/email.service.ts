@@ -1,7 +1,7 @@
-import emailConfig from "../config/email.js";
+import emailConfig from "@/config/email.js";
 import crypto from "crypto";
-import { generateVerificationEmail } from "../constant/email/email.js";
-import EmailRepository from "../repositories/email.repository.js";
+import { generateVerificationEmail } from "@/constant/email/email.js";
+import EmailRepository from "@/repositories/email.repository.js";
 import { Transporter, createTransport} from "nodemailer";
 
 export default class EmailService {
