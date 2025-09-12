@@ -92,6 +92,7 @@ export class AuthController {
   async signUpRestaurant(req: Request, res: Response) {
     try {
       emailVerificationSchema.parse(req.body);
+      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.createRestaurantUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
