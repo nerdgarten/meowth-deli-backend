@@ -1,7 +1,7 @@
 import { Router } from "express";
 
-import { AuthRouter } from "./auth.route";
 import { AdminRouter } from "./admin.route";
+import { AuthRouter } from "./auth.route";
 
 export class RouterManager {
   private router: Router;
@@ -22,6 +22,4 @@ export class RouterManager {
   public getRouter(): Router {
     return this.router;
   }
-  
 }
-
