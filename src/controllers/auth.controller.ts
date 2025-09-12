@@ -26,7 +26,6 @@ export class AuthController {
   async signIn(req: Request, res: Response) {
     try {
       emailVerificationSchema.parse(req.body);
-      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.signIn(req.body);
 
       res.cookie("token", user.token, {
