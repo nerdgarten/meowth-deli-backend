@@ -43,7 +43,7 @@ enum PaymentType {
 enum VerificationStatus {
     pending
     rejected
-    success
+    approved
 }
 
 enum CouponType {
