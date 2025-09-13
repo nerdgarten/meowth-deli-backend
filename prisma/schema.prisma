@@ -53,12 +53,12 @@ enum CouponType {
 
 // ---------------- MODELS ----------------
 model User {
-    id                       Int     @id @default(autoincrement())
-    email                    String  @unique
+    id                       Int      @id @default(autoincrement())
+    email                    String   @unique
     password                 String
-    accepted_term_of_service Boolean @default(false)
-    accepted_pdpa            Boolean @default(false)
-    accepted_cookie_tracking Boolean @default(false)
+    accepted_term_of_service Boolean  @default(false)
+    accepted_pdpa            Boolean  @default(false)
+    accepted_cookie_tracking Boolean  @default(false)
     created_at               DateTime @default(now()) @db.Timestamptz
     updated_at               DateTime @updatedAt @db.Timestamptz
 
@@ -84,7 +84,7 @@ model UserRole {
 }
 
 model Customer {
-    id         Int     @id
+    id         Int      @id
     firstname  String
     lastname   String
     image      String?
@@ -99,6 +99,8 @@ model Customer {
     orders         Order[]
     couponUsages   CouponUsage[]
     driverReviews  DriverReview[]
+
+    @@index([firstname, lastname])
 }
 
 model Location {
@@ -110,6 +112,8 @@ model Location {
     updated_at  DateTime @updatedAt @db.Timestamptz
 
     customer Customer @relation(fields: [customer_id], references: [id])
+
+    @@index([customer_id])
 }
 
 model Driver {
@@ -162,6 +166,8 @@ model RestaurantTag {
     updated_at    DateTime @updatedAt @db.Timestamptz
 
     restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
+
+    @@index([restaurant_id])
 }
 
 model RestaurantGallery {
@@ -172,6 +178,8 @@ model RestaurantGallery {
     updated_at    DateTime @updatedAt @db.Timestamptz
 
     restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
+
+    @@index([restaurant_id])
 }
 
 model AvailableTime {
@@ -184,6 +192,8 @@ model AvailableTime {
     updated_at    DateTime @updatedAt @db.Timestamptz
 
     restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
+
+    @@index([restaurant_id])
 }
 
 model Notification {
@@ -196,6 +206,8 @@ model Notification {
     updated_at DateTime @updatedAt @db.Timestamptz
 
     user User @relation(fields: [user_id], references: [id])
+
+    @@index([user_id])
 }
 
 model DriverLocation {
@@ -207,6 +219,8 @@ model DriverLocation {
     updated_at      DateTime  @updatedAt @db.Timestamptz
 
     driver Driver @relation(fields: [id], references: [id])
+
+    @@index([last_updated_at])
 }
 
 model Dish {
@@ -223,6 +237,8 @@ model Dish {
     restaurant  Restaurant     @relation(fields: [restaurant_id], references: [id])
     favorites   FavoriteDish[]
     orderDishes OrderDish[]
+
+    @@index([restaurant_id])
 }
 
 model FavoriteRestaurant {
@@ -260,6 +276,8 @@ model PaymentMethod {
 
     user     User      @relation(fields: [user_id], references: [id])
     payments Payment[]
+
+    @@index([user_id])
 }
 
 model Coupon {
@@ -273,6 +291,8 @@ model Coupon {
     updated_at DateTime   @updatedAt @db.Timestamptz
 
     usages CouponUsage[]
+
+    @@index([code])
 }
 
 model CouponUsage {
@@ -285,6 +305,7 @@ model CouponUsage {
     customer Customer @relation(fields: [customer_id], references: [id])
 
     @@id([coupon_id, customer_id])
+    @@index([customer_id])
 }
 
 model Payment {
@@ -298,6 +319,9 @@ model Payment {
 
     order         Order         @relation(fields: [order_id], references: [id])
     paymentMethod PaymentMethod @relation(fields: [payment_method_id], references: [id])
+
+    @@index([order_id])
+    @@index([payment_method_id])
 }
 
 model Order {
@@ -316,6 +340,9 @@ model Order {
     driver      Driver?     @relation(fields: [driver_id], references: [id])
     orderDishes OrderDish[]
     payments    Payment[]
+
+    @@index([customer_id])
+    @@index([driver_id])
 }
 
 model OrderDish {
@@ -343,6 +370,8 @@ model RestaurantReview {
 
     user       User       @relation(fields: [user_id], references: [id])
     restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
+
+    @@index([restaurant_id])
 }
 
 model DriverReview {
@@ -356,6 +385,8 @@ model DriverReview {
 
     customer Customer @relation(fields: [customer_id], references: [id])
     driver   Driver   @relation(fields: [driver_id], references: [id])
+
+    @@index([driver_id])
 }
 
 model VerifyToken {
