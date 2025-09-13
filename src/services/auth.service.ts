@@ -41,7 +41,7 @@ export default class AuthService {
       process.env.JWT_SECRET as string,
       {
         expiresIn: "1h",
-      },
+      }
     );
 
     return {
@@ -52,7 +52,10 @@ export default class AuthService {
   }
 
   async createCustomerUser(body: CustomerSignUpBody) {
-    const createdUser = await this.authRepository.createCustomerUser(body);
+    const createdUser = await this.authRepository.createCustomerUser({
+      ...body,
+      password: await this.hashPassword(body.password),
+    });
 
     return {
       id: createdUser.id,
@@ -62,7 +65,10 @@ export default class AuthService {
   }
 
   async createDriverUser(body: DriverSignUpBody) {
-    const createdUser = await this.authRepository.createDriverUser(body);
+    const createdUser = await this.authRepository.createDriverUser({
+      ...body,
+      password: await this.hashPassword(body.password),
+    });
 
     return {
       id: createdUser.id,
@@ -72,7 +78,10 @@ export default class AuthService {
   }
 
   async createRestaurantUser(body: RestaurantSignUpBody) {
-    const createdUser = await this.authRepository.createRestaurantUser(body);
+    const createdUser = await this.authRepository.createRestaurantUser({
+      ...body,
+      password: await this.hashPassword(body.password),
+    });
 
     return {
       id: createdUser.id,
@@ -82,28 +91,25 @@ export default class AuthService {
   }
 
   async verifyAdminStatus(token: string | undefined) {
-    try {
-      if (!token) {
-        throw new AppError("Unauthorized", StatusCodes.UNAUTHORIZED);
-      }
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-        id: number;
-        email: string;
-        role?: string;
-        iat?: number;
-        exp?: number;
-      };
-
-      if (decoded.role !== "admin") {
-        throw new AppError("Forbidden", StatusCodes.FORBIDDEN);
-      }
-
-      return { isAdmin: true, userId: decoded.id, email: decoded.email };
-    } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      }
+    if (!token) {
       throw new AppError("Unauthorized", StatusCodes.UNAUTHORIZED);
     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
+      id: number;
+      email: string;
+      role: string;
+    };
+
+    if (decoded.role !== "admin") {
+      throw new AppError("Forbidden", StatusCodes.FORBIDDEN);
+    }
+
+    return { isAdmin: true, userId: decoded.id, email: decoded.email };
+  }
+
+  async hashPassword(password: string): Promise<string> {
+    const saltRounds = parseInt(process.env.SALT_ROUNDS as string, 10);
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
   }
 }

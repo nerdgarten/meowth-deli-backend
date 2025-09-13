@@ -4,4 +4,6 @@ dist
 
 /src/generated/prisma
 /prisma/generated
-/coverage 
+/coverage
+
+.idea
