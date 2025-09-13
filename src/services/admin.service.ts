@@ -11,33 +11,17 @@ export default class AdminService {
   constructor() {
     this.adminRepository = new AdminRepository();
   }
-
+  
   private mapStatus(status: AdminVerificationStatus): VerificationStatus {
     switch (status) {
       case AdminVerificationStatus.APPROVED:
-        return "success";
+        return VerificationStatus.approved;
       case AdminVerificationStatus.REJECTED:
-        return "rejected";
+        return VerificationStatus.rejected;
       case AdminVerificationStatus.PENDING:
       default:
-        return "pending";
+        return VerificationStatus.pending;
     }
-  }
-
-  private buildWhereClause(status?: AdminVerificationStatus) {
-    if (!status) return undefined;
-
-    return {
-      verification_status: this.mapStatus(status),
-      is_available: status === AdminVerificationStatus.APPROVED,
-    };
-  }
-
-  private buildUpdateData(status: AdminVerificationStatus) {
-    return {
-      verification_status: this.mapStatus(status),
-      is_available: status === AdminVerificationStatus.APPROVED,
-    };
   }
 
   private validateStatus(status: AdminVerificationStatus) {
@@ -59,35 +43,41 @@ export default class AdminService {
     if (status) {
       this.validateStatus(status);
     }
-    const whereClause = this.buildWhereClause(status);
-    return this.adminRepository.listRestaurants(whereClause);
+    return this.adminRepository.listRestaurants(status ? { verification_status: this.mapStatus(status) } : undefined);
   }
 
-  async verifyRestaurant(
-    restaurantId: number,
-    status: AdminVerificationStatus
-  ) {
+  async verifyRestaurant(restaurantId: number, status: AdminVerificationStatus) {
     this.validateStatus(status);
 
-    const updateData = this.buildUpdateData(status);
-    return await this.adminRepository.updateRestaurant(
-      restaurantId,
-      updateData
-    );
+    const result = await this.adminRepository.updateRestaurant(restaurantId, status);
+    return {
+      success: true,
+      message: `Restaurant verification status updated to ${status.toLowerCase()}`,
+      data: {
+        ...result,
+        status: this.mapStatus(status)
+      }
+    };
+  }
+
+  async verifyDriver(driverId: number, status: AdminVerificationStatus) {
+    this.validateStatus(status);
+
+    const result = await this.adminRepository.updateDriver(driverId, status);
+    return {
+      success: true,
+      message: `Driver verification status updated to ${status.toLowerCase()}`,
+      data: {
+        ...result,
+        status: this.mapStatus(status)
+      }
+    };
   }
 
   async listDrivers(status?: AdminVerificationStatus) {
     if (status) {
       this.validateStatus(status);
     }
-    const whereClause = this.buildWhereClause(status);
-    return this.adminRepository.listDrivers(whereClause);
-  }
-
-  async verifyDriver(driverId: number, status: AdminVerificationStatus) {
-    this.validateStatus(status);
-
-    const updateData = this.buildUpdateData(status);
-    return await this.adminRepository.updateDriver(driverId, updateData);
+    return this.adminRepository.listDrivers(status ? { verification_status: this.mapStatus(status) } : undefined);
   }
 }
