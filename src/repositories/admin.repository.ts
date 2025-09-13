@@ -1,13 +1,8 @@
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma, VerificationStatus } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
+import { AdminVerificationStatus } from "@/types/admin/verification";
 
 export default class AdminRepository {
-  private readonly userSelect = {
-    id: true,
-    email: true,
-    roles: true
-  } as const;
-
   private readonly defaultOptions = {
     include: { 
       user: { 
@@ -21,6 +16,18 @@ export default class AdminRepository {
     orderBy: { id: "desc" as const }
   };
 
+  private mapToVerificationStatus(status: AdminVerificationStatus): VerificationStatus {
+    switch (status) {
+      case AdminVerificationStatus.APPROVED:
+        return VerificationStatus.approved;
+      case AdminVerificationStatus.REJECTED:
+        return VerificationStatus.rejected;
+      case AdminVerificationStatus.PENDING:
+      default:
+        return VerificationStatus.pending;
+    }
+  }
+
   async listRestaurants(where?: Prisma.RestaurantWhereInput) {
     return prisma.restaurant.findMany({
       where,
@@ -28,15 +35,18 @@ export default class AdminRepository {
     });
   }
 
-  async updateRestaurant(restaurantId: number, data: Prisma.RestaurantUpdateInput) {
+  async updateRestaurant(restaurantId: number, status: AdminVerificationStatus) {
+    const verificationStatus = this.mapToVerificationStatus(status);
+    
     return prisma.restaurant.update({
       where: { id: restaurantId },
-      data,
+      data: {
+        verification_status: verificationStatus,
+      },
       include: this.defaultOptions.include
     });
   }
 
-  // Driver methods
   async listDrivers(where?: Prisma.DriverWhereInput) {
     return prisma.driver.findMany({
       where,
@@ -44,10 +54,14 @@ export default class AdminRepository {
     });
   }
 
-  async updateDriver(driverId: number, data: Prisma.DriverUpdateInput) {
+  async updateDriver(driverId: number, status: AdminVerificationStatus) {
+    const verificationStatus = this.mapToVerificationStatus(status);
+
     return prisma.driver.update({
       where: { id: driverId },
-      data,
+      data: {
+        verification_status: verificationStatus,
+      },
       include: this.defaultOptions.include
     });
   }

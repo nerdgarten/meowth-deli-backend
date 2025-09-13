@@ -1,6 +1,6 @@
 export enum AdminVerificationStatus {
   PENDING = "pending",
-  APPROVED = "success", 
+  APPROVED = "approved", 
   REJECTED = "rejected"
 }
 

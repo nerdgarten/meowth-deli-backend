@@ -29,23 +29,49 @@ export class AdminController {
     }
   }
 
+  // ...existing code...
+
   async verifyRestaurant(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
       const { status } = req.body as { status: AdminVerificationStatus };
+      
       const result = await this.adminService.verifyRestaurant(id, status);
-      res.status(StatusCodes.OK).json({
-        message: `Restaurant status updated to ${status} successfully`,
-        data: result,
-      });
+      res.status(StatusCodes.OK).json(result);
     } catch (error: unknown) {
       if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
+        res.status(error.statusCode).json({ 
+          success: false,
+          message: error.message 
+        });
         return;
       }
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal server error" });
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+        success: false,
+        message: "Internal server error" 
+      });
+    }
+  }
+
+  async verifyDriver(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      const { status } = req.body as { status: AdminVerificationStatus };
+      
+      const result = await this.adminService.verifyDriver(id, status);
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ 
+          success: false,
+          message: error.message 
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+        success: false,
+        message: "Internal server error" 
+      });
     }
   }
 
@@ -66,23 +92,4 @@ export class AdminController {
     }
   }
 
-  async verifyDriver(req: Request, res: Response) {
-    try {
-      const id = Number(req.params.id);
-      const { status } = req.body as { status: AdminVerificationStatus };
-      const result = await this.adminService.verifyDriver(id, status);
-      res.status(StatusCodes.OK).json({
-        message: `Driver status updated to ${status} successfully`,
-        data: result,
-      });
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal server error" });
-    }
-  }
 }
