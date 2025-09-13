@@ -3,6 +3,18 @@ import { StatusCodes } from "http-status-codes";
 
 import AuthService from "@/services/auth.service";
 import { AppError } from "@/types/error";
+import { z } from "zod";
+
+const emailVerificationSchema = z.object({
+  email: z.string().email({ message: "Invalid email format" }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters long" }),
+});
+
+const phoneVerificationSchema = z.object({
+  tel: z
+    .string()
+    .regex(/^\+?[1-9]\d{10,14}$/, { message: "Invalid phone number format" }),
+});
 
 export class AuthController {
   private authService: AuthService;
@@ -13,6 +25,8 @@ export class AuthController {
 
   async signIn(req: Request, res: Response) {
     try {
+      emailVerificationSchema.parse(req.body);
+      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.signIn(req.body);
 
       res.cookie("token", user.token, {
@@ -35,6 +49,8 @@ export class AuthController {
 
   async signUpCustomer(req: Request, res: Response) {
     try {
+      emailVerificationSchema.parse(req.body);
+      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.createCustomerUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
@@ -54,6 +70,8 @@ export class AuthController {
 
   async signUpDriver(req: Request, res: Response) {
     try {
+      emailVerificationSchema.parse(req.body);
+      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.createDriverUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
@@ -73,6 +91,8 @@ export class AuthController {
 
   async signUpRestaurant(req: Request, res: Response) {
     try {
+      emailVerificationSchema.parse(req.body);
+      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.createRestaurantUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);

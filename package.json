@@ -41,7 +41,8 @@
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.6",
     "prisma": "^6.15.0",
-    "save-dev": "^0.0.1-security"
+    "save-dev": "^0.0.1-security",
+    "zod": "^4.1.7"
   },
   "devDependencies": {
     "@jest/globals": "^30.1.2",
