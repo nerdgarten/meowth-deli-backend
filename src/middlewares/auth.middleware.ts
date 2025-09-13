@@ -26,6 +26,7 @@ export function authMiddleware(
 
   try {
     const jwtData = verifyJwt(token);
+    req.user = jwtData;
     next();
   } catch {
     res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });

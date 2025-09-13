@@ -15,7 +15,7 @@ export default class AdminService {
   private mapStatus(status: AdminVerificationStatus): VerificationStatus {
     switch (status) {
       case AdminVerificationStatus.APPROVED:
-        return "success";
+        return "approved";
       case AdminVerificationStatus.REJECTED:
         return "rejected";
       case AdminVerificationStatus.PENDING:
