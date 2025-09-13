@@ -1,6 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import jwt from "jsonwebtoken";
+
+import { IJwtData } from "@/types/auth/jwt";
+import { verifyJwt } from "@/utils/jwt";
+
+declare module "express" {
+    export interface Request {
+        user?: IJwtData;
+    }
+}
 
 export function authMiddleware(
   req: Request,
@@ -17,13 +25,7 @@ export function authMiddleware(
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    if (!decoded) {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
-      return;
-    }
-
+    const jwtData = verifyJwt(token);
     next();
   } catch {
     res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
