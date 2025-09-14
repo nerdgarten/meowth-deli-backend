@@ -11,6 +11,7 @@ import {
 } from "@/types/auth/post";
 import { AppError } from "@/types/error";
 import { UserRole } from "@/types/role";
+import { signJwt } from "@/utils/jwt";
 
 export default class AuthService {
   private authRepository: AuthRepository;
@@ -32,23 +33,9 @@ export default class AuthService {
       throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
     }
 
-    const token = jwt.sign(
-      {
-        id: user.id,
-        email: user.email,
-        role,
-      },
-      process.env.JWT_SECRET as string,
-      {
-        expiresIn: "1h",
-      }
-    );
+    const token = signJwt(user.id, user.email, role);
 
-    return {
-      id: user.id,
-      email: user.email,
-      token,
-    };
+    return token;
   }
 
   async createCustomerUser(body: CustomerSignUpBody) {
