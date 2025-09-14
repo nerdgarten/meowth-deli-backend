@@ -10,6 +10,17 @@ export default class AuthRepository {
     });
   }
 
+  getUserRoles(userId: number) {
+    return prisma.userRole.findMany({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        role: true,
+      },
+    });
+  }
+
   createCustomerUser(customer: ICustomer) {
     return prisma.user.create({
       data: {

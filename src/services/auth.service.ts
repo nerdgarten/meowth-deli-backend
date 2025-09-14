@@ -28,6 +28,11 @@ export default class AuthService {
       throw new AppError("User not found", StatusCodes.NOT_FOUND);
     }
 
+    const userRoles = await this.authRepository.getUserRoles(user.id);
+    if (!userRoles.includes(role)) {
+      throw new AppError("Unauthorized role", StatusCodes.UNAUTHORIZED);
+    }
+
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
