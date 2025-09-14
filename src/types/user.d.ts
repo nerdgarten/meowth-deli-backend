@@ -9,12 +9,12 @@ export interface IBaseUser {
 
 export interface ICustomer extends IBaseUser {
   firstname: string;
-  lastname?: string;
+  lastname: string;
 }
 
 export interface IDriver extends IBaseUser {
   firstname: string;
-  lastname?: string;
+  lastname: string;
   vehicle: string;
   licence: string;
   fee_rate?: number;
