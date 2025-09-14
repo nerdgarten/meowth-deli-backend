@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-
 import AdminService from "@/services/admin.service";
 import { AdminVerificationStatus } from "@/types/admin/verification";
 import { AppError } from "@/types/error";
@@ -12,7 +11,6 @@ export class AdminController {
     this.adminService = new AdminService();
   }
 
-  // Restaurant verification endpoints
   async listRestaurants(req: Request, res: Response) {
     try {
       const { status } = req.query as { status?: AdminVerificationStatus };
@@ -29,12 +27,12 @@ export class AdminController {
     }
   }
 
-  // ...existing code...
-
   async verifyRestaurant(req: Request, res: Response) {
     try {
-      const id = Number(req.params.id);
-      const { status } = req.body as { status: AdminVerificationStatus };
+      const { id, status } = req.body as { 
+        id: number;
+        status: AdminVerificationStatus 
+      };
       
       const result = await this.adminService.verifyRestaurant(id, status);
       res.status(StatusCodes.OK).json(result);
@@ -55,8 +53,10 @@ export class AdminController {
 
   async verifyDriver(req: Request, res: Response) {
     try {
-      const id = Number(req.params.id);
-      const { status } = req.body as { status: AdminVerificationStatus };
+      const { id, status } = req.body as { 
+        id: number;
+        status: AdminVerificationStatus 
+      };
       
       const result = await this.adminService.verifyDriver(id, status);
       res.status(StatusCodes.OK).json(result);
@@ -75,7 +75,6 @@ export class AdminController {
     }
   }
 
-  // Driver verification endpoints
   async listDrivers(req: Request, res: Response) {
     try {
       const { status } = req.query as { status?: AdminVerificationStatus };
@@ -91,5 +90,4 @@ export class AdminController {
         .json({ message: "Internal server error" });
     }
   }
-
 }

@@ -3,10 +3,9 @@ import { StatusCodes } from "http-status-codes";
 import { Role, VerificationStatus } from "@/generated/prisma/client";
 import { AdminController } from "@/controllers/admin.controller";
 import AdminService from "@/services/admin.service";
-import { AdminVerificationStatus } from "@/types/admin/verification";
 import { AppError } from "@/types/error";
+import { AdminVerificationStatus } from "@/types/admin/verification";
 
-// Mock the AdminService
 jest.mock("@/services/admin.service");
 const MockAdminService = AdminService as jest.MockedClass<typeof AdminService>;
 
@@ -18,6 +17,7 @@ describe("AdminController", () => {
   let responseJson: jest.Mock;
   let responseStatus: jest.Mock;
 
+  // Base mock data
   const mockUserRole = {
     user_id: 1,
     role: Role.restaurant,
@@ -44,6 +44,26 @@ describe("AdminController", () => {
     },
   };
 
+  const mockDriverBase = {
+    id: 1,
+    firstname: "John",
+    lastname: "Doe",
+    verification_status: VerificationStatus.pending,
+    is_available: false,
+    image: null,
+    vehicle: "Car",
+    fee_rate: 0.1,
+    licence: "123456",
+    tel: "555-0002",
+    created_at: new Date(),
+    updated_at: new Date(),
+    user: {
+      id: 1,
+      email: "driver1@test.com",
+      roles: [{ ...mockUserRole, role: Role.driver }],
+    },
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -56,7 +76,6 @@ describe("AdminController", () => {
     };
 
     mockRequest = {
-      params: {},
       query: {},
       body: {},
     };
@@ -72,52 +91,170 @@ describe("AdminController", () => {
     adminController = new AdminController();
   });
 
-  describe("verifyRestaurant", () => {
-    it("should verify restaurant with approved status", async () => {
-      const mockSuccessResponse = {
-        success: true,
-        message: "Restaurant verification status updated to approved",
-        data: {
-          ...mockRestaurantBase,
-          verification_status: VerificationStatus.approved,
-          is_available: true,
-          status: VerificationStatus.approved  // Add the status field
-        },
-      };
+  describe("Restaurant Management", () => {
+    describe("GET /restaurants", () => {
+      it("should list all restaurants", async () => {
+        mockAdminService.listRestaurants.mockResolvedValue([mockRestaurantBase]);
+        
+        await adminController.listRestaurants(
+          mockRequest as Request,
+          mockResponse as Response
+        );
 
-      mockRequest.params = { id: "1" };
-      mockRequest.body = { status: AdminVerificationStatus.APPROVED };
-      mockAdminService.verifyRestaurant.mockResolvedValue(mockSuccessResponse);
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
+        expect(responseJson).toHaveBeenCalledWith([mockRestaurantBase]);
+      });
 
-      await adminController.verifyRestaurant(
-        mockRequest as Request,
-        mockResponse as Response
-      );
+      it("should filter restaurants by status", async () => {
+        mockRequest.query = { status: AdminVerificationStatus.PENDING };
+        mockAdminService.listRestaurants.mockResolvedValue([mockRestaurantBase]);
 
-      expect(mockAdminService.verifyRestaurant).toHaveBeenCalledWith(
-        1,
-        AdminVerificationStatus.APPROVED
-      );
-      expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
-      expect(responseJson).toHaveBeenCalledWith(mockSuccessResponse);
+        await adminController.listRestaurants(
+          mockRequest as Request,
+          mockResponse as Response
+        );
+
+        expect(mockAdminService.listRestaurants).toHaveBeenCalledWith(AdminVerificationStatus.PENDING);
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
+      });
     });
 
-    it("should handle restaurant not found error", async () => {
-      mockRequest.params = { id: "999" };
-      mockRequest.body = { status: AdminVerificationStatus.APPROVED };
-      
-      const error = new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
-      mockAdminService.verifyRestaurant.mockRejectedValue(error);
+    describe("PATCH /restaurants/verify", () => {
+      it("should verify restaurant with approved status", async () => {
+        const mockSuccessResponse = {
+          success: true,
+          message: "Restaurant verification status updated to approved",
+          data: {
+            ...mockRestaurantBase,
+            verification_status: VerificationStatus.approved,
+            is_available: true,
+            status: VerificationStatus.approved
+          },
+        };
 
-      await adminController.verifyRestaurant(
-        mockRequest as Request,
-        mockResponse as Response
-      );
+        mockRequest.body = { 
+          id: 1,
+          status: AdminVerificationStatus.APPROVED 
+        };
+        
+        mockAdminService.verifyRestaurant.mockResolvedValue(mockSuccessResponse);
 
-      expect(responseStatus).toHaveBeenCalledWith(StatusCodes.NOT_FOUND);
-      expect(responseJson).toHaveBeenCalledWith({
-        success: false,
-        message: "Restaurant not found"
+        await adminController.verifyRestaurant(
+          mockRequest as Request,
+          mockResponse as Response
+        );
+
+        expect(mockAdminService.verifyRestaurant).toHaveBeenCalledWith(
+          1,
+          AdminVerificationStatus.APPROVED
+        );
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
+        expect(responseJson).toHaveBeenCalledWith(mockSuccessResponse);
+      });
+
+      it("should handle restaurant not found error", async () => {
+        mockRequest.body = { 
+          id: 999,
+          status: AdminVerificationStatus.APPROVED 
+        };
+        
+        const error = new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
+        mockAdminService.verifyRestaurant.mockRejectedValue(error);
+
+        await adminController.verifyRestaurant(
+          mockRequest as Request,
+          mockResponse as Response
+        );
+
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.NOT_FOUND);
+        expect(responseJson).toHaveBeenCalledWith({
+          success: false,
+          message: "Restaurant not found"
+        });
+      });
+    });
+  });
+
+  describe("Driver Management", () => {
+    describe("GET /drivers", () => {
+      it("should list all drivers", async () => {
+        mockAdminService.listDrivers.mockResolvedValue([mockDriverBase]);
+        
+        await adminController.listDrivers(
+          mockRequest as Request,
+          mockResponse as Response
+        );
+
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
+        expect(responseJson).toHaveBeenCalledWith([mockDriverBase]);
+      });
+
+      it("should filter drivers by status", async () => {
+        mockRequest.query = { status: AdminVerificationStatus.PENDING };
+        mockAdminService.listDrivers.mockResolvedValue([mockDriverBase]);
+
+        await adminController.listDrivers(
+          mockRequest as Request,
+          mockResponse as Response
+        );
+
+        expect(mockAdminService.listDrivers).toHaveBeenCalledWith(AdminVerificationStatus.PENDING);
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
+      });
+    });
+
+    describe("PATCH /drivers/verify", () => {
+      it("should verify driver with approved status", async () => {
+        const mockDriverResponse = {
+          success: true,
+          message: "Driver verification status updated to approved",
+          data: {
+            ...mockDriverBase,
+            verification_status: VerificationStatus.approved,
+            is_available: true,
+            status: VerificationStatus.approved
+          },
+        };
+
+        mockRequest.body = { 
+          id: 1,
+          status: AdminVerificationStatus.APPROVED 
+        };
+        
+        mockAdminService.verifyDriver.mockResolvedValue(mockDriverResponse);
+
+        await adminController.verifyDriver(
+          mockRequest as Request,
+          mockResponse as Response
+        );
+
+        expect(mockAdminService.verifyDriver).toHaveBeenCalledWith(
+          1,
+          AdminVerificationStatus.APPROVED
+        );
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
+        expect(responseJson).toHaveBeenCalledWith(mockDriverResponse);
+      });
+
+      it("should handle driver not found error", async () => {
+        mockRequest.body = { 
+          id: 999,
+          status: AdminVerificationStatus.APPROVED 
+        };
+        
+        const error = new AppError("Driver not found", StatusCodes.NOT_FOUND);
+        mockAdminService.verifyDriver.mockRejectedValue(error);
+
+        await adminController.verifyDriver(
+          mockRequest as Request,
+          mockResponse as Response
+        );
+
+        expect(responseStatus).toHaveBeenCalledWith(StatusCodes.NOT_FOUND);
+        expect(responseJson).toHaveBeenCalledWith({
+          success: false,
+          message: "Driver not found"
+        });
       });
     });
   });
