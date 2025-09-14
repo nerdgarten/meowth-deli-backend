@@ -4,7 +4,6 @@ import { Role, VerificationStatus } from "@/generated/prisma/client";
 import { AdminController } from "@/controllers/admin.controller";
 import AdminService from "@/services/admin.service";
 import { AppError } from "@/types/error";
-import { AdminVerificationStatus } from "@/types/admin/verification";
 
 jest.mock("@/services/admin.service");
 const MockAdminService = AdminService as jest.MockedClass<typeof AdminService>;
@@ -106,7 +105,7 @@ describe("AdminController", () => {
       });
 
       it("should filter restaurants by status", async () => {
-        mockRequest.query = { status: AdminVerificationStatus.PENDING };
+        mockRequest.query = { status: VerificationStatus.pending };
         mockAdminService.listRestaurants.mockResolvedValue([mockRestaurantBase]);
 
         await adminController.listRestaurants(
@@ -114,7 +113,7 @@ describe("AdminController", () => {
           mockResponse as Response
         );
 
-        expect(mockAdminService.listRestaurants).toHaveBeenCalledWith(AdminVerificationStatus.PENDING);
+        expect(mockAdminService.listRestaurants).toHaveBeenCalledWith(VerificationStatus.pending);
         expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
       });
     });
@@ -134,7 +133,7 @@ describe("AdminController", () => {
 
         mockRequest.body = { 
           id: 1,
-          status: AdminVerificationStatus.APPROVED 
+          status: VerificationStatus.approved 
         };
         
         mockAdminService.verifyRestaurant.mockResolvedValue(mockSuccessResponse);
@@ -146,7 +145,7 @@ describe("AdminController", () => {
 
         expect(mockAdminService.verifyRestaurant).toHaveBeenCalledWith(
           1,
-          AdminVerificationStatus.APPROVED
+          VerificationStatus.approved
         );
         expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
         expect(responseJson).toHaveBeenCalledWith(mockSuccessResponse);
@@ -155,7 +154,7 @@ describe("AdminController", () => {
       it("should handle restaurant not found error", async () => {
         mockRequest.body = { 
           id: 999,
-          status: AdminVerificationStatus.APPROVED 
+          status: VerificationStatus.approved 
         };
         
         const error = new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
@@ -190,7 +189,7 @@ describe("AdminController", () => {
       });
 
       it("should filter drivers by status", async () => {
-        mockRequest.query = { status: AdminVerificationStatus.PENDING };
+        mockRequest.query = { status: VerificationStatus.pending };
         mockAdminService.listDrivers.mockResolvedValue([mockDriverBase]);
 
         await adminController.listDrivers(
@@ -198,7 +197,7 @@ describe("AdminController", () => {
           mockResponse as Response
         );
 
-        expect(mockAdminService.listDrivers).toHaveBeenCalledWith(AdminVerificationStatus.PENDING);
+        expect(mockAdminService.listDrivers).toHaveBeenCalledWith(VerificationStatus.pending);
         expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
       });
     });
@@ -218,7 +217,7 @@ describe("AdminController", () => {
 
         mockRequest.body = { 
           id: 1,
-          status: AdminVerificationStatus.APPROVED 
+          status: VerificationStatus.approved 
         };
         
         mockAdminService.verifyDriver.mockResolvedValue(mockDriverResponse);
@@ -230,7 +229,7 @@ describe("AdminController", () => {
 
         expect(mockAdminService.verifyDriver).toHaveBeenCalledWith(
           1,
-          AdminVerificationStatus.APPROVED
+          VerificationStatus.approved
         );
         expect(responseStatus).toHaveBeenCalledWith(StatusCodes.OK);
         expect(responseJson).toHaveBeenCalledWith(mockDriverResponse);
@@ -239,7 +238,7 @@ describe("AdminController", () => {
       it("should handle driver not found error", async () => {
         mockRequest.body = { 
           id: 999,
-          status: AdminVerificationStatus.APPROVED 
+          status: VerificationStatus.pending 
         };
         
         const error = new AppError("Driver not found", StatusCodes.NOT_FOUND);

@@ -1,6 +1,5 @@
 import { Prisma, VerificationStatus } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
-import { AdminVerificationStatus } from "@/types/admin/verification";
 
 export default class AdminRepository {
   private readonly defaultOptions = {
@@ -16,18 +15,6 @@ export default class AdminRepository {
     orderBy: { id: "desc" as const }
   };
 
-  private mapToVerificationStatus(status: AdminVerificationStatus): VerificationStatus {
-    switch (status) {
-      case AdminVerificationStatus.APPROVED:
-        return VerificationStatus.approved;
-      case AdminVerificationStatus.REJECTED:
-        return VerificationStatus.rejected;
-      case AdminVerificationStatus.PENDING:
-      default:
-        return VerificationStatus.pending;
-    }
-  }
-
   async listRestaurants(where?: Prisma.RestaurantWhereInput) {
     return prisma.restaurant.findMany({
       where,
@@ -35,13 +22,12 @@ export default class AdminRepository {
     });
   }
 
-  async updateRestaurant(restaurantId: number, status: AdminVerificationStatus) {
-    const verificationStatus = this.mapToVerificationStatus(status);
+  async updateRestaurant(restaurantId: number, status: VerificationStatus) {
     
     return prisma.restaurant.update({
       where: { id: restaurantId },
       data: {
-        verification_status: verificationStatus,
+        verification_status: status,
       },
       include: this.defaultOptions.include
     });
@@ -54,13 +40,12 @@ export default class AdminRepository {
     });
   }
 
-  async updateDriver(driverId: number, status: AdminVerificationStatus) {
-    const verificationStatus = this.mapToVerificationStatus(status);
+  async updateDriver(driverId: number, status: VerificationStatus) {
 
     return prisma.driver.update({
       where: { id: driverId },
       data: {
-        verification_status: verificationStatus,
+        verification_status: status,
       },
       include: this.defaultOptions.include
     });

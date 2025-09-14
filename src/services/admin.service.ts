@@ -2,7 +2,6 @@ import { StatusCodes } from "http-status-codes";
 
 import { VerificationStatus } from "@/generated/prisma/client";
 import AdminRepository from "@/repositories/admin.repository";
-import { AdminVerificationStatus } from "@/types/admin/verification";
 import { AppError } from "@/types/error";
 
 export default class AdminService {
@@ -11,43 +10,18 @@ export default class AdminService {
   constructor() {
     this.adminRepository = new AdminRepository();
   }
-  
-  private mapStatus(status: AdminVerificationStatus): VerificationStatus {
-    switch (status) {
-      case AdminVerificationStatus.APPROVED:
-        return VerificationStatus.approved;
-      case AdminVerificationStatus.REJECTED:
-        return VerificationStatus.rejected;
-      case AdminVerificationStatus.PENDING:
-      default:
-        return VerificationStatus.pending;
+
+  async listRestaurants(status?: VerificationStatus) {
+    if (!status) {
+        throw new AppError("...", StatusCodes.BAD_REQUEST)
     }
+    return this.adminRepository.listRestaurants(status ? { verification_status: status } : undefined);
   }
 
-  private validateStatus(status: AdminVerificationStatus) {
-    const allowed: AdminVerificationStatus[] = [
-      AdminVerificationStatus.PENDING,
-      AdminVerificationStatus.APPROVED,
-      AdminVerificationStatus.REJECTED,
-    ];
-
-    if (!allowed.includes(status)) {
-      throw new AppError(
-        `Invalid status. Allowed: ${allowed.join(", ")}`,
-        StatusCodes.BAD_REQUEST
-      );
+  async verifyRestaurant(restaurantId: number, status: VerificationStatus) {
+    if (!status) {
+        throw new AppError("...", StatusCodes.BAD_REQUEST)
     }
-  }
-
-  async listRestaurants(status?: AdminVerificationStatus) {
-    if (status) {
-      this.validateStatus(status);
-    }
-    return this.adminRepository.listRestaurants(status ? { verification_status: this.mapStatus(status) } : undefined);
-  }
-
-  async verifyRestaurant(restaurantId: number, status: AdminVerificationStatus) {
-    this.validateStatus(status);
 
     const result = await this.adminRepository.updateRestaurant(restaurantId, status);
     return {
@@ -55,13 +29,15 @@ export default class AdminService {
       message: `Restaurant verification status updated to ${status.toLowerCase()}`,
       data: {
         ...result,
-        status: this.mapStatus(status)
+        status: status
       }
     };
   }
 
-  async verifyDriver(driverId: number, status: AdminVerificationStatus) {
-    this.validateStatus(status);
+  async verifyDriver(driverId: number, status: VerificationStatus) {
+    if (!status) {
+        throw new AppError("...", StatusCodes.BAD_REQUEST)
+    }
 
     const result = await this.adminRepository.updateDriver(driverId, status);
     return {
@@ -69,15 +45,15 @@ export default class AdminService {
       message: `Driver verification status updated to ${status.toLowerCase()}`,
       data: {
         ...result,
-        status: this.mapStatus(status)
+        status: status
       }
     };
   }
 
-  async listDrivers(status?: AdminVerificationStatus) {
-    if (status) {
-      this.validateStatus(status);
+  async listDrivers(status?: VerificationStatus) {
+    if (!status) {
+      throw new AppError("...", StatusCodes.BAD_REQUEST)
     }
-    return this.adminRepository.listDrivers(status ? { verification_status: this.mapStatus(status) } : undefined);
+    return this.adminRepository.listDrivers(status ? { verification_status: status } : undefined);
   }
 }

@@ -1,22 +1,12 @@
-export enum AdminVerificationStatus {
-  PENDING = "pending",
-  APPROVED = "approved", 
-  REJECTED = "rejected"
-}
-
-export enum VerificationType {
-  RESTAURANT = "restaurant",
-  DRIVER = "driver"
-}
+import { Role, VerificationStatus } from "@/generated/prisma/client";
 
 export interface AdminVerificationRequest {
   id: number;
-  status: AdminVerificationStatus;
+  status: VerificationStatus;
 }
 
 export interface AdminVerificationQuery {
-  status?: AdminVerificationStatus;
+  status?: VerificationStatus;
 }
 
-export type AdminVerificationStatusType = keyof typeof AdminVerificationStatus;
-export type VerificationTypeType = keyof typeof VerificationType;
+export type AdminVerificationStatusType = keyof typeof VerificationStatus;
