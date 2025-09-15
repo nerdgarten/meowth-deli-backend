@@ -1,17 +1,15 @@
-import { StatusCodes } from "http-status-codes";
+import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
 
-import AuthRepository from "@/repositories/auth.repository";
 import DishRepository from "@/repositories/dish.repository";
 import { IDish } from "@/types/dish/dish";
 import { AppError } from "@/types/error";
+import { restaurantOwnershipValidator } from "@/utils/restaurant-ownership-validator";
 
 export default class DishService {
   private dishRepository: DishRepository;
-  private authRepository: AuthRepository;
 
   constructor() {
     this.dishRepository = new DishRepository();
-    this.authRepository = new AuthRepository();
   }
 
   async searchDishes(keyword: string, limit: number, offset: number) {
@@ -46,28 +44,10 @@ export default class DishService {
   }
 
   private async validateRestaurantOwnership(dishId: number, userId: number) {
-    const dish = await this.dishRepository.findDishById(dishId);
-    if (!dish) {
-      throw new AppError("Dish not found", StatusCodes.NOT_FOUND);
-    }
-
-    const userRestaurant =
-      await this.authRepository.findRestaurantByUserId(userId);
-    if (!userRestaurant) {
-      throw new AppError(
-        "User is not a restaurant owner",
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    if (dish.restaurant_id !== userRestaurant.id) {
-      throw new AppError(
-        "You can only modify dishes from your own restaurant",
-        StatusCodes.FORBIDDEN
-      );
-    }
-
-    return dish;
+    return await restaurantOwnershipValidator.validateDishOwnership(
+      dishId,
+      userId
+    );
   }
 
   async createDish(userId: number, data: IDish) {
@@ -82,13 +62,7 @@ export default class DishService {
     }
 
     const userRestaurant =
-      await this.authRepository.findRestaurantByUserId(userId);
-    if (!userRestaurant) {
-      throw new AppError(
-        "User is not a restaurant owner",
-        StatusCodes.FORBIDDEN
-      );
-    }
+      await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
 
     data.restaurant_id = userRestaurant.id;
 

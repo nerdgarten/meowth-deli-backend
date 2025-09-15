@@ -1,17 +1,15 @@
 import { StatusCodes } from "http-status-codes";
 
 import { VerificationStatus } from "@/generated/prisma";
-import AuthRepository from "@/repositories/auth.repository";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
+import { restaurantOwnershipValidator } from "@/utils/restaurant-ownership-validator";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
-  private authRepository: AuthRepository;
 
   constructor() {
     this.restaurantRepository = new RestaurantRepository();
-    this.authRepository = new AuthRepository();
   }
 
   async getRestaurantsByStatus(
@@ -36,13 +34,7 @@ export default class RestaurantService {
 
   async updateRestaurantAvailability(userId: number, is_available: boolean) {
     const userRestaurant =
-      await this.authRepository.findRestaurantByUserId(userId);
-    if (!userRestaurant) {
-      throw new AppError(
-        "User is not a restaurant owner",
-        StatusCodes.FORBIDDEN
-      );
-    }
+      await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
 
     const updatedRestaurant =
       await this.restaurantRepository.updateRestaurantAvailability(
