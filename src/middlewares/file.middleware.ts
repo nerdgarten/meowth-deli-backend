@@ -19,13 +19,11 @@ export function fileMiddleware(
             },
             filename: function (req, file, callback) {
                 if (!req.user || !req.user.id) {
-                  // Pass an error to Multer if user or user.id is missing
                     return callback(new Error("User ID is missing"), "");
                 }
                 const userId = req.user.id;
                 const timestamp = Date.now();
-                const originalName = '-' + timestamp;
-                callback(null, userId + ".jpg");
+                callback(null, userId + "_" + timestamp + ".jpg");
             }
         });
         const upload = multer({
@@ -35,11 +33,9 @@ export function fileMiddleware(
 
         upload(req, res, function (err) {
             if (err instanceof multer.MulterError) {
-                // A Multer error occurred when uploading.
                 res.status(StatusCodes.BAD_REQUEST).json({ message: err.message });
                 return;
             } else if (err) {
-                // An unknown error occurred when uploading.
                 res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal server error" });
                 return;
             }
@@ -47,7 +43,6 @@ export function fileMiddleware(
                 res.status(StatusCodes.BAD_REQUEST).json({ message: "No file provided" });
                 return;
             }
-            // Everything went fine.
             next();
         });
     } catch (error) {
