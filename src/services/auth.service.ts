@@ -29,7 +29,7 @@ export default class AuthService {
     }
 
     const userRoles = await this.authRepository.getUserRoles(user.id);
-    if (!userRoles.some((userRole) => userRole.role === role)) {
+    if (!userRoles.includes(role)) {
       throw new AppError("Unauthorized role", StatusCodes.UNAUTHORIZED);
     }
 
