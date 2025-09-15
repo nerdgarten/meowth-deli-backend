@@ -9,3 +9,4 @@ dist
 .idea
 
 upload/*
+!upload/example.jpg
