@@ -16,5 +16,9 @@ export class DishRouter extends BaseRouter {
       "/search",
       this.dishController.searchDishes.bind(this.dishController)
     );
+    this.router.post(
+      "/",
+      this.dishController.createDish.bind(this.dishController)
+    );
   }
 }

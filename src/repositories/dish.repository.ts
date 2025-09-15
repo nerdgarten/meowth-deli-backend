@@ -12,4 +12,16 @@ export default class DishRepository {
       skip: offset,
     });
   }
+
+  async createDish(data: {
+    restaurant_id: number;
+    name: string;
+    allergy?: string;
+    price: number;
+    detail?: string;
+  }) {
+    return prisma.dish.create({
+      data,
+    });
+  }
 }

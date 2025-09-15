@@ -32,4 +32,23 @@ export class DishController {
       });
     }
   }
+
+  async createDish(req: Request, res: Response) {
+    try {
+      const { email, dishData } = req.body;
+
+      const newDish = await this.dishService.createDish(email, dishData);
+
+      res.status(StatusCodes.CREATED).json(newDish);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+      console.error("Unexpected error during dish creation:", error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
 }

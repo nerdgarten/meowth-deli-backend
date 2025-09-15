@@ -1,6 +1,7 @@
 import { VerificationStatus } from "@/generated/prisma";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
+import { StatusCodes } from "http-status-codes";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
@@ -15,7 +16,7 @@ export default class RestaurantService {
     offset: number
   ) {
     if (status && !Object.values(VerificationStatus).includes(status)) {
-      throw new AppError("Invalid status value", 400);
+      throw new AppError("Invalid status value", StatusCodes.BAD_REQUEST);
     }
 
     const whereClause = status ? { verification_status: status } : {};

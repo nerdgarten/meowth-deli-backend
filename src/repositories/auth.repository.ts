@@ -109,4 +109,14 @@ export default class AuthRepository {
       },
     });
   }
+
+  async findRestaurantByUserId(userId: number) {
+    return prisma.restaurant.findFirst({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+    });
+  }
 }
