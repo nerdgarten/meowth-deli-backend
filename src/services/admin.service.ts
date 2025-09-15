@@ -13,30 +13,41 @@ export default class AdminService {
 
   async listRestaurants(status?: VerificationStatus) {
     if (!status) {
-        throw new AppError("Failed to status restaurant", StatusCodes.BAD_REQUEST)
+      throw new AppError(
+        "Failed to status restaurant",
+        StatusCodes.BAD_REQUEST,
+      );
     }
-    return this.adminRepository.listRestaurants(status ? { verification_status: status } : undefined);
+    return this.adminRepository.listRestaurants(
+      status ? { verification_status: status } : undefined,
+    );
   }
 
   async verifyRestaurant(restaurantId: number, status: VerificationStatus) {
     if (!status) {
-        throw new AppError("Failed to status restaurant", StatusCodes.BAD_REQUEST)
+      throw new AppError(
+        "Failed to status restaurant",
+        StatusCodes.BAD_REQUEST,
+      );
     }
 
-    const result = await this.adminRepository.updateRestaurant(restaurantId, status);
+    const result = await this.adminRepository.updateRestaurant(
+      restaurantId,
+      status,
+    );
     return {
       success: true,
       message: `Restaurant verification status updated to ${status.toLowerCase()}`,
       data: {
         ...result,
-        status: status
-      }
+        status: status,
+      },
     };
   }
 
   async verifyDriver(driverId: number, status: VerificationStatus) {
     if (!status) {
-        throw new AppError("Failed to status driver", StatusCodes.BAD_REQUEST)
+      throw new AppError("Failed to status driver", StatusCodes.BAD_REQUEST);
     }
 
     const result = await this.adminRepository.updateDriver(driverId, status);
@@ -45,15 +56,17 @@ export default class AdminService {
       message: `Driver verification status updated to ${status.toLowerCase()}`,
       data: {
         ...result,
-        status: status
-      }
+        status: status,
+      },
     };
   }
 
   async listDrivers(status?: VerificationStatus) {
     if (!status) {
-      throw new AppError("Failed to status driver", StatusCodes.BAD_REQUEST)
+      throw new AppError("Failed to status driver", StatusCodes.BAD_REQUEST);
     }
-    return this.adminRepository.listDrivers(status ? { verification_status: status } : undefined);
+    return this.adminRepository.listDrivers(
+      status ? { verification_status: status } : undefined,
+    );
   }
 }

@@ -29,13 +29,12 @@ export default class AdminRepository {
   }
 
   async updateRestaurant(restaurantId: number, status: VerificationStatus) {
-
     return prisma.restaurant.update({
       where: { id: restaurantId },
       data: {
         verification_status: status,
       },
-      include: this.defaultOptions.include
+      include: this.defaultOptions.include,
     });
   }
 
@@ -47,13 +46,12 @@ export default class AdminRepository {
   }
 
   async updateDriver(driverId: number, status: VerificationStatus) {
-
     return prisma.driver.update({
       where: { id: driverId },
       data: {
         verification_status: status,
       },
-      include: this.defaultOptions.include
+      include: this.defaultOptions.include,
     });
   }
 }
