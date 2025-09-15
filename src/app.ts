@@ -7,8 +7,19 @@ import { StatusCodes } from "http-status-codes";
 import { RouterManager } from "./routes";
 import type { Express } from "express";
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://meowth.borworntat.com"
+];
+
 const corsOptions: CorsOptions = {
-  origin: true,
+  origin: (origin, callback) => {
+    if(!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   credentials: true,
   optionsSuccessStatus: 200,
