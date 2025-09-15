@@ -14,7 +14,6 @@ export class ProfileController {
   async updateCustomerProfile(req: Request, res: Response) {
     try {
       const userId = Number(req.params.id);
-      console.log("User ID:", userId);
       if (!userId) {
         throw new AppError("Invalid user ID", StatusCodes.BAD_REQUEST);
       }

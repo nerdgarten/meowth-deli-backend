@@ -7,11 +7,7 @@ export default class ProfileRepository {
       where: {
         id: userId,
       },
-      data: {
-        firstname: data.firstname,
-        lastname: data.lastname,
-        tel: data.tel,
-      },
+      data: data,
     });
   }
 
@@ -20,14 +16,7 @@ export default class ProfileRepository {
       where: {
         id: userId,
       },
-      data: {
-        firstname: data.firstname,
-        lastname: data.lastname,
-        tel: data.tel,
-        vehicle: data.vehicle,
-        licence: data.licence,
-        fee_rate: data.fee_rate,
-      },
+      data: data,
     });
   }
 
@@ -36,13 +25,7 @@ export default class ProfileRepository {
       where: {
         id: userId,
       },
-      data: {
-        name: data.name,
-        tel: data.tel,
-        location: data.location,
-        detail: data.detail,
-        fee_rate: data.fee_rate,
-      },
+      data: data,
     });
   }
 }
