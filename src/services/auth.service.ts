@@ -30,7 +30,7 @@ export default class AuthService {
 
     const userRoles = await this.authRepository.getUserRoles(user.id);
     
-    if (!(userRoles.some((userRole) => userRole.role == "customer"))) {
+    if (!(userRoles.some((userRole) => userRole.role == role))) {
       throw new AppError("Unauthorized role", StatusCodes.UNAUTHORIZED);
     }
 
