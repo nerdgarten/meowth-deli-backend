@@ -2,28 +2,34 @@ import { Prisma, VerificationStatus } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
 
 export default class AdminRepository {
+  private readonly userSelect = {
+    id: true,
+    email: true,
+    roles: true,
+  } as const;
+
   private readonly defaultOptions = {
-    include: { 
-      user: { 
+    include: {
+      user: {
         select: {
           id: true,
           email: true,
-          roles: true
-        } 
-      } 
+          roles: true,
+        },
+      },
     },
-    orderBy: { id: "desc" as const }
+    orderBy: { id: "desc" as const },
   };
 
   async listRestaurants(where?: Prisma.RestaurantWhereInput) {
     return prisma.restaurant.findMany({
       where,
-      ...this.defaultOptions
+      ...this.defaultOptions,
     });
   }
 
   async updateRestaurant(restaurantId: number, status: VerificationStatus) {
-    
+
     return prisma.restaurant.update({
       where: { id: restaurantId },
       data: {
@@ -36,7 +42,7 @@ export default class AdminRepository {
   async listDrivers(where?: Prisma.DriverWhereInput) {
     return prisma.driver.findMany({
       where,
-      ...this.defaultOptions
+      ...this.defaultOptions,
     });
   }
 

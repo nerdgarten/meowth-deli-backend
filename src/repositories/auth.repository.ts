@@ -11,7 +11,7 @@ export default class AuthRepository {
   }
 
   getUserRoles(userId: number) {
-    return prisma.userRole.findMany({
+    const roles = prisma.userRole.findMany({
       where: {
         user_id: userId,
       },
@@ -19,6 +19,7 @@ export default class AuthRepository {
         role: true,
       },
     });
+    return roles.then((r) => r.map((role) => role.role));
   }
 
   createCustomerUser(customer: ICustomer) {

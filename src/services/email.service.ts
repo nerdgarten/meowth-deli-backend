@@ -30,7 +30,7 @@ export default class EmailService {
     await this.emailRepository.createToken(
       userId,
       token,
-      new Date(Date.now() + 3600000) // 1 hour expiration
+      new Date(Date.now() + 3600000), // 1 hour expiration
     );
     return token;
   }
@@ -40,7 +40,7 @@ export default class EmailService {
     to: string,
     subject: string,
     text: string,
-    html: string
+    html: string,
   ) {
     const info = await this.transporter.sendMail({
       from: from,
@@ -56,7 +56,7 @@ export default class EmailService {
     to: string,
     subject: string,
     text: string,
-    verificationUrl: string
+    verificationUrl: string,
   ) {
     const from = `"Meowth Deli" <${emailConfig.user}>`;
     const info = this.sendEmail(
@@ -64,7 +64,7 @@ export default class EmailService {
       to,
       subject,
       text,
-      generateVerificationEmail(verificationUrl)
+      generateVerificationEmail(verificationUrl),
     );
     console.log("Verification email sent: ", info);
   }

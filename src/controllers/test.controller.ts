@@ -20,9 +20,9 @@ export class TestController {
       res.status(StatusCodes.OK).json({
         message: "Middleware test successful",
         data: result,
-      })
-    } catch(e: unknown) {
-      if(e instanceof AppError) {
+      });
+    } catch (e: unknown) {
+      if (e instanceof AppError) {
         res.status(e.statusCode).json({ message: e.message });
         return;
       }
@@ -31,4 +31,4 @@ export class TestController {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
-};
+}
