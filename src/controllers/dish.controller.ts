@@ -35,8 +35,8 @@ export class DishController {
 
   async createDish(req: Request, res: Response) {
     try {
-      const dishData = req.body;
-      const userId = req.user?.id;
+      const { dishData, user_id } = req.body;
+      const userId = Number(user_id);
 
       if (!userId) {
         res
@@ -102,8 +102,8 @@ export class DishController {
   async updateDish(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const updateData = req.body;
-      const userId = req.user?.id;
+      const { updateData, user_id } = req.body;
+      const userId = Number(user_id);
 
       if (!userId) {
         res
@@ -134,7 +134,8 @@ export class DishController {
   async deleteDish(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const userId = req.user?.id;
+      const { user_id } = req.body;
+      const userId = Number(user_id);
 
       if (!userId) {
         res
@@ -161,8 +162,8 @@ export class DishController {
   async updateDishStockStatus(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const { is_out_of_stock } = req.body;
-      const userId = req.user?.id;
+      const { is_out_of_stock, user_id } = req.body;
+      const userId = Number(user_id);
 
       if (!userId) {
         res

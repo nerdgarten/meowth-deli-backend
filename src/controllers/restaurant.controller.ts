@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { VerificationStatus } from "@/generated/prisma";
+import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantService from "@/services/restaurant.service";
 import { AppError } from "@/types/error";
 
@@ -38,8 +38,8 @@ export class RestaurantController {
 
   async updateRestaurantAvailability(req: Request, res: Response) {
     try {
-      const { is_available } = req.body;
-      const userId = req.user?.id;
+      const { is_available, user_id } = req.body;
+      const userId = Number(user_id);
 
       if (!userId) {
         res
