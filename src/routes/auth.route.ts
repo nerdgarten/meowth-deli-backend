@@ -21,5 +21,13 @@ export class AuthRouter extends BaseRouter {
       "/signup/customer",
       this.authController.signUpCustomer.bind(this.authController),
     );
+    this.router.post(
+      "/signup/driver",
+      this.authController.signUpDriver.bind(this.authController),
+    );
+    this.router.post(
+      "/signup/restaurant",
+      this.authController.signUpRestaurant.bind(this.authController),
+    );
   }
 }
