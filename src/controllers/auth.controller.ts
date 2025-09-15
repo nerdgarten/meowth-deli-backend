@@ -35,8 +35,6 @@ export class AuthController {
 
   async signUpCustomer(req: Request, res: Response) {
     try {
-      emailVerificationSchema.parse(req.body);
-      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.createCustomerUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
@@ -56,8 +54,6 @@ export class AuthController {
 
   async signUpDriver(req: Request, res: Response) {
     try {
-      emailVerificationSchema.parse(req.body);
-      phoneVerificationSchema.parse(req.body);
       const user = await this.authService.createDriverUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
@@ -77,7 +73,6 @@ export class AuthController {
 
   async signUpRestaurant(req: Request, res: Response) {
     try {
-      emailVerificationSchema.parse(req.body);
       const user = await this.authService.createRestaurantUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
