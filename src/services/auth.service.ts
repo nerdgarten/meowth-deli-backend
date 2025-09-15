@@ -11,6 +11,7 @@ import {
 } from "@/types/auth/post";
 import { AppError } from "@/types/error";
 import { UserRole } from "@/types/role";
+import { emailVerificationSchema } from "./verification.service";
 
 export default class AuthService {
   private authRepository: AuthRepository;
@@ -41,7 +42,7 @@ export default class AuthService {
       process.env.JWT_SECRET as string,
       {
         expiresIn: "1h",
-      },
+      }
     );
 
     return {
