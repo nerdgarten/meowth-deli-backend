@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import AdminService from "@/services/admin.service";
-import { 
+import {
   AdminVerificationRequest,
-  AdminVerificationQuery 
+  AdminVerificationQuery,
 } from "@/types/admin/verification";
 import { AppError } from "@/types/error";
 
@@ -21,15 +21,15 @@ export class AdminController {
       res.status(StatusCodes.OK).json(result);
     } catch (error: unknown) {
       if (error instanceof AppError) {
-        res.status(error.statusCode).json({ 
+        res.status(error.statusCode).json({
           success: false,
-          message: error.message 
+          message: error.message,
         });
         return;
       }
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: "Internal server error" 
+        message: "Internal server error",
       });
     }
   }
@@ -41,15 +41,15 @@ export class AdminController {
       res.status(StatusCodes.OK).json(result);
     } catch (error: unknown) {
       if (error instanceof AppError) {
-        res.status(error.statusCode).json({ 
+        res.status(error.statusCode).json({
           success: false,
-          message: error.message 
+          message: error.message,
         });
         return;
       }
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: "Failed to verify restaurant" 
+        message: "Failed to verify restaurant",
       });
     }
   }
@@ -61,15 +61,15 @@ export class AdminController {
       res.status(StatusCodes.OK).json(result);
     } catch (error: unknown) {
       if (error instanceof AppError) {
-        res.status(error.statusCode).json({ 
+        res.status(error.statusCode).json({
           success: false,
-          message: error.message 
+          message: error.message,
         });
         return;
       }
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: "Failed to verify driver" 
+        message: "Failed to verify driver",
       });
     }
   }
@@ -81,15 +81,15 @@ export class AdminController {
       res.status(StatusCodes.OK).json(result);
     } catch (error: unknown) {
       if (error instanceof AppError) {
-        res.status(error.statusCode).json({ 
+        res.status(error.statusCode).json({
           success: false,
-          message: error.message 
+          message: error.message,
         });
         return;
       }
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
-        message: "Internal server error" 
+        message: "Internal server error",
       });
     }
   }
