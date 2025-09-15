@@ -18,9 +18,5 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
-    this.router.get(
-      "/dishes",
-      this.restaurantController.searchDishes.bind(this.restaurantController)
-    );
   }
 }

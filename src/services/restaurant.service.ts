@@ -28,35 +28,4 @@ export default class RestaurantService {
 
     return restaurants;
   }
-
-  async searchDishes(keyword: string, limit: number, offset: number) {
-    if (!keyword || keyword.trim() === "") {
-      throw new AppError("Keyword cannot be empty", 400);
-    }
-
-    const whereClause = {
-      OR: [
-        {
-          name: {
-            contains: keyword,
-            mode: "insensitive" as const,
-          },
-        },
-        {
-          detail: {
-            contains: keyword,
-            mode: "insensitive" as const,
-          },
-        },
-      ],
-    };
-
-    const dishes = await this.restaurantRepository.findDishesByKeyword(
-      whereClause,
-      limit,
-      offset
-    );
-
-    return dishes;
-  }
 }

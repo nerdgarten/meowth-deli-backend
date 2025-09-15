@@ -1,22 +1,21 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { VerificationStatus } from "@/generated/prisma";
-import RestaurantService from "@/services/restaurant.service";
+import DishService from "@/services/dish.service";
 import { AppError } from "@/types/error";
 
-export class RestaurantController {
-  private restaurantService: RestaurantService;
+export class DishController {
+  private dishService: DishService;
 
   constructor() {
-    this.restaurantService = new RestaurantService();
+    this.dishService = new DishService();
   }
 
-  async getRestaurantsByStatus(req: Request, res: Response) {
+  async searchDishes(req: Request, res: Response) {
     try {
-      const { status, limit, offset } = req.query;
-      const result = await this.restaurantService.getRestaurantsByStatus(
-        (status as VerificationStatus) || undefined,
+      const { keyword, limit, offset } = req.query;
+      const result = await this.dishService.searchDishes(
+        String(keyword),
         Number(limit) || 10,
         Number(offset) || 0
       );
@@ -25,11 +24,9 @@ export class RestaurantController {
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
-
         return;
       }
-      console.error("Unexpected error during get restaurants:", error);
-
+      console.error("Unexpected error during dish search:", error);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",
       });
