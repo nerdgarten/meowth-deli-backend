@@ -1,8 +1,9 @@
 import { prisma } from "@/libs/prisma";
+import { RestaurantWhereClause } from "@/types/restaurant/restaurant";
 
 export default class RestaurantRepository {
   async findRestaurantsByStatus(
-    whereClause: object,
+    whereClause: RestaurantWhereClause,
     limit: number,
     offset: number
   ) {

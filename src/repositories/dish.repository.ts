@@ -1,8 +1,9 @@
 import { prisma } from "@/libs/prisma";
+import { DishWhereClause } from "@/types/dish/dish";
 
 export default class DishRepository {
   async findDishesByKeyword(
-    whereClause: object,
+    whereClause: DishWhereClause,
     limit: number,
     offset: number
   ) {
