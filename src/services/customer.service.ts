@@ -13,7 +13,7 @@ export default class CustomerService {
 
   async getCustomerProfile(userId: number) {
     const profile = await this.customerRepository.getCustomerProfile(userId);
-    if(!profile) {
+    if (!profile) {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
     }
 
@@ -21,8 +21,11 @@ export default class CustomerService {
   }
 
   async updateCustomerProfile(userId: number, data: Partial<ICustomer>) {
-    const updatedProfile = await this.customerRepository.updateCustomerProfile(userId, data);
-    if(!updatedProfile) {
+    const updatedProfile = await this.customerRepository.updateCustomerProfile(
+      userId,
+      data,
+    );
+    if (!updatedProfile) {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
     }
 

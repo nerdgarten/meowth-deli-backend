@@ -11,7 +11,7 @@ export default class CustomerRepository {
         firstname: true,
         lastname: true,
         tel: true,
-      }
+      },
     });
   }
 
@@ -25,7 +25,7 @@ export default class CustomerRepository {
         firstname: true,
         lastname: true,
         tel: true,
-      }
+      },
     });
   }
 }

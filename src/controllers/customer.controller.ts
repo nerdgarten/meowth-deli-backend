@@ -17,29 +17,36 @@ export class CustomerController {
       const profile = await this.customerService.getCustomerProfile(userId);
 
       res.status(StatusCodes.OK).json(profile);
-    } catch(error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
         return;
       }
 
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
     }
   }
 
   async updateCustomerProfile(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
-      const data = await this.customerService.updateCustomerProfile(userId, req.body);
+      const data = await this.customerService.updateCustomerProfile(
+        userId,
+        req.body,
+      );
 
       res.status(StatusCodes.OK).json(data);
-    } catch(error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
         return;
       }
 
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Internal Server Error" });
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
     }
   }
 }
