@@ -4,7 +4,8 @@ import cors from "cors";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { RouterManager } from "./routes";
+import { RouterManager } from "@/routes";
+
 import type { Express } from "express";
 
 const corsOptions = {
@@ -12,7 +13,7 @@ const corsOptions = {
   methods: "*",
   allowedHeaders: "*",
   credentials: true,
-}
+};
 
 const app: Express = express();
 

@@ -35,4 +35,45 @@ export class RestaurantController {
       });
     }
   }
+
+  async updateRestaurantAvailability(req: Request, res: Response) {
+    try {
+      const { is_available } = req.body;
+      const userId = req.user?.id;
+
+      if (!userId) {
+        res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ message: "User not authenticated" });
+        return;
+      }
+
+      if (typeof is_available !== "boolean") {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: "is_available must be a boolean value" });
+        return;
+      }
+
+      const updatedRestaurant =
+        await this.restaurantService.updateRestaurantAvailability(
+          userId,
+          is_available
+        );
+
+      res.status(StatusCodes.OK).json(updatedRestaurant);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+      console.error(
+        "Unexpected error during restaurant availability update:",
+        error
+      );
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
 }

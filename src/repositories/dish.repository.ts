@@ -24,4 +24,82 @@ export default class DishRepository {
       data,
     });
   }
+
+  async findAllDishes(limit?: number, offset?: number) {
+    return prisma.dish.findMany({
+      take: limit,
+      skip: offset,
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            location: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findDishById(id: number) {
+    return prisma.dish.findUnique({
+      where: { id },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            location: true,
+          },
+        },
+      },
+    });
+  }
+
+  async updateDish(
+    id: number,
+    data: Partial<{
+      name: string;
+      allergy?: string;
+      price: number;
+      detail?: string;
+      is_out_of_stock?: boolean;
+    }>
+  ) {
+    return prisma.dish.update({
+      where: { id },
+      data,
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            location: true,
+          },
+        },
+      },
+    });
+  }
+
+  async deleteDish(id: number) {
+    return prisma.dish.delete({
+      where: { id },
+    });
+  }
+
+  async updateDishStockStatus(id: number, is_out_of_stock: boolean) {
+    return prisma.dish.update({
+      where: { id },
+      data: { is_out_of_stock },
+      include: {
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+            location: true,
+          },
+        },
+      },
+    });
+  }
 }

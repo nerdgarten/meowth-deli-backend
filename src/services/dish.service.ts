@@ -45,7 +45,32 @@ export default class DishService {
     return dishes;
   }
 
-  async createDish(email: string, data: IDish) {
+  private async validateRestaurantOwnership(dishId: number, userId: number) {
+    const dish = await this.dishRepository.findDishById(dishId);
+    if (!dish) {
+      throw new AppError("Dish not found", StatusCodes.NOT_FOUND);
+    }
+
+    const userRestaurant =
+      await this.authRepository.findRestaurantByUserId(userId);
+    if (!userRestaurant) {
+      throw new AppError(
+        "User is not a restaurant owner",
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    if (dish.restaurant_id !== userRestaurant.id) {
+      throw new AppError(
+        "You can only modify dishes from your own restaurant",
+        StatusCodes.FORBIDDEN
+      );
+    }
+
+    return dish;
+  }
+
+  async createDish(userId: number, data: IDish) {
     if (!data.name || data.name.trim() === "") {
       throw new AppError("Dish name cannot be empty", StatusCodes.BAD_REQUEST);
     }
@@ -56,15 +81,88 @@ export default class DishService {
       );
     }
 
-    const user = await this.authRepository.findUserByEmail(email);
-    const userID = user?.id || null;
+    const userRestaurant =
+      await this.authRepository.findRestaurantByUserId(userId);
+    if (!userRestaurant) {
+      throw new AppError(
+        "User is not a restaurant owner",
+        StatusCodes.FORBIDDEN
+      );
+    }
 
-    data.restaurant_id =
-      (await this.authRepository.findRestaurantByUserId(userID!))?.id || 0;
+    data.restaurant_id = userRestaurant.id;
 
     const newDish = await this.dishRepository.createDish({
       ...data,
     });
     return newDish;
+  }
+
+  async getAllDishes(limit?: number, offset?: number) {
+    const dishes = await this.dishRepository.findAllDishes(limit, offset);
+    return dishes;
+  }
+
+  async getDishById(id: number) {
+    if (!id || id <= 0) {
+      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
+    }
+
+    const dish = await this.dishRepository.findDishById(id);
+    if (!dish) {
+      throw new AppError("Dish not found", StatusCodes.NOT_FOUND);
+    }
+
+    return dish;
+  }
+
+  async updateDish(id: number, data: Partial<IDish>, userId: number) {
+    if (!id || id <= 0) {
+      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
+    }
+
+    await this.validateRestaurantOwnership(id, userId);
+
+    if (data.name !== undefined && (!data.name || data.name.trim() === "")) {
+      throw new AppError("Dish name cannot be empty", StatusCodes.BAD_REQUEST);
+    }
+    if (data.price !== undefined && data.price <= 0) {
+      throw new AppError(
+        "Price must be greater than zero",
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const updatedDish = await this.dishRepository.updateDish(id, data);
+    return updatedDish;
+  }
+
+  async deleteDish(id: number, userId: number) {
+    if (!id || id <= 0) {
+      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
+    }
+
+    await this.validateRestaurantOwnership(id, userId);
+
+    await this.dishRepository.deleteDish(id);
+    return { message: "Dish deleted successfully" };
+  }
+
+  async updateDishStockStatus(
+    dishId: number,
+    userId: number,
+    is_out_of_stock: boolean
+  ) {
+    if (!dishId || dishId <= 0) {
+      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
+    }
+
+    await this.validateRestaurantOwnership(dishId, userId);
+
+    const updatedDish = await this.dishRepository.updateDishStockStatus(
+      dishId,
+      is_out_of_stock
+    );
+    return updatedDish;
   }
 }
