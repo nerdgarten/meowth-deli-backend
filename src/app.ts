@@ -12,7 +12,7 @@ const corsOptions: CorsOptions = {
     origin: string | undefined,
     callback: (err: Error | null, allow?: boolean | string) => void,
   ) => {
-    const borworntatRegex = /^https:\/\/([a-zA-Z0-9-]+\.)*borwornta\.com$/;
+    const borworntatRegex = /^https:\/\/([a-zA-Z0-9-]+\.)*borworntat\.com$/;
     if (
       !origin ||
       origin.startsWith("http://localhost") ||
