@@ -1,43 +1,42 @@
 import { z } from "zod";
 
 export const signInSchema = z.object({
-  body: z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-    role: z.enum(["customer", "restaurant"]),
-  }),
+  email: z.string().email({ message: "Invalid email format" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" }),
+  role: z.enum(["customer", "restaurant"]),
 });
 
 export const signUpCustomerSchema = z.object({
-  body: z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    password: z.string().min(6),
-  }),
+  firstname: z.string().min(1, { message: "First name is required" }),
+  lastname: z.string().min(1, { message: "Last name is required" }),
+  email: z.string().email({ message: "Invalid email format" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" }),
+  tel: z.string().regex(/^\d{10}$/, { message: "Invalid phone number format" }),
 });
 
 export const signUpRestaurantSchema = z.object({
-  body: z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    password: z.string().min(6),
-    restaurantName: z.string().min(1),
-    restaurantAddress: z.string().min(1),
-  }),
-});
-export const signUpDriverSchema = z.object({
-  body: z.object({
-    name: z.string().min(1),
-    email: z.string().email(),
-    password: z.string().min(6),
-    vehicle: z.string().min(1),
-    licence: z.string().min(1),
-  }),
+  firstname: z.string().min(1, { message: "First name is required" }),
+  lastname: z.string().min(1, { message: "Last name is required" }),
+  email: z.string().email({ message: "Invalid email format" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" }),
+  location: z.string().min(1, { message: "Location is required" }),
+  tel: z.string().regex(/^\d{10}$/, { message: "Invalid phone number format" }),
 });
 
-export type SignInBody = z.infer<typeof signInSchema>["body"];
-export type CustomerSignUpBody = z.infer<typeof signUpCustomerSchema>["body"];
-export type DriverSignUpBody = z.infer<typeof signUpDriverSchema>["body"];
-export type RestaurantSignUpBody = z.infer<
-  typeof signUpRestaurantSchema
->["body"];
+export const signUpDriverSchema = z.object({
+  email: z.string().email({ message: "Invalid email format" }),
+  firstname: z.string().min(1, { message: "First name is required" }),
+  lastname: z.string().min(1, { message: "Last name is required" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" }),
+  vehicle: z.string().min(1, { message: "Vehicle is required" }),
+  licence: z.string().min(1, { message: "Licence is required" }),
+  tel: z.string().regex(/^\d{10}$/, { message: "Invalid phone number format" }),
+});

@@ -12,6 +12,12 @@ import {
 import { AppError } from "@/types/error";
 import { UserRole } from "@/types/role";
 import { signJwt } from "@/utils/jwt";
+import {
+  signInSchema,
+  signUpCustomerSchema,
+  signUpRestaurantSchema,
+  signUpDriverSchema,
+} from "@/validators/auth.schema";
 
 export default class AuthService {
   private authRepository: AuthRepository;
@@ -22,6 +28,7 @@ export default class AuthService {
 
   async signIn(body: SignInBody) {
     const { email, password, role } = body;
+    signInSchema.parse(body);
 
     const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
@@ -29,8 +36,9 @@ export default class AuthService {
     }
 
     const userRoles = await this.authRepository.getUserRoles(user.id);
-    if (!userRoles.includes(role)) {
-      throw new AppError("Unauthorized role", StatusCodes.UNAUTHORIZED);
+    const roles = userRoles.map((r) => r.role);
+    if (!roles.includes(role)) {
+      throw new AppError("Role not found", StatusCodes.NOT_FOUND);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -44,6 +52,7 @@ export default class AuthService {
   }
 
   async createCustomerUser(body: CustomerSignUpBody) {
+    signUpCustomerSchema.parse(body);
     const createdUser = await this.authRepository.createCustomerUser({
       ...body,
       password: await this.hashPassword(body.password),
@@ -57,6 +66,7 @@ export default class AuthService {
   }
 
   async createDriverUser(body: DriverSignUpBody) {
+    signUpDriverSchema.parse(body);
     const createdUser = await this.authRepository.createDriverUser({
       ...body,
       password: await this.hashPassword(body.password),
@@ -70,6 +80,7 @@ export default class AuthService {
   }
 
   async createRestaurantUser(body: RestaurantSignUpBody) {
+    signUpRestaurantSchema.parse(body);
     const createdUser = await this.authRepository.createRestaurantUser({
       ...body,
       password: await this.hashPassword(body.password),
