@@ -1,4 +1,4 @@
-import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+import { StatusCodes } from "http-status-codes";
 
 import AuthRepository from "@/repositories/auth.repository";
 import DishRepository from "@/repositories/dish.repository";

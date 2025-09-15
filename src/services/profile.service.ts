@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 
 import ProfileRepository from "@/repositories/profile.repository";
-import { ICustomer, IDriver, IRestaurant } from "@/types/user";
 import { AppError } from "@/types/error";
+import { ICustomer, IDriver, IRestaurant } from "@/types/user";
 
 export default class ProfileService {
   private profileRepository: ProfileRepository;
