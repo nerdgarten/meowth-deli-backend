@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
-import { restaurantOwnershipValidator } from "@/utils/restaurant-ownership-validator";
+import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;

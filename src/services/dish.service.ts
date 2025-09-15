@@ -1,9 +1,9 @@
-import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+import { StatusCodes } from "http-status-codes";
 
 import DishRepository from "@/repositories/dish.repository";
 import { IDish } from "@/types/dish/dish";
 import { AppError } from "@/types/error";
-import { restaurantOwnershipValidator } from "@/utils/restaurant-ownership-validator";
+import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
 
 export default class DishService {
   private dishRepository: DishRepository;
