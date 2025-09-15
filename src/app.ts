@@ -4,7 +4,8 @@ import cors, { CorsOptions } from "cors";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { RouterManager } from "./routes";
+import { RouterManager } from "@/routes";
+
 import type { Express } from "express";
 
 const corsOptions: CorsOptions = {

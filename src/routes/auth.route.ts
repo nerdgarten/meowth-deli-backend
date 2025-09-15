@@ -1,6 +1,5 @@
 import { AuthController } from "@/controllers/auth.controller";
-
-import { BaseRouter } from "./baseRouter";
+import { BaseRouter } from "@/routes/baseRouter";
 
 export class AuthRouter extends BaseRouter {
   private authController: AuthController;
@@ -15,11 +14,11 @@ export class AuthRouter extends BaseRouter {
   private setUpRoutes() {
     this.router.post(
       "/signin",
-      this.authController.signIn.bind(this.authController),
+      this.authController.signIn.bind(this.authController)
     );
     this.router.post(
       "/signup/customer",
-      this.authController.signUpCustomer.bind(this.authController),
+      this.authController.signUpCustomer.bind(this.authController)
     );
     this.router.post(
       "/signup/driver",
