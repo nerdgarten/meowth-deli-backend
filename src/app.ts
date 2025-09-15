@@ -7,6 +7,13 @@ import { StatusCodes } from "http-status-codes";
 import { RouterManager } from "./routes";
 import type { Express } from "express";
 
+const corsOptions = {
+  origin: "*",
+  methods: "*",
+  allowedHeaders: "*",
+  credentials: true,
+}
+
 const app: Express = express();
 
 app.use((req, res, next) => {
@@ -14,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.json());
 
