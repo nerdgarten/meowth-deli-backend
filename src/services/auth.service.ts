@@ -36,9 +36,8 @@ export default class AuthService {
     }
 
     const userRoles = await this.authRepository.getUserRoles(user.id);
-    const roles = userRoles.map((r) => r.role);
-    if (!roles.includes(role)) {
-      throw new AppError("Role not found", StatusCodes.NOT_FOUND);
+    if (!userRoles.includes(role)) {
+      throw new AppError("Unauthorized role", StatusCodes.UNAUTHORIZED);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
