@@ -2,8 +2,8 @@ import { Router } from "express";
 
 import { AuthRouter } from "@/routes/auth.route";
 import { AdminRouter } from "@/routes/admin.route";
-import { ProfileRouter } from "@/routes/profile.route";
 import { TestRouter } from "@/routes/test.route";
+import { CustomerRouter } from "@/routes/customer.route";
 
 export class RouterManager {
   private router: Router;
@@ -16,12 +16,12 @@ export class RouterManager {
   private initializeRouters(): void {
     const authRouter = new AuthRouter();
     const adminRouter = new AdminRouter();
-    const profileRouter = new ProfileRouter();
+    const customerRouter = new CustomerRouter();
     const testRouter = new TestRouter();
 
     this.router.use("/auth", authRouter.getRouter());
     this.router.use("/admin", adminRouter.getRouter());
-    this.router.use("/profile", profileRouter.getRouter());
+    this.router.use("/customer", customerRouter.getRouter());
     this.router.use("/api-test", testRouter.getRouter());
   }
 
