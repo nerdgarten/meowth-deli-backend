@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   roots: ["<rootDir>/src"],
@@ -7,6 +7,7 @@ export default {
     "^.+\\.ts$": "ts-jest",
   },
   moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   collectCoverageFrom: [
@@ -19,4 +20,5 @@ export default {
   clearMocks: true,
   resetMocks: true,
   restoreMocks: true,
+  silent: true,
 };

@@ -13,12 +13,12 @@ export class AuthController {
 
   async signIn(req: Request, res: Response) {
     try {
-      const user = await this.authService.signIn(req.body);
+      const token = await this.authService.signIn(req.body);
 
-      res.cookie("token", user.token, {
+      res.cookie("token", token, {
         maxAge: 24 * 60 * 60 * 1000,
       });
-      res.status(StatusCodes.OK).json(user);
+      res.status(StatusCodes.OK).json({ token });
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
