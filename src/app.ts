@@ -18,7 +18,7 @@ const corsOptions: CorsOptions = {
       origin.startsWith("http://localhost") ||
       borworntatRegex.test(origin)
     ) {
-      callback(null, origin || "*");
+      callback(null, origin);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
