@@ -14,6 +14,7 @@ export class FileRouter extends BaseRouter {
         super({
             prefix: "/file",
             middleware: [
+                authMiddleware,
                 fileMiddleware
             ],
         });
