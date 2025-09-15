@@ -1,5 +1,5 @@
 import { RestaurantController } from "@/controllers/restaurant.controller";
-import { BaseRouter } from "./baseRouter";
+import { BaseRouter } from "@/routes/baseRouter";
 
 export class RestaurantRouter extends BaseRouter {
   private restaurantController: RestaurantController;
@@ -12,6 +12,11 @@ export class RestaurantRouter extends BaseRouter {
   }
 
   private setUpRoutes() {
-    this.router.get("/", (req, res) => {});
+    this.router.get(
+      "/",
+      this.restaurantController.getRestaurantsByStatus.bind(
+        this.restaurantController
+      )
+    );
   }
 }
