@@ -1,8 +1,8 @@
 import { StatusCodes } from "http-status-codes";
 
-import { ICustomer, IDriver, IRestaurant } from "@/types/user";
-import { AppError } from "@/types/error";
 import CustomerRepository from "@/repositories/customer.repository";
+import { AppError } from "@/types/error";
+import { ICustomer, IDriver, IRestaurant } from "@/types/user";
 
 export default class CustomerService {
   private customerRepository: CustomerRepository;
