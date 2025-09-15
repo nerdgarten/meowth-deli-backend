@@ -1,6 +1,7 @@
-import { UserRole } from "@/types/role";
 import jwt from "jsonwebtoken";
+
 import { IJwtData } from "@/types/auth/jwt";
+import { UserRole } from "@/types/role";
 
 export function signJwt(id: number, email: string, role: UserRole): string {
   const payload = { id, email, role };

@@ -1,7 +1,8 @@
+import { StatusCodes } from "http-status-codes";
+
 import { VerificationStatus } from "@/generated/prisma";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
-import { StatusCodes } from "http-status-codes";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
