@@ -1,8 +1,6 @@
-
 import { prisma } from "@/libs/prisma";
 
 export default class EmailRepository {
-
   async findUniqueToken(token: string) {
     return prisma.verifyToken.findUnique({
       where: { token },

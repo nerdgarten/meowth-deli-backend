@@ -10,10 +10,11 @@
     "test:coverage": "jest --coverage",
     "db:setup": "docker compose up -d && npx prisma generate && npx prisma db push",
     "db:teardown": "docker compose down -v",
-    "lint": "eslint src --ext .ts src",
-    "lint:fix": "eslint --ext .ts src --fix",
+    "lint": "eslint src --ext .ts src --ignore-pattern src/__tests__/**",
+    "lint:fix": "eslint --ext .ts src --fix --ignore-pattern src/__tests__/**",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",

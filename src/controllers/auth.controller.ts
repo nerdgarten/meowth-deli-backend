@@ -16,7 +16,7 @@ export class AuthController {
       const token = await this.authService.signIn(req.body);
 
       res.cookie("token", token, {
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 2 * 24 * 60 * 60 * 1000,
       });
       res.status(StatusCodes.OK).json({ token });
     } catch (error: unknown) {

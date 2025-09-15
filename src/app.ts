@@ -1,6 +1,6 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -8,10 +8,19 @@ import { RouterManager } from "@/routes";
 
 import type { Express } from "express";
 
-const corsOptions = {
-  origin: "*",
-  methods: "*",
-  allowedHeaders: "*",
+const corsOptions: CorsOptions = {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean | string) => void,
+  ) => {
+    if (!origin || origin.startsWith("http://localhost")) {
+      callback(null, origin || "*");
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Accept"],
   credentials: true,
 };
 

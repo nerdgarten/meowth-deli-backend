@@ -81,11 +81,11 @@ describe("AuthService", () => {
       const result = await authService.signIn(signInData);
 
       expect(mockRepository.findUserByEmail).toHaveBeenCalledWith(
-        "test@example.com"
+        "test@example.com",
       );
       expect(mockBcrypt.compare).toHaveBeenCalledWith(
         "password123",
-        "hashedPassword"
+        "hashedPassword",
       );
       expect(mockJwt.sign).toHaveBeenCalledWith(
         {
@@ -94,7 +94,7 @@ describe("AuthService", () => {
           role: UserRole.Customer,
         },
         "test-secret",
-        { expiresIn: "1h" }
+        { expiresIn: "1h" },
       );
       expect(result).toEqual({
         id: 1,
@@ -107,11 +107,11 @@ describe("AuthService", () => {
       mockRepository.findUserByEmail.mockResolvedValue(null);
 
       await expect(authService.signIn(signInData)).rejects.toThrow(
-        new AppError("User not found", StatusCodes.NOT_FOUND)
+        new AppError("User not found", StatusCodes.NOT_FOUND),
       );
 
       expect(mockRepository.findUserByEmail).toHaveBeenCalledWith(
-        "test@example.com"
+        "test@example.com",
       );
       expect(mockBcrypt.compare).not.toHaveBeenCalled();
       expect(mockJwt.sign).not.toHaveBeenCalled();
@@ -122,15 +122,15 @@ describe("AuthService", () => {
       mockBcrypt.compare.mockResolvedValue(false as never);
 
       await expect(authService.signIn(signInData)).rejects.toThrow(
-        new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED)
+        new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED),
       );
 
       expect(mockRepository.findUserByEmail).toHaveBeenCalledWith(
-        "test@example.com"
+        "test@example.com",
       );
       expect(mockBcrypt.compare).toHaveBeenCalledWith(
         "password123",
-        "hashedPassword"
+        "hashedPassword",
       );
       expect(mockJwt.sign).not.toHaveBeenCalled();
     });
@@ -156,7 +156,7 @@ describe("AuthService", () => {
     it("should successfully create a customer user", async () => {
       mockBcrypt.hash.mockResolvedValue("hashedPassword" as never);
       mockRepository.createCustomerUser.mockResolvedValue(
-        mockCreatedUser as any
+        mockCreatedUser as any,
       );
 
       const result = await authService.createCustomerUser(customerData);
@@ -176,11 +176,11 @@ describe("AuthService", () => {
     it("should handle repository errors", async () => {
       mockBcrypt.hash.mockResolvedValue("hashedPassword" as never);
       mockRepository.createCustomerUser.mockRejectedValue(
-        new Error("Database error")
+        new Error("Database error"),
       );
 
       await expect(
-        authService.createCustomerUser(customerData)
+        authService.createCustomerUser(customerData),
       ).rejects.toThrow("Database error");
 
       expect(mockBcrypt.hash).toHaveBeenCalledWith("password123", 10);
@@ -232,11 +232,11 @@ describe("AuthService", () => {
     it("should handle repository errors", async () => {
       mockBcrypt.hash.mockResolvedValue("hashedPassword" as never);
       mockRepository.createDriverUser.mockRejectedValue(
-        new Error("Database error")
+        new Error("Database error"),
       );
 
       await expect(authService.createDriverUser(driverData)).rejects.toThrow(
-        "Database error"
+        "Database error",
       );
     });
   });
@@ -263,7 +263,7 @@ describe("AuthService", () => {
     it("should successfully create a restaurant user", async () => {
       mockBcrypt.hash.mockResolvedValue("hashedPassword" as never);
       mockRepository.createRestaurantUser.mockResolvedValue(
-        mockCreatedUser as any
+        mockCreatedUser as any,
       );
 
       const result = await authService.createRestaurantUser(restaurantData);
@@ -283,11 +283,11 @@ describe("AuthService", () => {
     it("should handle repository errors", async () => {
       mockBcrypt.hash.mockResolvedValue("hashedPassword" as never);
       mockRepository.createRestaurantUser.mockRejectedValue(
-        new Error("Database error")
+        new Error("Database error"),
       );
 
       await expect(
-        authService.createRestaurantUser(restaurantData)
+        authService.createRestaurantUser(restaurantData),
       ).rejects.toThrow("Database error");
     });
   });
@@ -316,7 +316,7 @@ describe("AuthService", () => {
 
     it("should throw error when token is not provided", async () => {
       await expect(authService.verifyAdminStatus(undefined)).rejects.toThrow(
-        new AppError("Unauthorized", StatusCodes.UNAUTHORIZED)
+        new AppError("Unauthorized", StatusCodes.UNAUTHORIZED),
       );
 
       expect(mockJwt.verify).not.toHaveBeenCalled();
@@ -324,7 +324,7 @@ describe("AuthService", () => {
 
     it("should throw error when token is empty string", async () => {
       await expect(authService.verifyAdminStatus("")).rejects.toThrow(
-        new AppError("Unauthorized", StatusCodes.UNAUTHORIZED)
+        new AppError("Unauthorized", StatusCodes.UNAUTHORIZED),
       );
 
       expect(mockJwt.verify).not.toHaveBeenCalled();
@@ -338,7 +338,7 @@ describe("AuthService", () => {
       mockJwt.verify.mockReturnValue(nonAdminToken as never);
 
       await expect(
-        authService.verifyAdminStatus("valid-token")
+        authService.verifyAdminStatus("valid-token"),
       ).rejects.toThrow(new AppError("Forbidden", StatusCodes.FORBIDDEN));
 
       expect(mockJwt.verify).toHaveBeenCalledWith("valid-token", "test-secret");
@@ -350,12 +350,12 @@ describe("AuthService", () => {
       });
 
       await expect(
-        authService.verifyAdminStatus("invalid-token")
+        authService.verifyAdminStatus("invalid-token"),
       ).rejects.toThrow(new AppError("Unauthorized", StatusCodes.UNAUTHORIZED));
 
       expect(mockJwt.verify).toHaveBeenCalledWith(
         "invalid-token",
-        "test-secret"
+        "test-secret",
       );
     });
 
@@ -366,7 +366,7 @@ describe("AuthService", () => {
       });
 
       await expect(
-        authService.verifyAdminStatus("invalid-token")
+        authService.verifyAdminStatus("invalid-token"),
       ).rejects.toThrow(customError);
     });
   });
@@ -387,11 +387,11 @@ describe("AuthService", () => {
     it("should handle bcrypt errors", async () => {
       const password = "testPassword123";
       (mockBcrypt.hash as jest.Mock).mockRejectedValue(
-        new Error("Hashing failed")
+        new Error("Hashing failed"),
       );
 
       await expect(authService.hashPassword(password)).rejects.toThrow(
-        "Hashing failed"
+        "Hashing failed",
       );
     });
   });
