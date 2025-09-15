@@ -39,16 +39,16 @@ describe("AdminController", () => {
 
     // Setup routes
     app.get("/admin/restaurants", (req, res) =>
-      adminController.listRestaurants(req, res)
+      adminController.listRestaurants(req, res),
     );
     app.put("/admin/restaurants/:id/verify", (req, res) =>
-      adminController.verifyRestaurant(req, res)
+      adminController.verifyRestaurant(req, res),
     );
     app.get("/admin/drivers", (req, res) =>
-      adminController.listDrivers(req, res)
+      adminController.listDrivers(req, res),
     );
     app.put("/admin/drivers/:id/verify", (req, res) =>
-      adminController.verifyDriver(req, res)
+      adminController.verifyDriver(req, res),
     );
   });
 
@@ -88,7 +88,7 @@ describe("AdminController", () => {
       ];
 
       mockAdminService.listRestaurants.mockResolvedValue(
-        mockRestaurants as any
+        mockRestaurants as any,
       );
 
       const response = await request(app)
@@ -119,7 +119,7 @@ describe("AdminController", () => {
       ];
 
       mockAdminService.listRestaurants.mockResolvedValue(
-        mockRestaurants as any
+        mockRestaurants as any,
       );
 
       const response = await request(app)
@@ -128,13 +128,13 @@ describe("AdminController", () => {
 
       expect(response.body).toEqual(mockRestaurants);
       expect(mockAdminService.listRestaurants).toHaveBeenCalledWith(
-        AdminVerificationStatus.PENDING
+        AdminVerificationStatus.PENDING,
       );
     });
 
     it("should handle service errors", async () => {
       mockAdminService.listRestaurants.mockRejectedValue(
-        new AppError("Database error", StatusCodes.INTERNAL_SERVER_ERROR)
+        new AppError("Database error", StatusCodes.INTERNAL_SERVER_ERROR),
       );
 
       const response = await request(app)
@@ -146,7 +146,7 @@ describe("AdminController", () => {
 
     it("should handle unexpected errors", async () => {
       mockAdminService.listRestaurants.mockRejectedValue(
-        new Error("Unexpected error")
+        new Error("Unexpected error"),
       );
 
       const response = await request(app)
@@ -178,7 +178,7 @@ describe("AdminController", () => {
       });
       expect(mockAdminService.verifyRestaurant).toHaveBeenCalledWith(
         1,
-        AdminVerificationStatus.APPROVED
+        AdminVerificationStatus.APPROVED,
       );
     });
 
@@ -202,13 +202,13 @@ describe("AdminController", () => {
       });
       expect(mockAdminService.verifyRestaurant).toHaveBeenCalledWith(
         1,
-        AdminVerificationStatus.REJECTED
+        AdminVerificationStatus.REJECTED,
       );
     });
 
     it("should handle invalid restaurant ID", async () => {
       mockAdminService.verifyRestaurant.mockRejectedValue(
-        new AppError("Restaurant not found", StatusCodes.NOT_FOUND)
+        new AppError("Restaurant not found", StatusCodes.NOT_FOUND),
       );
 
       const response = await request(app)
@@ -219,7 +219,7 @@ describe("AdminController", () => {
       expect(response.body).toEqual({ message: "Restaurant not found" });
       expect(mockAdminService.verifyRestaurant).toHaveBeenCalledWith(
         999,
-        AdminVerificationStatus.APPROVED
+        AdminVerificationStatus.APPROVED,
       );
     });
 
@@ -228,8 +228,8 @@ describe("AdminController", () => {
       mockAdminService.verifyRestaurant.mockRejectedValue(
         new AppError(
           "Invalid status. Allowed: pending, approved, rejected",
-          StatusCodes.BAD_REQUEST
-        )
+          StatusCodes.BAD_REQUEST,
+        ),
       );
 
       const response = await request(app)
@@ -274,7 +274,7 @@ describe("AdminController", () => {
     it("should handle non-numeric ID", async () => {
       // Mock service to handle NaN ID gracefully or throw an error
       mockAdminService.verifyRestaurant.mockRejectedValue(
-        new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST)
+        new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST),
       );
 
       const response = await request(app)
@@ -334,13 +334,13 @@ describe("AdminController", () => {
 
       expect(response.body).toEqual(mockDrivers);
       expect(mockAdminService.listDrivers).toHaveBeenCalledWith(
-        AdminVerificationStatus.REJECTED
+        AdminVerificationStatus.REJECTED,
       );
     });
 
     it("should handle service errors", async () => {
       mockAdminService.listDrivers.mockRejectedValue(
-        new AppError("Access denied", StatusCodes.FORBIDDEN)
+        new AppError("Access denied", StatusCodes.FORBIDDEN),
       );
 
       const response = await request(app)
@@ -352,7 +352,7 @@ describe("AdminController", () => {
 
     it("should handle unexpected errors", async () => {
       mockAdminService.listDrivers.mockRejectedValue(
-        new Error("Network error")
+        new Error("Network error"),
       );
 
       const response = await request(app)
@@ -385,7 +385,7 @@ describe("AdminController", () => {
       });
       expect(mockAdminService.verifyDriver).toHaveBeenCalledWith(
         1,
-        AdminVerificationStatus.APPROVED
+        AdminVerificationStatus.APPROVED,
       );
     });
 
@@ -410,13 +410,13 @@ describe("AdminController", () => {
       });
       expect(mockAdminService.verifyDriver).toHaveBeenCalledWith(
         2,
-        AdminVerificationStatus.REJECTED
+        AdminVerificationStatus.REJECTED,
       );
     });
 
     it("should handle invalid driver ID", async () => {
       mockAdminService.verifyDriver.mockRejectedValue(
-        new AppError("Driver not found", StatusCodes.NOT_FOUND)
+        new AppError("Driver not found", StatusCodes.NOT_FOUND),
       );
 
       const response = await request(app)
@@ -427,13 +427,13 @@ describe("AdminController", () => {
       expect(response.body).toEqual({ message: "Driver not found" });
       expect(mockAdminService.verifyDriver).toHaveBeenCalledWith(
         999,
-        AdminVerificationStatus.APPROVED
+        AdminVerificationStatus.APPROVED,
       );
     });
 
     it("should handle validation errors", async () => {
       mockAdminService.verifyDriver.mockRejectedValue(
-        new AppError("Invalid verification status", StatusCodes.BAD_REQUEST)
+        new AppError("Invalid verification status", StatusCodes.BAD_REQUEST),
       );
 
       const response = await request(app)
@@ -455,7 +455,7 @@ describe("AdminController", () => {
 
     it("should handle concurrent verification attempts", async () => {
       mockAdminService.verifyDriver.mockRejectedValue(
-        new AppError("Driver is already being processed", StatusCodes.CONFLICT)
+        new AppError("Driver is already being processed", StatusCodes.CONFLICT),
       );
 
       const response = await request(app)
@@ -482,7 +482,7 @@ describe("AdminController", () => {
       const largeId = Number.MAX_SAFE_INTEGER;
 
       mockAdminService.verifyRestaurant.mockRejectedValue(
-        new AppError("Restaurant not found", StatusCodes.NOT_FOUND)
+        new AppError("Restaurant not found", StatusCodes.NOT_FOUND),
       );
 
       const response = await request(app)
@@ -496,7 +496,7 @@ describe("AdminController", () => {
     it("should handle negative IDs", async () => {
       // Mock service to handle negative ID
       mockAdminService.verifyRestaurant.mockRejectedValue(
-        new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST)
+        new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST),
       );
 
       const response = await request(app)

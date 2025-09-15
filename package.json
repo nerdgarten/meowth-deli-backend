@@ -13,7 +13,8 @@
     "lint": "eslint src --ext .ts src",
     "lint:fix": "eslint --ext .ts src --fix",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "repository": {
     "type": "git",

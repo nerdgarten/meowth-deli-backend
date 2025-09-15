@@ -50,7 +50,7 @@ export default class AdminService {
     if (!allowed.includes(status)) {
       throw new AppError(
         `Invalid status. Allowed: ${allowed.join(", ")}`,
-        StatusCodes.BAD_REQUEST
+        StatusCodes.BAD_REQUEST,
       );
     }
   }
@@ -65,14 +65,14 @@ export default class AdminService {
 
   async verifyRestaurant(
     restaurantId: number,
-    status: AdminVerificationStatus
+    status: AdminVerificationStatus,
   ) {
     this.validateStatus(status);
 
     const updateData = this.buildUpdateData(status);
     return await this.adminRepository.updateRestaurant(
       restaurantId,
-      updateData
+      updateData,
     );
   }
 

@@ -8,11 +8,13 @@ import { RouterManager } from "./routes";
 import type { Express } from "express";
 
 const corsOptions: CorsOptions = {
-  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean | string) => void) => {
-    if(!origin || origin.startsWith("http://localhost")) {
+  origin: (
+    origin: string | undefined,
+    callback: (err: Error | null, allow?: boolean | string) => void,
+  ) => {
+    if (!origin || origin.startsWith("http://localhost")) {
       callback(null, origin || "*");
-    }
-    else {
+    } else {
       callback(new Error("Not allowed by CORS"));
     }
   },

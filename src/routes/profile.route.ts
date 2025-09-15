@@ -15,17 +15,17 @@ export class ProfileRouter extends BaseRouter {
   private setUpRoutes() {
     this.router.patch(
       "/update/:id",
-      this.profileController.updateCustomerProfile.bind(this.profileController)
+      this.profileController.updateCustomerProfile.bind(this.profileController),
     );
     this.router.patch(
       "/update/:id",
       this.profileController.updateRestaurantProfile.bind(
-        this.profileController
-      )
+        this.profileController,
+      ),
     );
     this.router.patch(
       "/update/:id",
-      this.profileController.updateDriverProfile.bind(this.profileController)
+      this.profileController.updateDriverProfile.bind(this.profileController),
     );
   }
 }

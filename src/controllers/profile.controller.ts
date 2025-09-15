@@ -19,7 +19,7 @@ export class ProfileController {
       }
       const updatedProfile = await this.profileService.updateCustomerProfile(
         userId,
-        req.body
+        req.body,
       );
 
       res.status(StatusCodes.OK).json({
@@ -45,7 +45,7 @@ export class ProfileController {
       }
       const updatedProfile = await this.profileService.updateRestaurantProfile(
         userId,
-        req.body
+        req.body,
       );
 
       res.status(StatusCodes.OK).json({
@@ -71,7 +71,7 @@ export class ProfileController {
       }
       const updatedProfile = await this.profileService.updateDriverProfile(
         userId,
-        req.body
+        req.body,
       );
 
       res.status(StatusCodes.OK).json({

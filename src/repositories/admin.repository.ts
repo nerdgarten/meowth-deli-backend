@@ -5,34 +5,37 @@ export default class AdminRepository {
   private readonly userSelect = {
     id: true,
     email: true,
-    roles: true
+    roles: true,
   } as const;
 
   private readonly defaultOptions = {
-    include: { 
-      user: { 
+    include: {
+      user: {
         select: {
           id: true,
           email: true,
-          roles: true
-        } 
-      } 
+          roles: true,
+        },
+      },
     },
-    orderBy: { id: "desc" as const }
+    orderBy: { id: "desc" as const },
   };
 
   async listRestaurants(where?: Prisma.RestaurantWhereInput) {
     return prisma.restaurant.findMany({
       where,
-      ...this.defaultOptions
+      ...this.defaultOptions,
     });
   }
 
-  async updateRestaurant(restaurantId: number, data: Prisma.RestaurantUpdateInput) {
+  async updateRestaurant(
+    restaurantId: number,
+    data: Prisma.RestaurantUpdateInput,
+  ) {
     return prisma.restaurant.update({
       where: { id: restaurantId },
       data,
-      include: this.defaultOptions.include
+      include: this.defaultOptions.include,
     });
   }
 
@@ -40,7 +43,7 @@ export default class AdminRepository {
   async listDrivers(where?: Prisma.DriverWhereInput) {
     return prisma.driver.findMany({
       where,
-      ...this.defaultOptions
+      ...this.defaultOptions,
     });
   }
 
@@ -48,7 +51,7 @@ export default class AdminRepository {
     return prisma.driver.update({
       where: { id: driverId },
       data,
-      include: this.defaultOptions.include
+      include: this.defaultOptions.include,
     });
   }
 }

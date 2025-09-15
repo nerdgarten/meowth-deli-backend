@@ -1,12 +1,12 @@
 export enum AdminVerificationStatus {
   PENDING = "pending",
-  APPROVED = "success", 
-  REJECTED = "rejected"
+  APPROVED = "success",
+  REJECTED = "rejected",
 }
 
 export enum VerificationType {
   RESTAURANT = "restaurant",
-  DRIVER = "driver"
+  DRIVER = "driver",
 }
 
 export type AdminVerificationStatusType = keyof typeof AdminVerificationStatus;

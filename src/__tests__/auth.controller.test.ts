@@ -57,16 +57,16 @@ describe("AuthController", () => {
     // Setup routes using class methods
     app.post("/auth/signin", (req, res) => authController.signIn(req, res));
     app.post("/auth/signup/customer", (req, res) =>
-      authController.signUpCustomer(req, res)
+      authController.signUpCustomer(req, res),
     );
     app.post("/auth/signup/driver", (req, res) =>
-      authController.signUpDriver(req, res)
+      authController.signUpDriver(req, res),
     );
     app.post("/auth/signup/restaurant", (req, res) =>
-      authController.signUpRestaurant(req, res)
+      authController.signUpRestaurant(req, res),
     );
     app.get("/auth/verify-admin", (req, res) =>
-      authController.verifyAdminStatus(req, res)
+      authController.verifyAdminStatus(req, res),
     );
   });
 
@@ -95,14 +95,14 @@ describe("AuthController", () => {
       expect(response.body).toEqual(mockResponse);
       expect(response.headers["set-cookie"]).toBeDefined();
       expect(response.headers["set-cookie"][0]).toContain(
-        "token=mock-jwt-token"
+        "token=mock-jwt-token",
       );
       expect(mockAuthService.signIn).toHaveBeenCalledWith(signInData);
     });
 
     it("should return 404 when user not found", async () => {
       mockAuthService.signIn.mockRejectedValue(
-        new AppError("User not found", StatusCodes.NOT_FOUND)
+        new AppError("User not found", StatusCodes.NOT_FOUND),
       );
 
       const response = await request(app)
@@ -116,7 +116,7 @@ describe("AuthController", () => {
 
     it("should return 401 when credentials are invalid", async () => {
       mockAuthService.signIn.mockRejectedValue(
-        new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED)
+        new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED),
       );
 
       const response = await request(app)
@@ -129,7 +129,7 @@ describe("AuthController", () => {
 
     it("should return 500 for unexpected errors", async () => {
       mockAuthService.signIn.mockRejectedValue(
-        new Error("Database connection failed")
+        new Error("Database connection failed"),
       );
 
       const response = await request(app)
@@ -169,13 +169,13 @@ describe("AuthController", () => {
 
       expect(response.body).toEqual(mockResponse);
       expect(mockAuthService.createCustomerUser).toHaveBeenCalledWith(
-        customerData
+        customerData,
       );
     });
 
     it("should handle service errors", async () => {
       mockAuthService.createCustomerUser.mockRejectedValue(
-        new AppError("Email already exists", StatusCodes.CONFLICT)
+        new AppError("Email already exists", StatusCodes.CONFLICT),
       );
 
       const response = await request(app)
@@ -188,7 +188,7 @@ describe("AuthController", () => {
 
     it("should return 500 for unexpected errors", async () => {
       mockAuthService.createCustomerUser.mockRejectedValue(
-        new Error("Database error")
+        new Error("Database error"),
       );
 
       const response = await request(app)
@@ -235,7 +235,7 @@ describe("AuthController", () => {
 
     it("should handle service errors", async () => {
       mockAuthService.createDriverUser.mockRejectedValue(
-        new AppError("Validation failed", StatusCodes.BAD_REQUEST)
+        new AppError("Validation failed", StatusCodes.BAD_REQUEST),
       );
 
       const response = await request(app)
@@ -277,13 +277,13 @@ describe("AuthController", () => {
 
       expect(response.body).toEqual(mockResponse);
       expect(mockAuthService.createRestaurantUser).toHaveBeenCalledWith(
-        restaurantData
+        restaurantData,
       );
     });
 
     it("should handle service errors", async () => {
       mockAuthService.createRestaurantUser.mockRejectedValue(
-        new AppError("Invalid location", StatusCodes.BAD_REQUEST)
+        new AppError("Invalid location", StatusCodes.BAD_REQUEST),
       );
 
       const response = await request(app)
@@ -312,13 +312,13 @@ describe("AuthController", () => {
 
       expect(response.body).toEqual(mockResponse);
       expect(mockAuthService.verifyAdminStatus).toHaveBeenCalledWith(
-        "valid-admin-token"
+        "valid-admin-token",
       );
     });
 
     it("should return 401 when token is missing", async () => {
       mockAuthService.verifyAdminStatus.mockRejectedValue(
-        new AppError("Unauthorized", StatusCodes.UNAUTHORIZED)
+        new AppError("Unauthorized", StatusCodes.UNAUTHORIZED),
       );
 
       const response = await request(app)
@@ -331,7 +331,7 @@ describe("AuthController", () => {
 
     it("should return 403 when user is not admin", async () => {
       mockAuthService.verifyAdminStatus.mockRejectedValue(
-        new AppError("Forbidden", StatusCodes.FORBIDDEN)
+        new AppError("Forbidden", StatusCodes.FORBIDDEN),
       );
 
       const response = await request(app)
@@ -341,7 +341,7 @@ describe("AuthController", () => {
 
       expect(response.body).toEqual({ message: "Forbidden" });
       expect(mockAuthService.verifyAdminStatus).toHaveBeenCalledWith(
-        "customer-token"
+        "customer-token",
       );
     });
   });
