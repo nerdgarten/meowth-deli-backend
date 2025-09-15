@@ -5,15 +5,15 @@ import { IJwtData } from "@/types/auth/jwt";
 import { verifyJwt } from "@/utils/jwt";
 
 declare module "express" {
-    export interface Request {
-        user?: IJwtData;
-    }
+  export interface Request {
+    user?: IJwtData;
+  }
 }
 
 export function authMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
   const cookies = req.cookies;
 

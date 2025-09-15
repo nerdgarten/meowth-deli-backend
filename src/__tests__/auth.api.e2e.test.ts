@@ -125,7 +125,7 @@ describe("Auth API Endpoints (E2E)", () => {
 
       // Mock service to reject invalid email
       mockCreateCustomerUser.mockRejectedValue(
-        new Error("Invalid email format")
+        new Error("Invalid email format"),
       );
 
       await request(app)
@@ -143,7 +143,7 @@ describe("Auth API Endpoints (E2E)", () => {
 
       // Mock service to reject incomplete data
       mockCreateCustomerUser.mockRejectedValue(
-        new Error("Missing required fields")
+        new Error("Missing required fields"),
       );
 
       await request(app)
@@ -212,7 +212,7 @@ describe("Auth API Endpoints (E2E)", () => {
   describe("Security Tests", () => {
     it("should not expose sensitive information in error messages", async () => {
       mockSignIn.mockRejectedValue(
-        new Error("Database connection string: secret://...")
+        new Error("Database connection string: secret://..."),
       );
 
       const response = await request(app).post("/auth/signin").send({
@@ -290,7 +290,7 @@ describe("Auth API Endpoints (E2E)", () => {
               accepted_term_of_service: true,
               accepted_pdpa: true,
               accepted_cookie_tracking: false,
-            })
+            }),
         );
 
       const responses = await Promise.all(requests);

@@ -17,21 +17,21 @@ export class AdminRouter extends BaseRouter {
     // Restaurant verification routes
     this.router.get(
       "/restaurants",
-      this.controller.listRestaurants.bind(this.controller)
+      this.controller.listRestaurants.bind(this.controller),
     );
     this.router.patch(
       "/restaurants/:id/verify",
-      this.controller.verifyRestaurant.bind(this.controller)
+      this.controller.verifyRestaurant.bind(this.controller),
     );
 
     // Driver verification routes
     this.router.get(
       "/drivers",
-      this.controller.listDrivers.bind(this.controller)
+      this.controller.listDrivers.bind(this.controller),
     );
     this.router.patch(
       "/drivers/:id/verify",
-      this.controller.verifyDriver.bind(this.controller)
+      this.controller.verifyDriver.bind(this.controller),
     );
   }
 

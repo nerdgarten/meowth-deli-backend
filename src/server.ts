@@ -1,4 +1,4 @@
-import "dotenv/config"
+import "dotenv/config";
 import path from "path";
 
 import * as moduleAlias from "module-alias";
@@ -12,5 +12,5 @@ const PORT: string | number = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV}`)
+  console.log(`Environment: ${process.env.NODE_ENV}`);
 });

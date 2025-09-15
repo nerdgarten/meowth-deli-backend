@@ -1,6 +1,6 @@
-import { BaseRouter } from "@/routes/baseRouter";
 import { TestController } from "@/controllers/test.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { BaseRouter } from "@/routes/baseRouter";
 
 export class TestRouter extends BaseRouter {
   private testController;
@@ -8,9 +8,7 @@ export class TestRouter extends BaseRouter {
   constructor() {
     super({
       prefix: "/api-test",
-      middleware: [
-        authMiddleware
-      ],
+      middleware: [authMiddleware],
     });
 
     this.testController = new TestController();
@@ -18,6 +16,9 @@ export class TestRouter extends BaseRouter {
   }
 
   private setUpRoutes() {
-    this.router.post("/middleware", this.testController.testMiddleware.bind(this.testController));
+    this.router.post(
+      "/middleware",
+      this.testController.testMiddleware.bind(this.testController),
+    );
   }
 }
