@@ -24,8 +24,9 @@ const corsOptions: CorsOptions = {
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Accept"],
+  allowedHeaders: ["Content-Type", "Accept", "X-Requested-With", "Authorization"],
   credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 const app: Express = express();
@@ -38,6 +39,8 @@ app.use((req, res, next) => {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.json());
+
+app.options("*", cors(corsOptions));
 
 const routerManager = new RouterManager();
 
