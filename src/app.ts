@@ -1,4 +1,5 @@
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
@@ -14,6 +15,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.json());
 
 const routerManager = new RouterManager();

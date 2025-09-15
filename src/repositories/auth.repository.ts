@@ -2,19 +2,21 @@ import { prisma } from "@/libs/prisma";
 import { ICustomer, IDriver, IRestaurant } from "@/types/user";
 
 export default class AuthRepository {
-  findUserByEmailAndPassword(email: string, password: string) {
-    return prisma.user.findFirst({
-      where: {
-        email,
-        password,
-      },
-    });
-  }
-
   findUserByEmail(email: string) {
     return prisma.user.findFirst({
       where: {
         email,
+      },
+    });
+  }
+
+  getUserRoles(userId: number) {
+    return prisma.userRole.findMany({
+      where: {
+        user_id: userId,
+      },
+      select: {
+        role: true,
       },
     });
   }

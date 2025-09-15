@@ -9,8 +9,8 @@ const mockDatabase = {
   },
 };
 
-jest.mock("../config/db", () => ({
-  default: mockDatabase,
+jest.mock("../libs/prisma", () => ({
+  prisma: mockDatabase,
 }));
 
 // Create a test app
@@ -174,7 +174,7 @@ describe("Authentication API Integration Tests", () => {
       expect(response.body.user.email).toBe(customerData.email);
       expect(response.body.user.roles[0].role).toBe("customer");
       expect(response.body.user.customer.firstname).toBe(
-        customerData.firstname,
+        customerData.firstname
       );
     });
 
@@ -191,7 +191,7 @@ describe("Authentication API Integration Tests", () => {
         .expect(400);
 
       expect(response.body.message).toBe(
-        "Missing required fields: email, password, firstname, tel",
+        "Missing required fields: email, password, firstname, tel"
       );
     });
 
@@ -251,7 +251,7 @@ describe("Authentication API Integration Tests", () => {
         .expect(400);
 
       expect(response.body.message).toBe(
-        "Missing required fields: email, password, firstname, tel, vehicle, licence",
+        "Missing required fields: email, password, firstname, tel, vehicle, licence"
       );
     });
   });
@@ -278,7 +278,7 @@ describe("Authentication API Integration Tests", () => {
       expect(response.body.user.roles[0].role).toBe("restaurant");
       expect(response.body.user.restaurant.name).toBe(restaurantData.name);
       expect(response.body.user.restaurant.location).toBe(
-        restaurantData.location,
+        restaurantData.location
       );
     });
 
@@ -296,7 +296,7 @@ describe("Authentication API Integration Tests", () => {
         .expect(400);
 
       expect(response.body.message).toBe(
-        "Missing required fields: email, password, name, tel, location",
+        "Missing required fields: email, password, name, tel, location"
       );
     });
   });
