@@ -22,5 +22,10 @@ export class AuthenticateRouter extends BaseRouter {
       "/isAuthenticated",
       this.authenticatedController.isAuthenticated.bind(this.authenticatedController),
     );
+
+    this.router.post(
+      "/logout",
+      this.authenticatedController.logout.bind(this.authenticatedController),
+    )
   }
 }
