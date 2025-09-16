@@ -18,8 +18,8 @@ export class AuthenticateRouter extends BaseRouter {
   }
 
   private setUpRoutes() {
-    this.router.post(
-      "/",
+    this.router.get(
+      "/isAuthenticated",
       this.authenticatedController.isAuthenticated.bind(this.authenticatedController),
     );
   }
