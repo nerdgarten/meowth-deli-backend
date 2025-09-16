@@ -1,6 +1,4 @@
-import {
-  AuthenticatedController
-} from "@/controllers/authenticated.controller";
+import { AuthenticatedController } from "@/controllers/authenticated.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
 
@@ -20,12 +18,14 @@ export class AuthenticateRouter extends BaseRouter {
   private setUpRoutes() {
     this.router.get(
       "/isAuthenticated",
-      this.authenticatedController.isAuthenticated.bind(this.authenticatedController),
+      this.authenticatedController.isAuthenticated.bind(
+        this.authenticatedController,
+      ),
     );
 
     this.router.post(
       "/logout",
       this.authenticatedController.logout.bind(this.authenticatedController),
-    )
+    );
   }
 }
