@@ -1,9 +1,6 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { TestService } from "@/services/test.service";
-import { AppError } from "@/types/error";
-
 export class AuthenticatedController {
   constructor() {}
 

@@ -2,10 +2,10 @@ import { Router } from "express";
 
 import { AdminRouter } from "@/routes/admin.route";
 import { AuthRouter } from "@/routes/auth.route";
-import { CustomerRouter } from "@/routes/customer.route";
-import { TestRouter } from "@/routes/test.route";
-import { FileRouter } from "@/routes/file.route";
 import { AuthenticateRouter } from "@/routes/authenticated.route";
+import { CustomerRouter } from "@/routes/customer.route";
+import { FileRouter } from "@/routes/file.route";
+import { TestRouter } from "@/routes/test.route";
 
 export class RouterManager {
   private router: Router;

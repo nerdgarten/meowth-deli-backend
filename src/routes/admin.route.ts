@@ -1,14 +1,16 @@
 import { Router } from "express";
 
 import { AdminController } from "@/controllers/admin.controller";
+import { authMiddleware } from "@/middlewares/auth.middleware";
 
 import { BaseRouter } from "./baseRouter";
+
 
 export class AdminRouter extends BaseRouter {
   private controller: AdminController;
 
   constructor() {
-    super({ prefix: "/admin" });
+    super({ prefix: "/admin", middleware: [authMiddleware] });
     this.controller = new AdminController();
     this.initializeRoutes();
   }

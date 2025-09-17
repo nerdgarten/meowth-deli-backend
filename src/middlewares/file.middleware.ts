@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-
 import multer from "multer";
 
 export function fileMiddleware(
@@ -45,7 +44,7 @@ export function fileMiddleware(
       }
       next();
     });
-  } catch (error) {
+  } catch {
     res.status(StatusCodes.BAD_REQUEST).json({ message: "File Upload Error" });
   }
 }

@@ -1,11 +1,10 @@
 import { Router } from "express";
 
 import { FileController } from "@/controllers/file.controller";
-
-import { BaseRouter } from "./baseRouter";
-
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { fileMiddleware } from "@/middlewares/file.middleware";
+
+import { BaseRouter } from "./baseRouter";
 
 export class FileRouter extends BaseRouter {
   private controller: FileController;

@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '-':
-        specifier: ^0.0.1
-        version: 0.0.1
       '@prisma/client':
         specifier: 6.15.0
         version: 6.15.0(prisma@6.16.1(typescript@5.9.2))(typescript@5.9.2)
@@ -143,9 +140,6 @@ importers:
         version: 5.9.2
 
 packages:
-
-  '-@0.0.1':
-    resolution: {integrity: sha512-3HfneK3DGAm05fpyj20sT3apkNcvPpCuccOThOPdzz8sY7GgQGe0l93XH9bt+YzibcTIgUAIMoyVJI740RtgyQ==}
 
   '@aws-crypto/sha256-browser@5.2.0':
     resolution: {integrity: sha512-AXfN/lGotSQwu6HNcEsIASo7kWXZ5HYWvfOmSNKDsEqC4OashTp8alTmaz+F7TC2L083SFv5RdB+qU3Vs1kZqw==}
@@ -3300,8 +3294,6 @@ packages:
     resolution: {integrity: sha512-5R1P+WwQqmmMIEACyzSvo4JXHY5WiAFHRMg+zBZKgKS+Q1viRa0C1hmUKtHltoIFKtIdki3pRxkmpP74jnNYHQ==}
 
 snapshots:
-
-  '-@0.0.1': {}
 
   '@aws-crypto/sha256-browser@5.2.0':
     dependencies:

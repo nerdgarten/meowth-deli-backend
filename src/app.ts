@@ -1,11 +1,10 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
-import express from "express";
+import express, { type Express } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { RouterManager } from "./routes";
-import type { Express } from "express";
 
 const allowedOrigins = [
   "http://localhost:3000",
