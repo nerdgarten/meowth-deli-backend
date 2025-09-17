@@ -3,11 +3,11 @@ import { Router } from "express";
 import { AdminRouter } from "@/routes/admin.route";
 import { AuthRouter } from "@/routes/auth.route";
 import { AuthenticateRouter } from "@/routes/authenticated.route";
-import { RestaurantRouter } from "@/routes/restaurant.route";
 import { CustomerRouter } from "@/routes/customer.route";
-import { FileRouter } from "@/routes/file.route";
-import { TestRouter } from "@/routes/test.route";
 import { DishRouter } from "@/routes/dish.route";
+import { FileRouter } from "@/routes/file.route";
+import { RestaurantRouter } from "@/routes/restaurant.route";
+import { TestRouter } from "@/routes/test.route";
 
 export class RouterManager {
   private router: Router;
