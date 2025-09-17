@@ -1,27 +1,27 @@
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
-import express from "express";
+import express, { type Express } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { RouterManager } from "@/routes";
 
-import type { Express } from "express";
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://meowth.borworntat.com",
+];
 
 const corsOptions: CorsOptions = {
-  origin: (
-    origin: string | undefined,
-    callback: (err: Error | null, allow?: boolean | string) => void,
-  ) => {
-    if (!origin || origin.startsWith("http://localhost")) {
-      callback(null, origin || "*");
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Accept"],
   credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 const app: Express = express();
