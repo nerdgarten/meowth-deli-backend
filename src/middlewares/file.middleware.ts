@@ -10,7 +10,10 @@ export function fileMiddleware(
   try {
     const storage = multer.diskStorage({
       destination: function (req, file, callback) {
-        callback(null, "./upload");
+        if (!req.user || !req.user.role) {
+          return callback(new Error("User Role is missing"), "");
+        }
+        callback(null, `./upload/${req.user.role}`);
       },
       filename: function (req, file, callback) {
         if (!req.user || !req.user.id) {
@@ -18,7 +21,7 @@ export function fileMiddleware(
         }
         const userId = req.user.id;
         const timestamp = Date.now();
-        callback(null, userId + "_" + timestamp + ".jpg");
+        callback(null, userId + "_Certificate_" +  timestamp + ".pdf");
       },
     });
     const upload = multer({
@@ -40,6 +43,12 @@ export function fileMiddleware(
         res
           .status(StatusCodes.BAD_REQUEST)
           .json({ message: "No file provided" });
+        return;
+      }
+      if ( req.file.mimetype !== "application/pdf") {
+        res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: "Accept PDF File Only" });
         return;
       }
       next();
