@@ -8,6 +8,13 @@ export function fileMiddleware(
   next: NextFunction,
 ): void {
   try {
+    const pdfFileFilter: multer.Options["fileFilter"] = (req, file, callback) => {
+      if (file.mimetype === "application/pdf") {
+        callback(null, true);
+      } else {
+        callback(new Error("Accept PDF File Only"));
+      }
+    };
     const storage = multer.diskStorage({
       destination: function (req, file, callback) {
         if (!req.user || !req.user.role) {
@@ -19,13 +26,12 @@ export function fileMiddleware(
         if (!req.user || !req.user.id) {
           return callback(new Error("User ID is missing"), "");
         }
-        const userId = req.user.id;
-        const timestamp = Date.now();
-        callback(null, userId + "_Certificate_" +  timestamp + ".pdf");
+        callback(null, req.user.id + "_Certificate_" + Date.now() + ".pdf"); // e.g., 123_Certificate_1616161616161.pdf
       },
     });
     const upload = multer({
       storage: storage,
+      fileFilter: pdfFileFilter,
       limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
     }).single("file");
 
@@ -34,21 +40,16 @@ export function fileMiddleware(
         res.status(StatusCodes.BAD_REQUEST).json({ message: err.message });
         return;
       } else if (err) {
+        // Show the actual error message from pdfFileFilter
         res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: "Internal server error" });
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ message: err.message || "File Upload Error" });
         return;
       }
       if (!req.file) {
         res
           .status(StatusCodes.BAD_REQUEST)
           .json({ message: "No file provided" });
-        return;
-      }
-      if ( req.file.mimetype !== "application/pdf") {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Accept PDF File Only" });
         return;
       }
       next();
