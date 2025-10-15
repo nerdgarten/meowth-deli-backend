@@ -6,6 +6,7 @@ import path from "path";
 import { parse, stringify } from "yaml";
 import { FileStatus } from "@/types/file/file";
 import { FileManagement } from "@/types/file/file";
+import crypto from "crypto";
 
 const updateFileStatus = (
   uploadPath: string,
@@ -23,7 +24,7 @@ const updateFileStatus = (
 
   fs.writeFileSync(statusPath, stringify(fileStatus));
 };
-const UploadManageFilseStatus = (
+const uploadManageFilseStatus = (
   managePath: string,
   id: string,
   status: "yes" | "no",
@@ -104,12 +105,7 @@ export function fileMiddleware(
         req.user.id.toString()
       );
 
-      UploadManageFilseStatus(
-        managePath,
-        req.user.id.toString(),
-        "no",
-        path.join(uploadPath, "status.yaml")
-      );
+      
 
       if (err instanceof multer.MulterError) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: err.message });
@@ -127,7 +123,16 @@ export function fileMiddleware(
           .json({ message: "No file provided" });
         return;
       }
+
+      uploadManageFilseStatus(
+        managePath,
+        req.user.id.toString(),
+        "no",
+        path.join(uploadPath, "status.yaml")
+      );
+
       updateFileStatus(uploadPath, {
+        id: crypto.randomBytes(8).toString('hex'), // generates a random 32-character hex string
         filename: req.file.filename,
         uploadedAt: new Date().toISOString(),
         status: "pending",

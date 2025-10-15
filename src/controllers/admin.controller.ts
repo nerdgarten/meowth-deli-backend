@@ -94,4 +94,182 @@ export class AdminController {
       });
     }
   }
+  async getPendingVerifiedDrivers(req: Request, res: Response) {
+    try {
+      const page = Number(req.query.page);
+      const limit = Number(req.query.limit);
+      const offset = (page - 1) * limit;
+
+      const result = await this.adminService.getPendingVerifications(
+        limit,
+        offset,
+        "driver"
+      );
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+  async getFileIdPendingVerifiedDriver(req: Request, res: Response) {
+    try {
+      const driverId = Number(req.params.id);
+      console.log(driverId);
+      if (isNaN(driverId)) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "Invalid driver ID",
+        });
+        return;
+      }
+      const result = await this.adminService.getFileIdPendingVerified(
+        driverId,
+        "driver"
+      );
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+  async getPendingVerifiedRestaurants(req: Request, res: Response) {
+    try {
+      const page = Number(req.query.page);
+      const limit = Number(req.query.limit);
+      const offset = (page - 1) * limit;
+
+      const result = await this.adminService.getPendingVerifications(
+        limit,
+        offset,
+        "restaurant"
+      );
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+  async getFileIdPendingVerifiedRestaurants(req: Request, res: Response) {
+    try {
+      const driverId = Number(req.params.id);
+      console.log(driverId);
+      if (isNaN(driverId)) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "Invalid driver ID",
+        });
+        return;
+      }
+      const result = await this.adminService.getFileIdPendingVerified(
+        driverId,
+        "restaurant"
+      );
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+  async getDriverFileById(req: Request, res: Response) {
+    try {
+      const driverId = Number(req.params.id);
+      const fileId = String(req.params.fileId);
+      if (isNaN(driverId) || !fileId) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "Invalid driver ID or file ID",
+        });
+        return;
+      }
+      const result = await this.adminService.getFileById(
+        driverId,
+        fileId,
+        "driver"
+      );
+      console.log(result.filePath);
+      res.sendFile(result.filePath);
+      // res.status(StatusCodes.OK).json({
+      //   message: result.message,
+      // });
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+  async getRestaurantFileById(req: Request, res: Response) {
+    try {
+      const driverId = Number(req.params.id);
+      const fileId = String(req.params.fileId);
+      if (isNaN(driverId) || !fileId) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "Invalid driver ID or file ID",
+        });
+        return;
+      }
+      const result = await this.adminService.getFileById(
+        driverId,
+        fileId,
+        "restaurant"
+      );
+      res.sendFile(result.filePath);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
 }

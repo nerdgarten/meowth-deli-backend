@@ -1,5 +1,6 @@
 export interface FileStatus {
     files: {
+        id: string;
         filename: string;
         uploadedAt: string;
         status: "pending" | "verified" | "rejected";
