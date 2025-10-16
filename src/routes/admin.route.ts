@@ -3,7 +3,6 @@ import { Router } from "express";
 import { AdminController } from "@/controllers/admin.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
-import { PaginationMiddleware } from "@/middlewares/pagination.middleware";
 
 export class AdminRouter extends BaseRouter {
   private controller: AdminController;
@@ -36,7 +35,6 @@ export class AdminRouter extends BaseRouter {
     );
     this.router.get(
       "/drivers/file-pending",
-      PaginationMiddleware,
       this.controller.getPendingVerifiedDrivers.bind(this.controller),
     );
     this.router.get(
@@ -45,7 +43,6 @@ export class AdminRouter extends BaseRouter {
     );
     this.router.get(
       "/restaurants/file-pending",
-      PaginationMiddleware,
       this.controller.getPendingVerifiedRestaurants.bind(this.controller),
     );
     this.router.get(

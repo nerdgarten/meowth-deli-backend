@@ -16,3 +16,7 @@ export interface FileManagement {
         status_path: string;
     }[];
 }
+export interface FilePaginationQuery {
+    limit?: string | string[];
+    offset?: string | string[];
+}

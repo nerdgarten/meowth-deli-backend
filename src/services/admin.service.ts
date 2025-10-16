@@ -7,6 +7,7 @@ import fs from "fs";
 import { parse } from "yaml";
 import { FileManagement } from "@/types/file/file";
 import { FileStatus } from "@/types/file/file";
+import { FilePaginationQuery } from "@/types/file/file";
 import path from "path";
 export default class AdminService {
   private adminRepository: AdminRepository;
@@ -74,8 +75,11 @@ export default class AdminService {
     );
   }
 
-  async getPendingVerifications(limt: number, page: number, role: "restaurant" | "driver") {
-    const managePath = "./upload/driver/manage.yaml";
+  async getPendingVerifications(
+    paging: FilePaginationQuery,
+    role: "restaurant" | "driver"
+  ) {
+    const managePath = `./upload/${role}/manage.yaml`;
     if (!fs.existsSync(managePath)) {
       throw new AppError("No pending verifications", StatusCodes.NOT_FOUND);
     }
@@ -84,11 +88,13 @@ export default class AdminService {
     const pendingVerifications = manageData.userFiles.filter(
       (file) => file.is_verified_decided === "no"
     );
-    const startIndex = (page - 1) * limt;
+    const limit = Math.min(Number(paging.limit) || 10, 100);
+    const offset = Math.max(Number(paging.offset) || 0, 0);
+
 
     const paginatedData = pendingVerifications.slice(
-      startIndex,
-      Math.max(startIndex + limt, pendingVerifications.length)
+      offset,
+      Math.max(offset + limit, pendingVerifications.length)
     );
 
     return {
@@ -96,11 +102,14 @@ export default class AdminService {
       message: "Pending verifications retrieved successfully",
       data: paginatedData,
       total: pendingVerifications.length,
-      page: page,
-      limit: limt,
+      offset: offset,
+      limit: limit,
     };
   }
-  async getFileIdPendingVerified(driverId: number, role: "restaurant" | "driver") {
+  async getFileIdPendingVerified(
+    driverId: number,
+    role: "restaurant" | "driver"
+  ) {
     const userFilePath = `./upload/driver/${driverId}/status.yaml`;
     if (!fs.existsSync(userFilePath)) {
       throw new AppError("File not found", StatusCodes.NOT_FOUND);
@@ -122,7 +131,11 @@ export default class AdminService {
       data: driverFile,
     };
   }
-  async getFileById(driverId: number, fileId: string, role: "restaurant" | "driver") {
+  async getFileById(
+    driverId: number,
+    fileId: string,
+    role: "restaurant" | "driver"
+  ) {
     const filePath = `./upload/driver/${driverId}/status.yaml`;
     if (!fs.existsSync(filePath)) {
       throw new AppError("Driver file not found", StatusCodes.NOT_FOUND);
@@ -144,6 +157,5 @@ export default class AdminService {
         File.filename
       ),
     };
-
   }
 }

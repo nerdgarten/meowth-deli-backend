@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import AdminService from "@/services/admin.service";
+import { FilePaginationQuery } from "@/types/file/file";
 import {
   AdminVerificationRequest,
   AdminVerificationQuery,
@@ -96,13 +97,10 @@ export class AdminController {
   }
   async getPendingVerifiedDrivers(req: Request, res: Response) {
     try {
-      const page = Number(req.query.page);
-      const limit = Number(req.query.limit);
-      const offset = (page - 1) * limit;
+
 
       const result = await this.adminService.getPendingVerifications(
-        limit,
-        offset,
+        req.query as FilePaginationQuery,
         "driver"
       );
       res.status(StatusCodes.OK).json(result);
@@ -152,13 +150,9 @@ export class AdminController {
   }
   async getPendingVerifiedRestaurants(req: Request, res: Response) {
     try {
-      const page = Number(req.query.page);
-      const limit = Number(req.query.limit);
-      const offset = (page - 1) * limit;
 
       const result = await this.adminService.getPendingVerifications(
-        limit,
-        offset,
+        req.query as FilePaginationQuery,
         "restaurant"
       );
       res.status(StatusCodes.OK).json(result);
