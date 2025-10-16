@@ -28,3 +28,28 @@ export interface IRestaurant extends IBaseUser {
 }
 
 export type ICustomerProfile = Pick<ICustomer, "firstname", "lastname", "tel">;
+
+export interface IOrderDish {
+  name: string;
+  quantity: number;
+  note?: string;
+}
+
+export interface ICreateOrderRequest {
+  location: string;
+  note?: string;
+  dishes: IOrderDish[];
+}
+
+export interface IOrderDishRepository {
+  dishId: number;
+  quantity: number;
+  note?: string;
+}
+
+export interface ICreateOrderRepository {
+  customerId: number;
+  location: string;
+  note?: string;
+  dishes: IOrderDishRepository[];
+}

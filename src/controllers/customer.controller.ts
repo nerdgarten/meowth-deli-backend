@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
+import { ICreateOrderRequest } from "@/types/user";
 import CustomerService from "@/services/customer.service";
 import { AppError } from "@/types/error";
 
@@ -47,6 +48,52 @@ export class CustomerController {
       res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: "Internal Server Error" });
+    }
+  }
+
+  async createOrder(req: Request<any, any, ICreateOrderRequest>, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { location, note, dishes } = req.body;
+
+      if (!location || !dishes?.length) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          message: "Location and at least one dish are required"
+        });
+        return;
+      }
+
+      const isValidDishes = dishes.every(dish => 
+        dish.name && 
+        dish.quantity && 
+        dish.quantity > 0
+      );
+
+      if (!isValidDishes) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          message: "Invalid dish format. Each dish must have name and quantity > 0"
+        });
+        return;
+      }
+
+      const order = await this.customerService.createOrder(userId, {
+        location,
+        note,
+        dishes
+      });
+
+      res.status(StatusCodes.CREATED).json({
+        message: "Order created successfully",
+        order
+      });
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+         .json({ message: "Internal Server Error" });
     }
   }
 }
