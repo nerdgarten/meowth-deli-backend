@@ -24,5 +24,22 @@ export class CustomerRouter extends BaseRouter {
         this.customerController,
       ),
     );
+
+    this.router.get(
+      "/HistoryOrders",
+      this.customerController.getOrderHistory.bind(this.customerController)
+    );
+    this.router.get(
+      "/Orders/statistics",
+      this.customerController.getOrderStatistics.bind(this.customerController)
+    );
+    this.router.get(
+      "/HistoryOrders/:orderId",
+      this.customerController.getOrderById.bind(this.customerController)
+    );
+    this.router.get(
+      "/HistoryOrders/:orderId/reorder",
+      this.customerController.getReorderItems.bind(this.customerController)
+    );
   }
 }
