@@ -24,5 +24,18 @@ export class CustomerRouter extends BaseRouter {
         this.customerController,
       ),
     );
+    this.router.get(
+      "/Orders/:orderId/status",
+      this.customerController.getOrderStatus.bind(this.customerController),
+    );
+    this.router.get(
+      "/Orders",
+      this.customerController.getAllOrdersWithStatus.bind(this.customerController),
+    );
+    
+    this.router.post(
+      "/payment/mock",
+      this.customerController.processMockPayment.bind(this.customerController),
+    );
   }
 }
