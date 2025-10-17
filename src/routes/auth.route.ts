@@ -28,7 +28,7 @@ export class AuthRouter extends BaseRouter {
       "/signup/restaurant",
       this.authController.signUpRestaurant.bind(this.authController),
     );
-    this.router.patch(
+    this.router.post(
       "/reset/request",
       this.authController.requestResetPassword.bind(this.authController)
     );

@@ -131,7 +131,7 @@ export default class AuthService {
       expires,
     } as ResetToken);
 
-    const resetUrl = `${urlConfig.front_end}/auth/reset?token=${token}`;
+    const resetUrl = `http://${urlConfig.front_end}/auth/reset?token=${token}`;
     const from = `"Meowth Deli" <${emailConfig.user}>`;
 
     await this.emailService.sendEmail(from, {
