@@ -110,6 +110,9 @@ export default class AdminService {
     driverId: number,
     role: "restaurant" | "driver"
   ) {
+    if(!driverId){
+      throw new AppError("Driver ID is required", StatusCodes.BAD_REQUEST);
+    }
     const userFilePath = `./upload/driver/${driverId}/status.yaml`;
     if (!fs.existsSync(userFilePath)) {
       throw new AppError("File not found", StatusCodes.NOT_FOUND);

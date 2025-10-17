@@ -121,14 +121,6 @@ export class AdminController {
   async getFileIdPendingVerifiedDriver(req: Request, res: Response) {
     try {
       const driverId = Number(req.params.id);
-      console.log(driverId);
-      if (isNaN(driverId)) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-          success: false,
-          message: "Invalid driver ID",
-        });
-        return;
-      }
       const result = await this.adminService.getFileIdPendingVerified(
         driverId,
         "driver"
