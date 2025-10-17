@@ -70,6 +70,7 @@ model User {
   paymentMethods    PaymentMethod[]
   restaurantReviews RestaurantReview[]
   verifyTokens      VerifyToken[]
+  resetTokens       ResetToken[]
 }
 
 model UserRole {
@@ -397,4 +398,15 @@ model VerifyToken {
   updated_at DateTime @updatedAt @db.Timestamptz
 
   user User @relation(fields: [user_id], references: [id])
+}
+
+model ResetToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  user_id    Int
+  expires_at DateTime? @db.Timestamptz
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
 }
