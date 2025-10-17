@@ -1,3 +1,4 @@
+//Service
 import { StatusCodes } from "http-status-codes";
 
 import CustomerRepository from "@/repositories/customer.repository";
@@ -32,13 +33,30 @@ export default class CustomerService {
 
     return updatedProfile;
   }
+
   async createOrder(customerId: number, orderData: ICreateOrderRequest): Promise<Order> {
+    // Validation for location
     if (!orderData.location) {
       throw new AppError("Location is required", StatusCodes.BAD_REQUEST);
     }
 
+    // Validation for dishes
     if (!orderData.dishes?.length) {
       throw new AppError("At least one dish is required", StatusCodes.BAD_REQUEST);
+    }
+
+    // Validate dish format
+    const isValidDishes = orderData.dishes.every(dish => 
+      dish.name && 
+      dish.quantity && 
+      dish.quantity > 0
+    );
+
+    if (!isValidDishes) {
+      throw new AppError(
+        "Invalid dish format. Each dish must have name and quantity > 0", 
+        StatusCodes.BAD_REQUEST
+      );
     }
 
     const dishDetails = await this.customerRepository.getDishesWithDetails(
