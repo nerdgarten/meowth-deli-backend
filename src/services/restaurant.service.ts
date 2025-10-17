@@ -4,6 +4,7 @@ import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
+import { OrderStatus } from "@/generated/prisma/client";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
@@ -43,5 +44,34 @@ export default class RestaurantService {
       );
 
     return updatedRestaurant;
+  }
+  async getRestaurantOrders(userId: number, status?: OrderStatus) {
+    const userRestaurant = await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
+    
+    const orders = await this.restaurantRepository.getOrdersByRestaurantId(userRestaurant.id, status);
+    
+    return orders;
+  }
+
+  async updateOrderStatus(userId: number, orderId: number, status: OrderStatus) {
+    const userRestaurant = await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
+    
+    const order = await this.restaurantRepository.findOrderById(orderId);
+    if (!order || !order.orderDishes.some(od => od.dish.restaurant_id === userRestaurant.id)) {
+      throw new AppError("Order not found or doesn't belong to this restaurant", StatusCodes.NOT_FOUND);
+    }
+    
+    const validStatuses: OrderStatus[] = [OrderStatus.preparing, OrderStatus.rejected];
+    if (!validStatuses.includes(status)) {
+      throw new AppError("Invalid status. Restaurant can only set status to 'preparing' or 'rejected'", StatusCodes.BAD_REQUEST);
+    }
+    
+    if (order.status !== OrderStatus.pending) {
+      throw new AppError("Order status can only be updated when it's in 'pending' state", StatusCodes.BAD_REQUEST);
+    }
+    
+    const updatedOrder = await this.restaurantRepository.updateOrderStatus(orderId, status);
+    
+    return updatedOrder;
   }
 }

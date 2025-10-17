@@ -26,5 +26,16 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
+    this.router.get(
+      "/orders",
+      authMiddleware,
+      this.restaurantController.getRestaurantOrders.bind(this.restaurantController)
+    );
+
+    this.router.patch(
+      "/orders/:orderId/status",
+      authMiddleware,
+      this.restaurantController.updateOrderStatus.bind(this.restaurantController)
+    );
   }
 }

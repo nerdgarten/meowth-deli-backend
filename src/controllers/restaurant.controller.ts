@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantService from "@/services/restaurant.service";
 import { AppError } from "@/types/error";
+import { OrderStatus } from "@/generated/prisma/client";
 
 export class RestaurantController {
   private restaurantService: RestaurantService;
@@ -71,6 +72,66 @@ export class RestaurantController {
         "Unexpected error during restaurant availability update:",
         error
       );
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
+  async getRestaurantOrders(req: Request, res: Response) {
+    try {
+      const userId = req.user?.id;
+      const status = req.query.status as OrderStatus | undefined;
+      
+      if (!userId) {
+        res.status(StatusCodes.UNAUTHORIZED).json({ message: "User not authenticated" });
+        return;
+      }
+      
+      const orders = await this.restaurantService.getRestaurantOrders(userId, status);
+      
+      res.status(StatusCodes.OK).json(orders);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+      console.error("Unexpected error during get restaurant orders:", error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
+
+  async updateOrderStatus(req: Request, res: Response) {
+    try {
+      const userId = req.user?.id;
+      const orderId = parseInt(req.params.orderId);
+      const { status } = req.body;
+      
+      if (!userId) {
+        res.status(StatusCodes.UNAUTHORIZED).json({ message: "User not authenticated" });
+        return;
+      }
+      
+      if (isNaN(orderId) || !status) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "Valid orderId and status are required" });
+        return;
+      }
+      
+      if (![OrderStatus.preparing, OrderStatus.rejected].includes(status)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid status. Can only update to 'preparing' or 'rejected'" });
+        return;
+      }
+      
+      const updatedOrder = await this.restaurantService.updateOrderStatus(userId, orderId, status as OrderStatus);
+      
+      res.status(StatusCodes.OK).json(updatedOrder);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+      console.error("Unexpected error during order status update:", error);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",
       });
