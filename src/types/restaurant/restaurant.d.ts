@@ -13,9 +13,3 @@ export interface RestaurantWhereClause {
   AND?: RestaurantWhereClause[];
   OR?: RestaurantWhereClause[];
 }
-export interface RestaurantOrderByClause {
-  id?: "asc" | "desc";
-  name?: "asc" | "desc";
-  created_at?: "asc" | "desc";
-  updated_at?: "asc" | "desc";
-}
