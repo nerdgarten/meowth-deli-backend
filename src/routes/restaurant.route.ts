@@ -19,10 +19,23 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
+    
     this.router.patch(
       "/availability",
       authMiddleware,
       this.restaurantController.updateRestaurantAvailability.bind(
+        this.restaurantController
+      )
+    );
+    this.router.get(
+      "/:id/dish",
+      this.restaurantController.getDishesByRestaurantId.bind(
+        this.restaurantController
+      )
+    );
+    this.router.get(
+      "/:id",
+      this.restaurantController.getRestaurantById.bind(
         this.restaurantController
       )
     );

@@ -1,0 +1,99 @@
+{
+	"info": {
+		"_postman_id": "2d6df2b5-5174-4c4d-92c9-a52a06f70141",
+		"name": "Create Dish",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33733768",
+		"_collection_link": "https://nerdgarten.postman.co/workspace/NerdGarten~e27bafeb-e55d-4de5-a184-0191c0c5ce0d/collection/33733768-2d6df2b5-5174-4c4d-92c9-a52a06f70141?action=share&source=collection_link&creator=33733768"
+	},
+	"item": [
+		{
+			"name": "SignUp Restaurant",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\" : \"Test\",\r\n    \"password\": \"12345\",\r\n    \"firstname\": \"a\",\r\n    \"lastname\": \"b\",\r\n    \"tel\": \"\",\r\n    \"vehicle\" : \"honda\",\r\n    \"licence\" : \"1234\",\r\n    \"name\": \"Bar Gay\",\r\n    \"location\": \"Poseidon\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/auth/signup/restaurant",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"auth",
+						"signup",
+						"restaurant"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Dish",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\" : 4,\r\n    \"dishData\": {\r\n        \"restaurant_id\": 4,\r\n        \"name\": \"Pizza\",\r\n\r\n        \"price\": 20\r\n\r\n    }\r\n    \r\n \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/dish/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"dish",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SignIn",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"test2\",\r\n    \"password\": \"12345\",\r\n    \"role\": \"customer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3030/auth/signin",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"auth",
+						"signin"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

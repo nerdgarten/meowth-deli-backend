@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "0d1fa1b6-c5b7-4914-a1e0-5822ce5ff897",
+		"name": "Restaurant",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33733768",
+		"_collection_link": "https://nerdgarten.postman.co/workspace/NerdGarten~e27bafeb-e55d-4de5-a184-0191c0c5ce0d/collection/33733768-0d1fa1b6-c5b7-4914-a1e0-5822ce5ff897?action=share&source=collection_link&creator=33733768"
+	},
+	"item": [
+		{
+			"name": "Get Dish by ID",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Dish by Restaurant ID",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Restaurant",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
