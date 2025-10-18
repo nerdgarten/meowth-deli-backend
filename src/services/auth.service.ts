@@ -141,7 +141,7 @@ export default class AuthService {
       html: `
           <h1>Reset Your Password</h1>
           <p>Click the link below to reset your password. This link expires in 1 hour.</p>
-          <a href="${resetUrl}">Reset Password</a>
+          <a href="${resetUrl}"> Reset Password</a>
         `,
     } as IEmail);
   }
