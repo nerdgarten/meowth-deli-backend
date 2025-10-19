@@ -2,7 +2,8 @@ import { StatusCodes } from "http-status-codes";
 
 import CustomerRepository from "@/repositories/customer.repository";
 import { AppError } from "@/types/error";
-import { ICustomer, IDriver, IRestaurant, MockPaymentResult, PaymentRequest, OrderStatusInfo } from "@/types/user";
+import { ICustomer, IDriver, IRestaurant } from "@/types/user";
+import {MockPaymentResult, PaymentRequest, OrderStatusInfo} from "@/types/order"
 import { OrderStatus } from "@/generated/prisma/client";
 
 export default class CustomerService {
@@ -201,17 +202,10 @@ export default class CustomerService {
         timestamp: new Date(),
       };
     } else {
-      const failureReasons = [
-        "Insufficient funds",
-        "Card declined by bank",
-        "Invalid card number",
-        "Payment gateway timeout",
-        "Transaction limit exceeded",
-      ];
       
       return {
         success: false,
-        message: failureReasons[Math.floor(Math.random() * failureReasons.length)],
+        message: "Payment Failure",
         timestamp: new Date(),
       };
     }

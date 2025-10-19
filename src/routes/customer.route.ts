@@ -25,11 +25,11 @@ export class CustomerRouter extends BaseRouter {
       ),
     );
     this.router.get(
-      "/Orders/:orderId/status",
+      "/my-orders/:orderId/status",
       this.customerController.getOrderStatus.bind(this.customerController),
     );
     this.router.get(
-      "/Orders",
+      "/my-orders",
       this.customerController.getAllOrdersWithStatus.bind(this.customerController),
     );
     
