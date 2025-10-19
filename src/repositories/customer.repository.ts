@@ -1,6 +1,5 @@
 import { prisma } from "@/libs/prisma";
 import { ICustomerProfile } from "@/types/user";
-
 export default class CustomerRepository {
   getCustomerProfile(userId: number) {
     return prisma.customer.findFirst({
@@ -42,12 +41,12 @@ export default class CustomerRepository {
     const limit = options?.limit || 10;
     const skip = (page - 1) * limit;
 
-    const where: Prisma.OrderWhereInput = {
+    const where = {
       customer_id: userId,
       ...(options?.status && { status: options.status as any }),
     };
 
-    const orderBy: Prisma.OrderOrderByWithRelationInput = {
+    const orderBy = {
       [options?.sortBy || "created_at"]: options?.sortOrder || "desc",
     };
 
