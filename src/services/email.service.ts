@@ -7,6 +7,7 @@ import emailConfig from "@/config/email";
 import { generateVerificationEmail } from "@/constant/email/email";
 import EmailRepository from "@/repositories/email.repository";
 import { AppError } from "@/types/error";
+import { IEmail } from "@/types/email/email";
 
 export default class EmailService {
   private emailRepository: EmailRepository;
@@ -30,24 +31,18 @@ export default class EmailService {
     await this.emailRepository.createToken(
       userId,
       token,
-      new Date(Date.now() + 3600000), // 1 hour expiration
+      new Date(Date.now() + 3600000) // 1 hour expiration
     );
     return token;
   }
 
-  async sendEmail(
-    from: string,
-    to: string,
-    subject: string,
-    text: string,
-    html: string,
-  ) {
+  async sendEmail(from: string, mail: IEmail) {
     const info = await this.transporter.sendMail({
       from: from,
-      to: to,
-      subject: subject,
-      text: text,
-      html: html,
+      to: mail.to,
+      subject: mail.subject,
+      text: mail.text,
+      html: mail.html,
     });
     return info;
   }
@@ -56,16 +51,15 @@ export default class EmailService {
     to: string,
     subject: string,
     text: string,
-    verificationUrl: string,
+    verificationUrl: string
   ) {
     const from = `"Meowth Deli" <${emailConfig.user}>`;
-    const info = this.sendEmail(
-      from,
+    const info = this.sendEmail(from, {
       to,
       subject,
       text,
-      generateVerificationEmail(verificationUrl),
-    );
+      html: generateVerificationEmail(verificationUrl),
+    } as IEmail);
     console.log("Verification email sent: ", info);
   }
 

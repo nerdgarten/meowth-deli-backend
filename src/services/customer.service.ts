@@ -25,7 +25,7 @@ export default class CustomerService {
   async updateCustomerProfile(userId: number, data: Partial<ICustomer>) {
     const updatedProfile = await this.customerRepository.updateCustomerProfile(
       userId,
-      data,
+      data
     );
     if (!updatedProfile) {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
