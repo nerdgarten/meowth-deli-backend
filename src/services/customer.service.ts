@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 
 import CustomerRepository from "@/repositories/customer.repository";
 import { AppError } from "@/types/error";
-import { ICustomer, IDriver, IRestaurant } from "@/types/user";
+import { ICustomer } from "@/types/user";
 
 export default class CustomerService {
   private customerRepository: CustomerRepository;
@@ -23,7 +23,7 @@ export default class CustomerService {
   async updateCustomerProfile(userId: number, data: Partial<ICustomer>) {
     const updatedProfile = await this.customerRepository.updateCustomerProfile(
       userId,
-      data,
+      data
     );
     if (!updatedProfile) {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
