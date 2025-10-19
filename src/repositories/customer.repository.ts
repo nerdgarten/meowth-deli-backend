@@ -1,6 +1,5 @@
 import { prisma } from "@/libs/prisma";
 import { ICustomerProfile } from "@/types/user";
-import {Prisma} from "@/generated/prisma/client";
 
 export default class CustomerRepository {
   getCustomerProfile(userId: number) {
