@@ -1,0 +1,60 @@
+{
+	"info": {
+		"_postman_id": "0382922a-0f78-4cd5-a673-cc2f3aaaceba",
+		"name": "Admin Dashboard",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33733768",
+		"_collection_link": "https://nerdgarten.postman.co/workspace/NerdGarten~e27bafeb-e55d-4de5-a184-0191c0c5ce0d/collection/33733768-0382922a-0f78-4cd5-a673-cc2f3aaaceba?action=share&source=collection_link&creator=33733768"
+	},
+	"item": [
+		{
+			"name": "Driver File Paging",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get User File Status Driver",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get File",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3030/admin/drivers/files/:id/:fileId",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"admin",
+						"drivers",
+						"files",
+						":id",
+						":fileId"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "3"
+						},
+						{
+							"key": "fileId",
+							"value": "b447225171ea08cb"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

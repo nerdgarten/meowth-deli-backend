@@ -33,6 +33,31 @@ export class AdminRouter extends BaseRouter {
       "/drivers/:id/verify",
       this.controller.verifyDriver.bind(this.controller),
     );
+    this.router.get(
+      "/drivers/file-pending",
+      this.controller.getPendingVerifiedDrivers.bind(this.controller),
+    );
+    this.router.get(
+      "/drivers/file-pending/:id",
+      this.controller.getFileIdPendingVerifiedDriver.bind(this.controller),
+    );
+    this.router.get(
+      "/restaurants/file-pending",
+      this.controller.getPendingVerifiedRestaurants.bind(this.controller),
+    );
+    this.router.get(
+      "/restaurants/file-pending/:id",
+      this.controller.getFileIdPendingVerifiedRestaurants.bind(this.controller),
+    );
+
+    this.router.get(
+      "/drivers/files/:id/:fileId",
+      this.controller.getDriverFileById.bind(this.controller),
+    );
+    this.router.get(
+      "/restaurants/files/:id/:fileId",
+      this.controller.getRestaurantFileById.bind(this.controller),
+    );
   }
 
   public getRouter(): Router {
