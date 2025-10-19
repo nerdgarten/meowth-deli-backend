@@ -61,8 +61,7 @@ export default class RestaurantService {
       throw new AppError("Order not found or doesn't belong to this restaurant", StatusCodes.NOT_FOUND);
     }
     
-    const validStatuses: OrderStatus[] = [OrderStatus.preparing, OrderStatus.rejected];
-    if (!validStatuses.includes(status)) {
+    if (![OrderStatus.preparing, OrderStatus.rejected].includes(status as any)) {
       throw new AppError("Invalid status. Restaurant can only set status to 'preparing' or 'rejected'", StatusCodes.BAD_REQUEST);
     }
     
