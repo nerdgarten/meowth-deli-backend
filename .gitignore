@@ -12,3 +12,5 @@ dist
 upload/driver/*
 upload/restaurant/*
 !upload/example.jpg
+
+.DS_Store
