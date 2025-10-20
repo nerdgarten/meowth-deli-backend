@@ -434,15 +434,6 @@ export default class CustomerService {
   // HELPER METHODS
   // ========================
 
-  private async simulatePaymentGateway(paymentRequest: PaymentRequest) {
-    // Simulate async payment processing
-    await new Promise((res) => setTimeout(res, 1000));
-    return {
-      success: Math.random() > 0.2,
-      message: "Mock payment processed",
-    };
-  }
-
   private getStatusDescription(status: string): string {
     const descriptions: Record<string, string> = {
       [OrderStatus.pending]: "Your order is awaiting payment",
