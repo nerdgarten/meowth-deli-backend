@@ -55,7 +55,6 @@ export default class CustomerService {
   ): Promise<Order> {
     // Validate input
     this.validateOrderInput(orderData);
-    console.log(orderData)
 
     // Validate restaurant
     const restaurant = await this.validateRestaurant(orderData.restaurant_id);
