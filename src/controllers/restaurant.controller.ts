@@ -144,4 +144,44 @@ export class RestaurantController {
       });
     }
   }
+
+  async getDishesByRestaurantId(req: Request, res: Response) {
+    try {
+      const restaurantId = Number(req.params.id);
+
+      const dishes = await this.restaurantService.getDishesByRestaurantId(restaurantId);
+      res.status(StatusCodes.OK).json(dishes);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+      console.error(
+        "Unexpected error during restaurant availability update:",
+        error
+      );
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
+  async getRestaurantById(req: Request, res: Response) {
+    try {
+      const restaurantId = Number(req.params.id);
+      const restaurant = await this.restaurantService.getRestaurantById(restaurantId);
+      res.status(StatusCodes.OK).json(restaurant);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+      console.error(
+        "Unexpected error during restaurant availability update:",
+        error
+      );
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
 }

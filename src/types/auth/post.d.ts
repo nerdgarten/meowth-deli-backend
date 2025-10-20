@@ -13,3 +13,8 @@ export interface SignInBody extends IBaseUser {
 export type CustomerSignUpBody = ICustomer;
 export type DriverSignUpBody = IDriver;
 export type RestaurantSignUpBody = IRestaurant;
+
+export interface ResetPasswordBody {
+  token: string;
+  password: string;
+}

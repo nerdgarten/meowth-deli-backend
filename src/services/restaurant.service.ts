@@ -4,6 +4,7 @@ import { VerificationStatus, OrderStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
+import { IRestaurant } from "@/types/user";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
@@ -73,5 +74,23 @@ export default class RestaurantService {
     const updatedOrder = await this.restaurantRepository.updateOrderStatus(orderId, status);
     
     return updatedOrder;
+  }
+
+  async getDishesByRestaurantId(restaurantId: number) {
+    if(!restaurantId || isNaN(restaurantId)) {
+      throw new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST);
+    }
+    const dishes = await this.restaurantRepository.findDishesByRestaurantId(restaurantId);
+    return dishes;
+  }
+  async getRestaurantById(restaurantId: number) {
+    if(!restaurantId || isNaN(restaurantId)) {
+      throw new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST);
+    }
+    const restaurant = await this.restaurantRepository.findRestaurantById(restaurantId);
+    if(!restaurant) {
+      throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
+    }
+    return restaurant;
   }
 }

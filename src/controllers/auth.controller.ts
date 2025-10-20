@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 
 import AuthService from "@/services/auth.service";
 import { AppError } from "@/types/error";
+import { ResetPasswordBody } from "@/types/auth/post";
 
 export class AuthController {
   private authService: AuthService;
@@ -107,6 +108,49 @@ export class AuthController {
         return;
       }
       console.error("Unexpected error during verify admin status:", error);
+
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
+  async requestResetPassword(req: Request, res: Response) {
+    try {
+      await this.authService.requestResetPassword(req.body.email);
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "Password reset email sent successfully" });
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+
+        return;
+      }
+      console.error("Unexpected error during request Reset Password:", error);
+
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
+  async resetPassword(req: Request, res: Response) {
+    try {
+      await this.authService.resetPassword(
+        {
+          token: req.params.token,
+          password: req.body.password
+        } as ResetPasswordBody
+      );
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "Password has been reset successfully" });
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+
+        return;
+      }
+      console.error("Unexpected error during request Reset Password:", error);
 
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",

@@ -1,0 +1,234 @@
+{
+  "info": {
+    "name": "Review API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Requests for driver, restaurant, and order review endpoints."
+  },
+  "item": [
+    {
+      "name": "Create Driver Review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/driver/{{driverId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["review", "driver", "{{driverId}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": {{orderId}},\n  \"rate\": 5,\n  \"reviewText\": \"Great delivery experience\"\n}"
+        }
+      }
+    },
+    {
+      "name": "List Driver Reviews",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}",
+            "type": "text"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/driver/{{driverId}}?limit={{limit}}&offset={{offset}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["review", "driver", "{{driverId}}"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "{{limit}}"
+            },
+            {
+              "key": "offset",
+              "value": "{{offset}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Driver Review",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/driver/{{driverId}}/{{driverReviewId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["review", "driver", "{{driverId}}", "{{driverReviewId}}"]
+        }
+      }
+    },
+    {
+      "name": "Create Restaurant Review",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/restaurant/{{restaurantId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["review", "restaurant", "{{restaurantId}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": {{orderId}},\n  \"rate\": 4,\n  \"reviewText\": \"Nice food\"\n}"
+        }
+      }
+    },
+    {
+      "name": "List Restaurant Reviews",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/restaurant/{{restaurantId}}?limit={{limit}}&offset={{offset}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["review", "restaurant", "{{restaurantId}}"],
+          "query": [
+            {
+              "key": "limit",
+              "value": "{{limit}}"
+            },
+            {
+              "key": "offset",
+              "value": "{{offset}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Get Restaurant Review",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/restaurant/{{restaurantId}}/{{restaurantReviewId}}",
+          "host": ["{{baseUrl}}"],
+          "path": [
+            "review",
+            "restaurant",
+            "{{restaurantId}}",
+            "{{restaurantReviewId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Order Reviews",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/order/{{orderId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["review", "order", "{{orderId}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"restaurantReview\": {\n    \"restaurantId\": {{restaurantId}},\n    \"rate\": 4,\n    \"reviewText\": \"Food was good\"\n  },\n  \"driverReview\": {\n    \"driverId\": {{driverId}},\n    \"rate\": 5,\n    \"reviewText\": \"Driver was polite\"\n  }\n}"
+        }
+      }
+    },
+    {
+      "name": "Get Order Reviews",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/review/order/{{orderId}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["review", "order", "{{orderId}}"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "description": "JWT token stored in the 'token' cookie"
+    },
+    {
+      "key": "driverId",
+      "value": "1"
+    },
+    {
+      "key": "restaurantId",
+      "value": "1"
+    },
+    {
+      "key": "orderId",
+      "value": "1"
+    },
+    {
+      "key": "driverReviewId",
+      "value": "1"
+    },
+    {
+      "key": "restaurantReviewId",
+      "value": "1"
+    },
+    {
+      "key": "limit",
+      "value": "10"
+    },
+    {
+      "key": "offset",
+      "value": "0"
+    }
+  ]
+}

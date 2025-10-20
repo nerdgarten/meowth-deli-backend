@@ -86,4 +86,9 @@ export default class RestaurantRepository {
       }
     });
   }
+  async findDishesByRestaurantId(restaurantId: number) {
+    return prisma.dish.findMany({
+      where: { restaurant_id: restaurantId },
+    });
+  }
 }
