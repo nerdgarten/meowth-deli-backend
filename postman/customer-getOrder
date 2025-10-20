@@ -1,0 +1,56 @@
+{
+	"info": {
+		"_postman_id": "5ed5ddbc-8fc2-47ea-ad89-317e11095771",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47973470",
+		"_collection_link": "https://poohmy-s-team.postman.co/workspace/Poohmy's-Workspace~69aa68a8-7839-42da-813f-958f0f1bf516/collection/47973470-5ed5ddbc-8fc2-47ea-ad89-317e11095771?action=share&source=collection_link&creator=47973470"
+	},
+	"item": [
+		{
+			"name": "HistoryOrder",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "HistoryOrderbyId",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "GetOrderStatistics",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3030/customer/Orders/statistics",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3030",
+					"path": [
+						"customer",
+						"Orders",
+						"statistics"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ReorderItems",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}

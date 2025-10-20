@@ -59,5 +59,22 @@ export class CustomerRouter extends BaseRouter {
       "/payment/mock",
       this.customerController.processMockPayment.bind(this.customerController),
     );
+
+    this.router.get(
+      "/my-orders",
+      this.customerController.getOrderHistory.bind(this.customerController)
+    );
+    this.router.get(
+      "/my-orders/statistics",
+      this.customerController.getOrderStatistics.bind(this.customerController)
+    );
+    this.router.get(
+      "/my-orders/:orderId",
+      this.customerController.getOrderById.bind(this.customerController)
+    );
+    this.router.get(
+      "/my-orders/:orderId/reorder",
+      this.customerController.getReorderItems.bind(this.customerController)
+    );
   }
 }
