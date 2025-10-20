@@ -1,0 +1,35 @@
+{
+	"info": {
+		"_postman_id": "ca1fc4b7-08a1-49d4-bba9-b571d0ffb016",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47973470",
+		"_collection_link": "https://poohmy-s-team.postman.co/workspace/Poohmy's-Workspace~69aa68a8-7839-42da-813f-958f0f1bf516/collection/47973470-ca1fc4b7-08a1-49d4-bba9-b571d0ffb016?action=share&source=collection_link&creator=47973470"
+	},
+	"item": [
+		{
+			"name": "Get All Order Response",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Payment Mock",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Get Order Status Response",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
