@@ -26,5 +26,3 @@ export interface IRestaurant extends IBaseUser {
   detail?: string;
   fee_rate?: number;
 }
-
-export type ICustomerProfile = Pick<ICustomer, "firstname", "lastname", "tel">;

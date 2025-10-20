@@ -49,4 +49,101 @@ export class CustomerController {
         .json({ message: "Internal Server Error" });
     }
   }
+  async getOrderStatus(req: Request, res: Response) {
+    try {
+      const customerId = req.user!.id;
+      const orderId = parseInt(req.params.orderId);
+      
+      if (isNaN(orderId)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ 
+          message: "Invalid order ID" 
+        });
+        return;
+      }
+      
+      const orderStatus = await this.customerService.getOrderStatus(
+        customerId,
+        orderId
+      );
+
+      res.status(StatusCodes.OK).json({
+        success: true,
+        data: orderStatus
+      });
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
+    }
+  }
+
+  // View all orders with their status
+  async getAllOrdersWithStatus(req: Request, res: Response) {
+    try {
+      const customerId = req.user!.id;
+      const { status } = req.query;
+      
+      const orders = await this.customerService.getAllOrdersWithStatus(
+        customerId,
+        status as string | undefined
+      );
+
+      res.status(StatusCodes.OK).json({
+        success: true,
+        data: orders
+      });
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
+    }
+  }
+
+  // Mock payment endpoint
+  async processMockPayment(req: Request, res: Response) {
+    try {
+      const customerId = req.user!.id;
+      const { orderId, amount, paymentMethod } = req.body;
+
+      if (!orderId || !amount) {
+        res.status(StatusCodes.BAD_REQUEST).json({ 
+          message: "Order ID and amount are required" 
+        });
+        return;
+      }
+
+      const paymentResult = await this.customerService.processMockPayment(
+        customerId,
+        orderId,
+        {
+          amount,
+          paymentMethod: paymentMethod || "credit_card",
+        }
+      );
+
+      res.status(StatusCodes.OK).json({
+        success: paymentResult.success,
+        data: paymentResult
+      });
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: "Internal Server Error" });
+    }
+  }
 }
