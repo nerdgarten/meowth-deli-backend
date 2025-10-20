@@ -1,7 +1,8 @@
-export type ICustomerProfile = Pick<ICustomer, "firstname", "lastname", "tel">;
+import { OrderStatus } from "@/generated/prisma/enums";
+
 export interface OrderStatusInfo {
   orderId: number;
-  currentStatus: string;
+  currentStatus: OrderStatus;
   statusDescription: string;
   restaurantName?: string;
   orderDate: Date;
@@ -22,7 +23,7 @@ export interface OrderStatusInfo {
 
 export interface PaymentRequest {
   amount: number;
-  paymentMethod: string;
+  paymentMethod: PaymentType;
 }
 
 export interface MockPaymentResult {

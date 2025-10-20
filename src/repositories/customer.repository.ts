@@ -1,5 +1,6 @@
 import { prisma } from "@/libs/prisma";
-import { ICustomerProfile } from "@/types/order";
+import { ICustomer, ICustomerProfile, ICreateOrderRepository } from "@/types/user";
+import { type Order, type OrderDish, type Dish, OrderStatus} from "@/generated/prisma/client";
 
 export default class CustomerRepository {
   getCustomerProfile(userId: number) {
@@ -27,6 +28,55 @@ export default class CustomerRepository {
         tel: true,
       },
     });
+  }
+
+  async createOrder(data: ICreateOrderRepository): Promise<Order & { orderDishes: OrderDish[] }> {
+    return prisma.$transaction(async (tx) => {
+      const order = await tx.order.create({
+        data: {
+          customer_id: data.customerId,
+          restaurant_id: data.restaurant_id, // Add restaurant_id
+          status: OrderStatus.pending,
+          location: data.location,
+          remark: data.note ?? null,
+          total_amount: 0,
+          driver_fee: 0,
+          driver_id: null
+        }
+      });
+
+      await tx.orderDish.createMany({
+        data: data.dishes.map(dish => ({
+          order_id: order.id,
+          dish_id: dish.dishId,
+          amount: dish.quantity,
+          remark: dish.note ?? null
+        }))
+      });
+
+      return {
+        ...order,
+        orderDishes: await tx.orderDish.findMany({
+          where: { order_id: order.id }
+        })
+      };
+    });
+  }
+
+  async getDishesWithDetails(dishIds: number[], restaurantId: number) {
+    return prisma.dish.findMany({
+      where: {
+        id: { in: dishIds },
+        restaurant_id: restaurantId,
+        is_out_of_stock: false
+      },
+      select: {
+        id: true,
+        name: true, 
+        price: true,
+        restaurant_id: true
+      }
+    })
   }
   async getOrderWithDetails(orderId: number, customerId: number) {
     return prisma.order.findFirst({
