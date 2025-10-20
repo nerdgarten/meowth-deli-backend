@@ -1,5 +1,7 @@
 import { prisma } from "@/libs/prisma";
-import { ICustomerProfile } from "@/types/user";
+import { ICustomer, ICustomerProfile, ICreateOrderRepository } from "@/types/user";
+import { type Order, type OrderDish, type Dish, OrderStatus} from "@/generated/prisma/client";
+
 export default class CustomerRepository {
   getCustomerProfile(userId: number) {
     return prisma.customer.findFirst({
@@ -27,6 +29,183 @@ export default class CustomerRepository {
       },
     });
   }
+
+  async createOrder(data: ICreateOrderRepository): Promise<Order & { orderDishes: OrderDish[] }> {
+    return prisma.$transaction(async (tx) => {
+      const order = await tx.order.create({
+        data: {
+          customer_id: data.customerId,
+          restaurant_id: data.restaurant_id, // Add restaurant_id
+          status: OrderStatus.pending,
+          location: data.location,
+          remark: data.note ?? null,
+          total_amount: 0,
+          driver_fee: 0,
+          driver_id: null
+        }
+      });
+
+      await tx.orderDish.createMany({
+        data: data.dishes.map(dish => ({
+          order_id: order.id,
+          dish_id: dish.dishId,
+          amount: dish.quantity,
+          remark: dish.note ?? null
+        }))
+      });
+
+      return {
+        ...order,
+        orderDishes: await tx.orderDish.findMany({
+          where: { order_id: order.id }
+        })
+      };
+    });
+  }
+
+  async getDishesWithDetails(dishIds: number[], restaurantId: number) {
+    return prisma.dish.findMany({
+      where: {
+        id: { in: dishIds },
+        restaurant_id: restaurantId,
+        is_out_of_stock: false
+      },
+      select: {
+        id: true,
+        name: true, 
+        price: true,
+        restaurant_id: true
+      }
+    })
+  }
+  async getOrderWithDetails(orderId: number, customerId: number) {
+    return prisma.order.findFirst({
+      where: {
+        id: orderId,
+        customer_id: customerId,
+      },
+      include: {
+        customer: {
+          select: {
+            firstname: true,
+            lastname: true,
+            tel: true,
+          },
+        },
+        driver: {
+          select: {
+            firstname: true,
+            lastname: true,
+            tel: true,
+          },
+        },
+        orderDishes: {
+          include: {
+            dish: {
+              select: {
+                id: true,
+                name: true,
+                detail: true,  // Changed from description
+                price: true,
+                allergy: true,
+                is_out_of_stock: true,
+                restaurant: {
+                  select: {
+                    name: true,
+                    location: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payments: {
+          include: {
+            paymentMethod: {
+              select: {
+                id: true,
+                title: true,
+                type: true,
+              },
+            },
+          },
+          orderBy: {
+            created_at: 'desc',
+          },
+          take: 1,
+        },
+      },
+    });
+  }
+
+  // Get all customer orders with optional status filter
+  async getCustomerOrders(customerId: number, statusFilter?: string) {
+    const whereClause: any = {
+      customer_id: customerId,
+    };
+
+    if (statusFilter) {
+      whereClause.status = statusFilter;
+    }
+
+    return prisma.order.findMany({
+      where: whereClause,
+      include: {
+        _count: {
+          select: {
+            orderDishes: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+  }
+
+  // Update order status
+  async updateOrderStatus(orderId: number, newStatus: string) {
+    return prisma.order.update({
+      where: {
+        id: orderId,
+      },
+      data: {
+        status: newStatus as any, // Cast to match Prisma enum type
+        updated_at: new Date(),
+      },
+    });
+  }
+
+  // Create payment record
+  async createPayment(paymentData: {
+    order_id: number;
+    payment_method_id: number;
+    status: any; // Will be cast to $Enums.VerificationStatus
+    image: string | null;
+  }) {
+    return prisma.payment.create({
+      data: {
+        order_id: paymentData.order_id,
+        payment_method_id: paymentData.payment_method_id,
+        status: paymentData.status,
+        image: paymentData.image,
+        created_at: new Date(),
+        updated_at: new Date(),
+      },
+    });
+  }
+
+  // Get payment methods
+  async getPaymentMethods() {
+    return prisma.paymentMethod.findMany({
+      select: {
+        id: true,
+        title: true,  // Changed from name
+        type: true,
+      },
+    });
+  }
+
   getCustomerOrderHistory(
     userId: number,
     options?: {

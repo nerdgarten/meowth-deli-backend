@@ -1,0 +1,138 @@
+{
+  "info": {
+    "name": "Auth API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Authentication flows for Meowth Deli backend."
+  },
+  "item": [
+    {
+      "name": "Customer Sign Up",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/signup/customer",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "signup", "customer"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"customer@example.com\",\n  \"password\": \"Password123!\",\n  \"firstname\": \"Jane\",\n  \"lastname\": \"Doe\",\n  \"tel\": \"0800000000\",\n  \"accepted_term_of_service\": true,\n  \"accepted_pdpa\": true,\n  \"accepted_cookie_tracking\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "Driver Sign Up",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/signup/driver",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "signup", "driver"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"driver@example.com\",\n  \"password\": \"Password123!\",\n  \"firstname\": \"John\",\n  \"lastname\": \"Smith\",\n  \"tel\": \"0800000001\",\n  \"vehicle\": \"Bike\",\n  \"licence\": \"DRIVER-001\",\n  \"fee_rate\": 0.1,\n  \"accepted_term_of_service\": true,\n  \"accepted_pdpa\": true,\n  \"accepted_cookie_tracking\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "Restaurant Sign Up",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/signup/restaurant",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "signup", "restaurant"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"restaurant@example.com\",\n  \"password\": \"Password123!\",\n  \"name\": \"Meowth Deli\",\n  \"tel\": \"0800000002\",\n  \"location\": \"123 Kitty Street\",\n  \"detail\": \"Open 9am-9pm\",\n  \"fee_rate\": 0.1,\n  \"accepted_term_of_service\": true,\n  \"accepted_pdpa\": true,\n  \"accepted_cookie_tracking\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "Sign In",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "if (json && json.token) {",
+              "  pm.collectionVariables.set('authToken', json.token);",
+              "  pm.environment.set('authToken', json.token);",
+              "}",
+              "pm.test('Received token', function () {",
+              "  pm.expect(json.token).to.exist;",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/signin",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "signin"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"customer@example.com\",\n  \"password\": \"Password123!\",\n  \"role\": \"customer\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Verify Admin Status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Cookie",
+            "value": "token={{authToken}}"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/auth/verify-admin-status",
+          "host": ["{{baseUrl}}"],
+          "path": ["auth", "verify-admin-status"]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "authToken",
+      "value": ""
+    }
+  ]
+}
