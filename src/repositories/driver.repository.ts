@@ -1,10 +1,16 @@
 import { prisma } from "@/libs/prisma";
-import { DriverWhereClause } from "@/types/driver/driver";
+import { OrderWhereClause } from "@/types/order/order";
 
 export default class DriverRepository {
-  async getDriverOrdersByStatus(whereClause: DriverWhereClause) {
+  async getDriverOrdersByStatus(whereClause: OrderWhereClause) {
     return prisma.order.findMany({
       where: whereClause
     });
   }
+  async getDriverOrderById(whereClause: OrderWhereClause) {
+    return prisma.order.findFirst({
+      where: whereClause
+    });
+  }
 }
+

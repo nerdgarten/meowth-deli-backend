@@ -2,8 +2,8 @@ import { StatusCodes } from "http-status-codes";
 
 import { OrderStatus } from "@/generated/prisma/enums";
 import DriverRepository from "@/repositories/driver.repository";
-import { DriverWhereClause } from "@/types/driver/driver";
 import { AppError } from "@/types/error";
+import { OrderWhereClause } from "@/types/order/order";
 
 export class DriverService {
   private driverRepository: DriverRepository;
@@ -18,12 +18,24 @@ export class DriverService {
       throw new AppError("Invalid status value", StatusCodes.BAD_REQUEST);
     }
 
-    const whereClause: DriverWhereClause = {
+    const whereClause: OrderWhereClause = {
       driver_id: driver_id,
       status: status,
     };
 
     const orders = await this.driverRepository.getDriverOrdersByStatus(whereClause);
     return orders;
+  }
+
+  async getDriverOrderById(driver_id: number, order_id: number) {
+    const whereClause: OrderWhereClause = {
+      driver_id: driver_id,
+      id: order_id,
+    };
+    const order = await this.driverRepository.getDriverOrderById(whereClause);
+    if(!order) {
+      throw new AppError("Order not found", StatusCodes.NOT_FOUND);
+    }
+    return order;
   }
 }

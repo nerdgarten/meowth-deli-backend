@@ -20,5 +20,9 @@ export class DriverRouter extends BaseRouter {
       this.driverController.getDriverOrdersByStatus.bind(this.driverController),
     );
 
+    this.router.get(
+      "/orders/:id",
+      this.driverController.getDriverOrderById.bind(this.driverController),
+    );
   }
 }
