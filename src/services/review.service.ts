@@ -30,7 +30,7 @@ export default class ReviewService {
   async createDriverReview(
     userId: number,
     driverIdValue: unknown,
-    body: CreateDriverReviewBody
+    body: CreateDriverReviewBody,
   ) {
     const driverId = this.parseId(driverIdValue, "driverId");
     const orderId = this.parseId(body.orderId, "orderId");
@@ -48,20 +48,20 @@ export default class ReviewService {
         rate,
         reviewText,
         tx,
-      })
+      }),
     );
   }
 
   async getDriverReviews(
     driverIdValue: unknown,
-    query?: ReviewPaginationQuery
+    query?: ReviewPaginationQuery,
   ) {
     const driverId = this.parseId(driverIdValue, "driverId");
     await this.ensureDriverExists(driverId);
 
     const { limit, offset } = this.normalizePagination(
       query?.limit,
-      query?.offset
+      query?.offset,
     );
 
     const [reviews, total] = await Promise.all([
@@ -87,7 +87,7 @@ export default class ReviewService {
 
     const review = await this.reviewRepository.findDriverReviewById(
       driverId,
-      reviewId
+      reviewId,
     );
 
     if (!review) {
@@ -100,7 +100,7 @@ export default class ReviewService {
   async createRestaurantReview(
     userId: number,
     restaurantIdValue: unknown,
-    body: CreateRestaurantReviewBody
+    body: CreateRestaurantReviewBody,
   ) {
     const restaurantId = this.parseId(restaurantIdValue, "restaurantId");
     const orderId = this.parseId(body.orderId, "orderId");
@@ -118,20 +118,20 @@ export default class ReviewService {
         rate,
         reviewText,
         tx,
-      })
+      }),
     );
   }
 
   async getRestaurantReviews(
     restaurantIdValue: unknown,
-    query?: ReviewPaginationQuery
+    query?: ReviewPaginationQuery,
   ) {
     const restaurantId = this.parseId(restaurantIdValue, "restaurantId");
     await this.ensureRestaurantExists(restaurantId);
 
     const { limit, offset } = this.normalizePagination(
       query?.limit,
-      query?.offset
+      query?.offset,
     );
 
     const [reviews, total] = await Promise.all([
@@ -151,7 +151,7 @@ export default class ReviewService {
 
   async getRestaurantReview(
     restaurantIdValue: unknown,
-    reviewIdValue: unknown
+    reviewIdValue: unknown,
   ) {
     const restaurantId = this.parseId(restaurantIdValue, "restaurantId");
     const reviewId = this.parseId(reviewIdValue, "reviewId");
@@ -160,7 +160,7 @@ export default class ReviewService {
 
     const review = await this.reviewRepository.findRestaurantReviewById(
       restaurantId,
-      reviewId
+      reviewId,
     );
 
     if (!review) {
@@ -173,14 +173,14 @@ export default class ReviewService {
   async createOrderReviews(
     userId: number,
     orderIdValue: unknown,
-    body: CreateOrderReviewBody
+    body: CreateOrderReviewBody,
   ) {
     const orderId = this.parseId(orderIdValue, "orderId");
 
     if (!body || (!body.driverReview && !body.restaurantReview)) {
       throw new AppError(
         "At least one review payload is required",
-        StatusCodes.BAD_REQUEST
+        StatusCodes.BAD_REQUEST,
       );
     }
 
@@ -199,7 +199,7 @@ export default class ReviewService {
       ? {
           restaurantId: this.parseId(
             body.restaurantReview.restaurantId,
-            "restaurantId"
+            "restaurantId",
           ),
           rate: this.parseRate(body.restaurantReview.rate),
           reviewText: this.extractReviewText(body.restaurantReview),
@@ -240,7 +240,7 @@ export default class ReviewService {
         }
 
         return created;
-      }
+      },
     );
 
     return {
@@ -259,11 +259,11 @@ export default class ReviewService {
     const [driverReview, restaurantReview] = await Promise.all([
       this.reviewRepository.findDriverReviewByOrderAndCustomer(
         order.id,
-        userId
+        userId,
       ),
       this.reviewRepository.findRestaurantReviewByOrderAndUser(
         order.id,
-        userId
+        userId,
       ),
     ]);
 
@@ -309,7 +309,7 @@ export default class ReviewService {
     if (order.customer_id !== customerId) {
       throw new AppError(
         "You are not allowed to access this order",
-        StatusCodes.FORBIDDEN
+        StatusCodes.FORBIDDEN,
       );
     }
 
@@ -318,16 +318,16 @@ export default class ReviewService {
 
   private ensureOrderContainsRestaurant(
     order: OrderWithDetails,
-    restaurantId: number
+    restaurantId: number,
   ) {
     const hasRestaurant = order.orderDishes.some(
-      (orderDish) => orderDish.dish.restaurant_id === restaurantId
+      (orderDish) => orderDish.dish.restaurant_id === restaurantId,
     );
 
     if (!hasRestaurant) {
       throw new AppError(
         "Order does not contain dishes from this restaurant",
-        StatusCodes.BAD_REQUEST
+        StatusCodes.BAD_REQUEST,
       );
     }
   }
@@ -345,14 +345,14 @@ export default class ReviewService {
     if (params.order.driver_id === null) {
       throw new AppError(
         "No driver is assigned to this order",
-        StatusCodes.BAD_REQUEST
+        StatusCodes.BAD_REQUEST,
       );
     }
 
     if (params.order.driver_id !== params.driverId) {
       throw new AppError(
         "Driver is not assigned to this order",
-        StatusCodes.BAD_REQUEST
+        StatusCodes.BAD_REQUEST,
       );
     }
 
@@ -360,13 +360,13 @@ export default class ReviewService {
       await this.reviewRepository.findDriverReviewByOrderAndCustomer(
         params.order.id,
         params.userId,
-        params.tx
+        params.tx,
       );
 
     if (existingReview) {
       throw new AppError(
         "Driver review already exists for this order",
-        StatusCodes.CONFLICT
+        StatusCodes.CONFLICT,
       );
     }
 
@@ -378,7 +378,7 @@ export default class ReviewService {
         rate: params.rate,
         review_text: params.reviewText,
       },
-      params.tx
+      params.tx,
     );
   }
 
@@ -397,13 +397,13 @@ export default class ReviewService {
       await this.reviewRepository.findRestaurantReviewByOrderAndUser(
         params.order.id,
         params.userId,
-        params.tx
+        params.tx,
       );
 
     if (existingReview) {
       throw new AppError(
         "Restaurant review already exists for this order",
-        StatusCodes.CONFLICT
+        StatusCodes.CONFLICT,
       );
     }
 
@@ -415,13 +415,13 @@ export default class ReviewService {
         rate: params.rate,
         review_text: params.reviewText,
       },
-      params.tx
+      params.tx,
     );
   }
 
   private resolveDriverId(
     driverIdValue: number | string | undefined,
-    order: OrderWithDetails
+    order: OrderWithDetails,
   ) {
     if (driverIdValue !== undefined && driverIdValue !== null) {
       return this.parseId(driverIdValue, "driverId");
@@ -451,7 +451,7 @@ export default class ReviewService {
     if (numeric < MIN_RATE || numeric > MAX_RATE) {
       throw new AppError(
         `Rate must be between ${MIN_RATE} and ${MAX_RATE}`,
-        StatusCodes.BAD_REQUEST
+        StatusCodes.BAD_REQUEST,
       );
     }
 
@@ -478,14 +478,14 @@ export default class ReviewService {
     const limit = Math.min(
       Math.max(
         limitNumber !== undefined ? Math.floor(limitNumber) : DEFAULT_LIMIT,
-        1
+        1,
       ),
-      MAX_LIMIT
+      MAX_LIMIT,
     );
 
     const offset = Math.max(
       offsetNumber !== undefined ? Math.floor(offsetNumber) : 0,
-      0
+      0,
     );
 
     return { limit, offset };
