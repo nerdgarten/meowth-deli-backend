@@ -1,7 +1,6 @@
 import { prisma } from "@/libs/prisma";
 import { ICustomer, ICustomerProfile, ICreateOrderRepository } from "@/types/user";
-import { type Order, type OrderDish, type Dish, OrderStatus} from "@/generated/prisma/client";
-
+import { type Order, type OrderDish, type Dish, OrderStatus, VerificationStatus} from "@/generated/prisma/client";
 export default class CustomerRepository {
   getCustomerProfile(userId: number) {
     return prisma.customer.findFirst({
@@ -39,8 +38,8 @@ export default class CustomerRepository {
           status: OrderStatus.pending,
           location: data.location,
           remark: data.note ?? null,
-          total_amount: 0,
-          driver_fee: 0,
+          total_amount: data.total_amount,
+          driver_fee: data.driver_fee,
           driver_id: null
         }
       });
@@ -139,8 +138,11 @@ export default class CustomerRepository {
   }
 
   // Get all customer orders with optional status filter
-  async getCustomerOrders(customerId: number, statusFilter?: string) {
-    const whereClause: any = {
+  async getCustomerOrders(
+    customerId: number,
+    statusFilter?: OrderStatus
+  ) {
+    const whereClause: { customer_id: number; status?: OrderStatus } = {
       customer_id: customerId,
     };
 
@@ -164,13 +166,13 @@ export default class CustomerRepository {
   }
 
   // Update order status
-  async updateOrderStatus(orderId: number, newStatus: string) {
+  async updateOrderStatus(orderId: number, newStatus: OrderStatus) {
     return prisma.order.update({
       where: {
         id: orderId,
       },
       data: {
-        status: newStatus as any, // Cast to match Prisma enum type
+        status: newStatus, // Cast to match Prisma enum type
         updated_at: new Date(),
       },
     });
@@ -180,7 +182,7 @@ export default class CustomerRepository {
   async createPayment(paymentData: {
     order_id: number;
     payment_method_id: number;
-    status: any; // Will be cast to $Enums.VerificationStatus
+    status: VerificationStatus;
     image: string | null;
   }) {
     return prisma.payment.create({
@@ -211,7 +213,7 @@ export default class CustomerRepository {
     options?: {
       page?: number;
       limit?: number;
-      status?: string;
+      status?: OrderStatus;
       sortBy?: "created_at" | "total_amount";
       sortOrder?: "asc" | "desc";
     }
@@ -220,9 +222,9 @@ export default class CustomerRepository {
     const limit = options?.limit || 10;
     const skip = (page - 1) * limit;
 
-    const where = {
+    const where: { customer_id: number; status?: OrderStatus } = {
       customer_id: userId,
-      ...(options?.status && { status: options.status as any }),
+      ...(options?.status && { status: options.status as OrderStatus }),
     };
 
     const orderBy = {

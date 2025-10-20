@@ -1,5 +1,5 @@
 import { StatusCodes } from "http-status-codes";
-import { prisma } from "@/libs/prisma";
+import { prisma,  } from "@/libs/prisma";
 
 import CustomerRepository from "@/repositories/customer.repository";
 import { AppError } from "@/types/error";
@@ -14,8 +14,9 @@ import {
   MockPaymentResult,
   PaymentRequest,
   OrderStatusInfo,
+  OrderDishWithRestaurant
 } from "@/types/order";
-import { OrderStatus, type Order } from "@/generated/prisma/client";
+import { OrderStatus, VerificationStatus, type Order } from "@/generated/prisma/client";
 
 export default class CustomerService {
   private customerRepository: CustomerRepository;
@@ -49,7 +50,7 @@ export default class CustomerService {
     options?: {
       page?: number;
       limit?: number;
-      status?: string;
+      status?: OrderStatus;
       sortBy?: "created_at" | "total_amount";
       sortOrder?: "asc" | "desc";
     }
@@ -163,8 +164,16 @@ export default class CustomerService {
     }));
   }
 
-  private groupDishesByRestaurant(orderDishes: any[]) {
-    const grouped = orderDishes.reduce((acc, item) => {
+  private groupDishesByRestaurant(orderDishes: OrderDishWithRestaurant[]) {
+    type GroupedResult = {
+      restaurant: OrderDishWithRestaurant["dish"]["restaurant"];
+      dishes: Array<OrderDishWithRestaurant["dish"] & {
+        amount: number;
+        remark?: string | null;
+      }>;
+    };
+
+    const grouped = orderDishes.reduce<Record<number, GroupedResult>>((acc, item) => {
       const restaurantId = item.dish.restaurant.id;
       if (!acc[restaurantId]) {
         acc[restaurantId] = {
@@ -182,6 +191,8 @@ export default class CustomerService {
 
     return Object.values(grouped);
   }
+
+
   // ========================
   // ORDER CREATION SECTION
   // ========================
@@ -335,11 +346,12 @@ export default class CustomerService {
 
     const statusDescription = this.getStatusDescription(order.status);
 
-    const items = order.orderDishes?.map((orderDish: any) => ({
-      name: orderDish.dish?.name || "Unknown Item",
+    const items: Array<{ name: string; quantity: number; price: number }> = 
+    order.orderDishes?.map((orderDish) => ({
+      name: orderDish.dish.name,
       quantity: orderDish.amount,
-      price: orderDish.dish?.price || 0,
-    }));
+      price: orderDish.dish.price,
+    })) ?? [];
 
     const restaurantName =
       order.orderDishes?.[0]?.dish?.restaurant?.name || "Restaurant";
@@ -358,7 +370,7 @@ export default class CustomerService {
     };
   }
 
-  async getAllOrdersWithStatus(customerId: number, statusFilter?: string) {
+  async getAllOrdersWithStatus(customerId: number, statusFilter?: OrderStatus) {
     const orders = await this.customerRepository.getCustomerOrders(
       customerId,
       statusFilter
@@ -401,7 +413,7 @@ export default class CustomerService {
     await this.customerRepository.createPayment({
       order_id: order.id,
       payment_method_id: 1, // assuming mock payment method
-      status: "verified",
+      status: VerificationStatus.pending,
       image: null,
     });
 
@@ -443,7 +455,10 @@ export default class CustomerService {
     return descriptions[status] || "Unknown status";
   }
 
-  private getTrackingInfo(order: any) {
+  private getTrackingInfo(order: {
+    status: OrderStatus;
+    driver?: { firstname: string; lastname: string; tel: string } | null;
+  }) {
     if (order.status === OrderStatus.delivered && order.driver) {
       return {
         driverName: `${order.driver.firstname} ${order.driver.lastname}`,
@@ -453,4 +468,5 @@ export default class CustomerService {
     }
     return undefined;
   }
+
 }
