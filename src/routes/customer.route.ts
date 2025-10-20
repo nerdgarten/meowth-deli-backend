@@ -36,8 +36,9 @@ export class CustomerRouter extends BaseRouter {
       body: z.object({
         location: z.string().min(1, "Location is required"),
         note: z.string().optional(),
+        restaurant_id: z.number().min(1, "Restaurant ID is required"),
         dishes: z.array(z.object({
-          name: z.string().min(1, "Dish name is required"),
+          dish_id: z.number().min(1, "Dish ID is required"),
           quantity: z.number().min(1, "Quantity must be greater than 0"),
           note: z.string().optional()
         })).min(1, "At least one dish is required")

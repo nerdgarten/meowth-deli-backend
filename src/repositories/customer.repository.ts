@@ -30,26 +30,13 @@ export default class CustomerRepository {
       },
     });
   }
-  async getDishesWithDetails(names: string[]) {
-    return prisma.dish.findMany({
-      where: {
-        name: { in: names },
-        is_out_of_stock: false
-      },
-      select: {
-        id: true,
-        name: true, 
-        price: true,
-        restaurant_id: true
-      }
-    });
-  }
 
   async createOrder(data: ICreateOrderRepository): Promise<Order & { orderDishes: OrderDish[] }> {
     return prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
           customer_id: data.customerId,
+          restaurant_id: data.restaurant_id, // Add restaurant_id
           status: OrderStatus.pending,
           location: data.location,
           remark: data.note ?? null,
@@ -74,6 +61,22 @@ export default class CustomerRepository {
           where: { order_id: order.id }
         })
       };
+    });
+  }
+
+  async getDishesWithDetails(dishIds: number[], restaurantId: number) {
+    return prisma.dish.findMany({
+      where: {
+        id: { in: dishIds },
+        restaurant_id: restaurantId,
+        is_out_of_stock: false
+      },
+      select: {
+        id: true,
+        name: true, 
+        price: true,
+        restaurant_id: true
+      }
     });
   }
 }

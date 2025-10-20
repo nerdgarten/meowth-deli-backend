@@ -329,6 +329,7 @@ model Order {
   id           Int         @id @default(autoincrement())
   customer_id  Int
   driver_id    Int?
+  restaurant_id Int
   location     String
   status       OrderStatus @default(pending)
   remark       String?
