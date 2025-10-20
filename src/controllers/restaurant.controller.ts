@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { VerificationStatus } from "@/generated/prisma/enums";
+import { VerificationStatus, OrderStatus } from "@/generated/prisma/enums";
 import RestaurantService from "@/services/restaurant.service";
 import { AppError } from "@/types/error";
-import { OrderStatus } from "@/generated/prisma/client";
 
 export class RestaurantController {
   private restaurantService: RestaurantService;
@@ -77,6 +76,7 @@ export class RestaurantController {
       });
     }
   }
+
   async getRestaurantOrders(req: Request, res: Response) {
     try {
       const userId = req.user?.id;
@@ -84,6 +84,12 @@ export class RestaurantController {
       
       if (!userId) {
         res.status(StatusCodes.UNAUTHORIZED).json({ message: "User not authenticated" });
+        return;
+      }
+      
+      // Validate status if provided
+      if (status && !Object.values(OrderStatus).includes(status)) {
+        res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid order status" });
         return;
       }
       
@@ -118,7 +124,8 @@ export class RestaurantController {
         return;
       }
       
-      if (![OrderStatus.preparing, OrderStatus.rejected].includes(status)) {
+      const allowedStatuses: OrderStatus[] = [OrderStatus.preparing, OrderStatus.rejected];
+      if (!allowedStatuses.includes(status as OrderStatus)) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: "Invalid status. Can only update to 'preparing' or 'rejected'" });
         return;
       }

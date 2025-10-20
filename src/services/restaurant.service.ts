@@ -1,10 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 
-import { VerificationStatus } from "@/generated/prisma/enums";
+import { VerificationStatus, OrderStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
-import { OrderStatus } from "@/generated/prisma/client";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
@@ -45,6 +44,7 @@ export default class RestaurantService {
 
     return updatedRestaurant;
   }
+
   async getRestaurantOrders(userId: number, status?: OrderStatus) {
     const userRestaurant = await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
     
@@ -61,7 +61,8 @@ export default class RestaurantService {
       throw new AppError("Order not found or doesn't belong to this restaurant", StatusCodes.NOT_FOUND);
     }
     
-    if (![OrderStatus.preparing, OrderStatus.rejected].includes(status as any)) {
+    const allowedStatuses: OrderStatus[] = [OrderStatus.preparing, OrderStatus.rejected];
+    if (!allowedStatuses.includes(status)) {
       throw new AppError("Invalid status. Restaurant can only set status to 'preparing' or 'rejected'", StatusCodes.BAD_REQUEST);
     }
     

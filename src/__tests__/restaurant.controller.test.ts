@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { OrderStatus, VerificationStatus } from '@/generated/prisma/client';
+import { OrderStatus } from '@/generated/prisma/enums';
 import { RestaurantController } from '@/controllers/restaurant.controller';
 import RestaurantService from '@/services/restaurant.service';
 import { AppError } from '@/types/error';
@@ -37,6 +37,7 @@ describe('RestaurantController', () => {
     id: 1,
     customer_id: 1,
     driver_id: null,
+    restaurant_id: 1, // ADD THIS LINE
     location: "123 Test St",
     status: status,
     remark: null,

@@ -1,6 +1,7 @@
 import { prisma } from "@/libs/prisma";
 import { RestaurantWhereClause } from "@/types/restaurant/restaurant";
-import { OrderStatus } from "@/generated/prisma/client";
+import { OrderStatus } from "@/generated/prisma/enums";
+import { Prisma } from "@/generated/prisma/client";
 
 export default class RestaurantRepository {
   async findRestaurantsByStatus(
@@ -27,6 +28,7 @@ export default class RestaurantRepository {
       data: { is_available },
     });
   }
+
   async getOrdersByRestaurantId(restaurantId: number, status?: OrderStatus) {
     return prisma.order.findMany({
       where: {
@@ -37,7 +39,7 @@ export default class RestaurantRepository {
             }
           }
         },
-        status: status
+        ...(status && { status })
       },
       include: {
         customer: true,
@@ -50,7 +52,7 @@ export default class RestaurantRepository {
         payments: true
       },
       orderBy: {
-        created_at: 'desc'
+        created_at: Prisma.SortOrder.desc
       }
     });
   }

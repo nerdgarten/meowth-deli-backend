@@ -1,4 +1,4 @@
-import { OrderStatus, VerificationStatus } from '@/generated/prisma/client';
+import { OrderStatus, VerificationStatus } from '@/generated/prisma/enums';
 import RestaurantService from '@/services/restaurant.service';
 import RestaurantRepository from '@/repositories/restaurant.repository';
 import { AppError } from '@/types/error';
@@ -21,6 +21,7 @@ describe('RestaurantService', () => {
     id: 1,
     customer_id: 1,
     driver_id: null,
+    restaurant_id: 1, // ADDED
     location: "123 Test St",
     status: status,
     remark: null,
@@ -116,7 +117,7 @@ describe('RestaurantService', () => {
     it('should throw an error for an invalid status update', async () => {
       const userId = 1;
       const orderId = 1;
-      const newStatus = OrderStatus.delivered as any; // This should not be allowed
+      const newStatus = OrderStatus.delivered; // REMOVED 'as any'
       const restaurantId = 1;
       const mockOrder = createMockOrder(OrderStatus.pending);
 
