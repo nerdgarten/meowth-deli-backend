@@ -27,7 +27,24 @@ export class CustomerRouter extends BaseRouter {
         this.customerController,
       ),
     );
-
+    /////
+    this.router.get(
+      "/my-orders-hist",
+      this.customerController.getOrderHistory.bind(this.customerController)
+    );
+    this.router.get(
+      "/my-orders-hist/statistics",
+      this.customerController.getOrderStatistics.bind(this.customerController)
+    );
+    this.router.get(
+      "/my-orders-hist/:orderId",
+      this.customerController.getOrderById.bind(this.customerController)
+    );
+    this.router.get(
+      "/my-orders-hist/:orderId/reorder",
+      this.customerController.getReorderItems.bind(this.customerController)
+    )
+    //////
     const createOrderSchema = z.object({
       body: z.object({
         location: z.string().min(1, "Location is required"),
@@ -46,6 +63,7 @@ export class CustomerRouter extends BaseRouter {
       validateRequest(createOrderSchema),
       this.customerController.createOrder.bind(this.customerController)
     )
+    //////
     this.router.get(
       "/my-orders/:orderId/status",
       this.customerController.getOrderStatus.bind(this.customerController),
@@ -58,23 +76,6 @@ export class CustomerRouter extends BaseRouter {
     this.router.post(
       "/payment/mock",
       this.customerController.processMockPayment.bind(this.customerController),
-    );
-
-    this.router.get(
-      "/my-orders",
-      this.customerController.getOrderHistory.bind(this.customerController)
-    );
-    this.router.get(
-      "/my-orders/statistics",
-      this.customerController.getOrderStatistics.bind(this.customerController)
-    );
-    this.router.get(
-      "/my-orders/:orderId",
-      this.customerController.getOrderById.bind(this.customerController)
-    );
-    this.router.get(
-      "/my-orders/:orderId/reorder",
-      this.customerController.getReorderItems.bind(this.customerController)
     );
   }
 }

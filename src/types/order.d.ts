@@ -34,3 +34,21 @@ export interface MockPaymentResult {
   orderId?: number;
   newOrderStatus?: string;
 }
+
+export interface OrderDishWithRestaurant {
+  amount: number;
+  remark?: string | null;
+  dish: {
+    id: number;
+    name: string;
+    detail: string | null; 
+    price: number;
+    allergy: string | null;  
+    is_out_of_stock: boolean; 
+    restaurant: {
+      id: number;
+      name: string;
+      location: string;
+    };
+  };
+}

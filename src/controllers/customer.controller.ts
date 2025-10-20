@@ -4,6 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { ICreateOrderRequest } from "@/types/user";
 import CustomerService from "@/services/customer.service";
 import { AppError } from "@/types/error";
+import { OrderStatus} from "@/generated/prisma/client";
 
 export class CustomerController {
   private customerService: CustomerService;
@@ -59,7 +60,7 @@ export class CustomerController {
   }
 
   // Create Order
-  async createOrder(req: Request<any, any, ICreateOrderRequest>, res: Response) {
+  async createOrder(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
       const order = await this.customerService.createOrder(userId, req.body);
@@ -113,7 +114,7 @@ export class CustomerController {
       
       const orders = await this.customerService.getAllOrdersWithStatus(
         customerId,
-        status as string | undefined
+        status as OrderStatus
       );
 
       res.status(StatusCodes.OK).json({
@@ -150,7 +151,7 @@ export class CustomerController {
         orderId,
         {
           amount,
-          paymentMethod: paymentMethod || "credit_card",
+          paymentMethod: paymentMethod || "creditcard",
         }
       );
 
@@ -177,7 +178,7 @@ export class CustomerController {
       const options = {
         page: page ? parseInt(page as string) : undefined,
         limit: limit ? parseInt(limit as string) : undefined,
-        status: status as string | undefined,
+        status: status as OrderStatus | undefined,
         sortBy: sortBy as "created_at" | "total_amount" | undefined,
         sortOrder: sortOrder as "asc" | "desc" | undefined,
       };

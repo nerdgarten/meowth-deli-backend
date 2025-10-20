@@ -70,8 +70,8 @@ export interface ICreateOrderRepository {
   location: string;
   note?: string;
   restaurant_id: number;
-  total_amount?: number;
-  driver_fee?: number;
+  total_amount: number;
+  driver_fee: number;
   dishes: IOrderDishRepository[];
 }
 
