@@ -9,6 +9,7 @@ import { FileRouter } from "@/routes/file.route";
 import { RestaurantRouter } from "@/routes/restaurant.route";
 import { ReviewRouter } from "@/routes/review.route";
 import { TestRouter } from "@/routes/test.route";
+import { LocationRouter } from "@/routes/location.route";
 
 export class RouterManager {
   private router: Router;
@@ -28,6 +29,7 @@ export class RouterManager {
     const dishRouter = new DishRouter();
     const reviewRouter = new ReviewRouter();
     const testRouter = new TestRouter();
+    const locationRouter = new LocationRouter();
 
     this.router.use("/auth", authRouter.getRouter());
     this.router.use("/authenticated", authenticatedRouter.getRouter());
@@ -38,6 +40,7 @@ export class RouterManager {
     this.router.use("/dish", dishRouter.getRouter());
     this.router.use("/review", reviewRouter.getRouter());
     this.router.use("/api-test", testRouter.getRouter());
+    this.router.use("/location", locationRouter.getRouter());
   }
 
   public getRouter(): Router {

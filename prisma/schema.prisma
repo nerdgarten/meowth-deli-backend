@@ -107,8 +107,8 @@ model Customer {
 model Location {
   id          Int      @id @default(autoincrement())
   customer_id Int
-  location    String
   address     String
+  is_default  Boolean  @default(false)
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
 
@@ -326,22 +326,22 @@ model Payment {
 }
 
 model Order {
-  id           Int         @id @default(autoincrement())
-  customer_id  Int
-  driver_id    Int?
+  id            Int         @id @default(autoincrement())
+  customer_id   Int
+  driver_id     Int?
   restaurant_id Int
-  location     String
-  status       OrderStatus @default(pending)
-  remark       String?
-  total_amount Float
-  driver_fee   Float
-  created_at   DateTime    @default(now()) @db.Timestamptz
-  updated_at   DateTime    @updatedAt @db.Timestamptz
+  location      String
+  status        OrderStatus @default(pending)
+  remark        String?
+  total_amount  Float
+  driver_fee    Float
+  created_at    DateTime    @default(now()) @db.Timestamptz
+  updated_at    DateTime    @updatedAt @db.Timestamptz
 
-  customer         Customer         @relation(fields: [customer_id], references: [id])
-  driver           Driver?          @relation(fields: [driver_id], references: [id])
-  orderDishes      OrderDish[]
-  payments         Payment[]
+  customer          Customer           @relation(fields: [customer_id], references: [id])
+  driver            Driver?            @relation(fields: [driver_id], references: [id])
+  orderDishes       OrderDish[]
+  payments          Payment[]
   restaurantReviews RestaurantReview[]
   driverReviews     DriverReview[]
 
@@ -410,8 +410,8 @@ model VerifyToken {
 }
 
 model ResetToken {
-  id         Int      @id @default(autoincrement())
-  token      String   @unique
+  id         Int       @id @default(autoincrement())
+  token      String    @unique
   user_id    Int
   expires_at DateTime? @db.Timestamptz
 
