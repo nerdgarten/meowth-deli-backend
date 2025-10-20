@@ -72,7 +72,7 @@ export class LocationController {
 
   async getLocations(req: Request, res: Response) {
     try {
-      const customerId = Number(req.params.id);
+      const customerId = Number(req.user!.id);
       if (Number.isNaN(customerId)) {
         res
           .status(StatusCodes.BAD_REQUEST)

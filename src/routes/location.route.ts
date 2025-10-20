@@ -11,7 +11,6 @@ export class LocationRouter extends BaseRouter {
   constructor() {
     super({
       prefix: "/location",
-      middleware: [authMiddleware],
     });
     this.controller = new LocationController();
     this.initializeRoutes();
@@ -24,7 +23,7 @@ export class LocationRouter extends BaseRouter {
     );
     this.router.post("/", this.controller.createLocation.bind(this.controller));
     this.router.get(
-      "/customer/:id",
+      "/customer",
       this.controller.getLocations.bind(this.controller)
     );
     this.router.patch(
