@@ -12,7 +12,7 @@ const emailConfig = {
 };
 if (!emailConfig.user || !emailConfig.password) {
   throw new Error(
-    "EMAIL_USER and EMAIL_PASSWORD must be set in environment variables",
+    "EMAIL_USER and EMAIL_PASSWORD must be set in environment variables"
   );
 }
 export default emailConfig;
