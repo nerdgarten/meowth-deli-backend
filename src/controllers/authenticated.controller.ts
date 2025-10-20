@@ -4,9 +4,11 @@ import { StatusCodes } from "http-status-codes";
 export class AuthenticatedController {
   constructor() {}
 
-  async isAuthenticated(req: Request, res: Response) {
+  async authenticatedAs(req: Request, res: Response) {
+    const role = req.user?.role;
     res.status(StatusCodes.OK).json({
       message: "Authenticated route accessed successfully",
+      role,
     });
   }
 

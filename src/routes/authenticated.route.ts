@@ -17,15 +17,15 @@ export class AuthenticateRouter extends BaseRouter {
 
   private setUpRoutes() {
     this.router.get(
-      "/isAuthenticated",
-      this.authenticatedController.isAuthenticated.bind(
-        this.authenticatedController,
-      ),
+      "/authenticatedAs",
+      this.authenticatedController.authenticatedAs.bind(
+        this.authenticatedController
+      )
     );
 
     this.router.post(
       "/logout",
-      this.authenticatedController.logout.bind(this.authenticatedController),
+      this.authenticatedController.logout.bind(this.authenticatedController)
     );
   }
 }
