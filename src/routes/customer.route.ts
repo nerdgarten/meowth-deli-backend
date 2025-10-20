@@ -27,10 +27,6 @@ export class CustomerRouter extends BaseRouter {
         this.customerController,
       ),
     );
-    this.router.post(
-      "/orders",
-      this.customerController.createOrder.bind(this.customerController),
-    );
 
     const createOrderSchema = z.object({
       body: z.object({
@@ -49,6 +45,19 @@ export class CustomerRouter extends BaseRouter {
       "/orders",
       validateRequest(createOrderSchema),
       this.customerController.createOrder.bind(this.customerController)
+    )
+    this.router.get(
+      "/my-orders/:orderId/status",
+      this.customerController.getOrderStatus.bind(this.customerController),
+    );
+    this.router.get(
+      "/my-orders",
+      this.customerController.getAllOrdersWithStatus.bind(this.customerController),
+    );
+    
+    this.router.post(
+      "/payment/mock",
+      this.customerController.processMockPayment.bind(this.customerController),
     );
   }
 }

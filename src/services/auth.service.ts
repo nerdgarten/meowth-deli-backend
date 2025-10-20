@@ -20,6 +20,12 @@ import emailConfig from "@/config/email";
 import { AppError } from "@/types/error";
 import { UserRole } from "@/types/role";
 import { signJwt } from "@/utils/jwt";
+import {
+  signInSchema,
+  signUpCustomerSchema,
+  signUpRestaurantSchema,
+  signUpDriverSchema,
+} from "@/validators/auth.schema";
 
 import EmailService from "./email.service";
 
@@ -36,6 +42,7 @@ export default class AuthService {
 
   async signIn(body: SignInBody) {
     const { email, password, role } = body;
+    signInSchema.parse(body);
 
     const user = await this.authRepository.findUserByEmail(email);
     if (!user) {
@@ -59,6 +66,7 @@ export default class AuthService {
   }
 
   async createCustomerUser(body: CustomerSignUpBody) {
+    signUpCustomerSchema.parse(body);
     const createdUser = await this.authRepository.createCustomerUser({
       ...body,
       password: await this.hashPassword(body.password),
@@ -72,6 +80,7 @@ export default class AuthService {
   }
 
   async createDriverUser(body: DriverSignUpBody) {
+    signUpDriverSchema.parse(body);
     const createdUser = await this.authRepository.createDriverUser({
       ...body,
       password: await this.hashPassword(body.password),
@@ -85,6 +94,7 @@ export default class AuthService {
   }
 
   async createRestaurantUser(body: RestaurantSignUpBody) {
+    signUpRestaurantSchema.parse(body);
     const createdUser = await this.authRepository.createRestaurantUser({
       ...body,
       password: await this.hashPassword(body.password),
