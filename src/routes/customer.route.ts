@@ -10,7 +10,9 @@ export class CustomerRouter extends BaseRouter {
   private customerController: CustomerController;
 
   constructor() {
-    super({ prefix: "/customer", middleware: [authMiddleware] });
+    super({ prefix: "/customer"
+      , middleware: [authMiddleware] 
+    });
 
     this.customerController = new CustomerController();
     this.setUpRoutes();

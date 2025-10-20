@@ -55,6 +55,7 @@ export default class CustomerService {
   ): Promise<Order> {
     // Validate input
     this.validateOrderInput(orderData);
+    console.log(orderData)
 
     // Validate restaurant
     const restaurant = await this.validateRestaurant(orderData.restaurant_id);
@@ -64,14 +65,12 @@ export default class CustomerService {
       orderData.dishes.map((d) => d.dish_id),
       restaurant.id
     );
-
     // Calculate total amount and driver fee
     const { totalAmount, driverFee } = this.calculateOrderCosts(
       dishDetails,
       orderData.dishes,
       restaurant.fee_rate
     );
-
     // Prepare mapped dishes
     const mappedDishes: IOrderDishRepository[] = orderData.dishes.map(
       (dish) => ({
@@ -82,6 +81,7 @@ export default class CustomerService {
     );
 
     // Create order
+    
     return this.customerRepository.createOrder({
       customerId,
       restaurant_id: restaurant.id,
@@ -118,7 +118,7 @@ export default class CustomerService {
     const restaurant = await prisma.restaurant.findUnique({
       where: {
         id: restaurantId,
-        is_available: true,
+        // is_available: true,
       },
       select: {
         id: true,
