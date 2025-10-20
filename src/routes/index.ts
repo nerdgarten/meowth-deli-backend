@@ -5,6 +5,7 @@ import { AuthRouter } from "@/routes/auth.route";
 import { AuthenticateRouter } from "@/routes/authenticated.route";
 import { CustomerRouter } from "@/routes/customer.route";
 import { DishRouter } from "@/routes/dish.route";
+import { DriverRouter } from "@/routes/driver.route";
 import { FileRouter } from "@/routes/file.route";
 import { RestaurantRouter } from "@/routes/restaurant.route";
 import { ReviewRouter } from "@/routes/review.route";
@@ -27,6 +28,7 @@ export class RouterManager {
     const restaurantRouter = new RestaurantRouter();
     const dishRouter = new DishRouter();
     const reviewRouter = new ReviewRouter();
+    const driverRouter = new DriverRouter();
     const testRouter = new TestRouter();
 
     this.router.use("/auth", authRouter.getRouter());
@@ -37,6 +39,7 @@ export class RouterManager {
     this.router.use("/file", fileRouter.getRouter());
     this.router.use("/dish", dishRouter.getRouter());
     this.router.use("/review", reviewRouter.getRouter());
+    this.router.use("/driver", driverRouter.getRouter());
     this.router.use("/api-test", testRouter.getRouter());
   }
 
