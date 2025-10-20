@@ -11,7 +11,6 @@ export class LocationRouter extends BaseRouter {
   constructor() {
     super({
       prefix: "/location",
-      middleware: [authMiddleware],
     });
     this.controller = new LocationController();
     this.initializeRoutes();
