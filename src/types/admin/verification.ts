@@ -1,4 +1,4 @@
-import { Role, VerificationStatus } from "@/generated/prisma/client";
+import { VerificationStatus } from "@/generated/prisma/client";
 
 export interface AdminVerificationRequest {
   id: number;

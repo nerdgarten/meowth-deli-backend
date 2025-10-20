@@ -25,7 +25,7 @@ export default class CustomerService {
   async updateCustomerProfile(userId: number, data: Partial<ICustomer>) {
     const updatedProfile = await this.customerRepository.updateCustomerProfile(
       userId,
-      data,
+      data
     );
     if (!updatedProfile) {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
@@ -35,7 +35,7 @@ export default class CustomerService {
   }
   async getOrderStatus(customerId: number, orderId: number): Promise<OrderStatusInfo> {
     const order = await this.customerRepository.getOrderWithDetails(orderId, customerId);
-    
+
     if (!order) {
       throw new AppError("Order not found or access denied", StatusCodes.NOT_FOUND);
     }
@@ -73,7 +73,7 @@ export default class CustomerService {
       customerId,
       statusFilter
     );
-    
+
     return orders.map(order => ({
       orderId: order.id,
       currentStatus: order.status,
@@ -95,7 +95,7 @@ export default class CustomerService {
   ): Promise<MockPaymentResult> {
     // Verify the order belongs to the customer
     const order = await this.customerRepository.getOrderWithDetails(orderId, customerId);
-    
+
     if (!order) {
       throw new AppError("Order not found or access denied", StatusCodes.NOT_FOUND);
     }
@@ -175,39 +175,3 @@ export default class CustomerService {
     }
     return undefined;
   }
-
-  private async simulatePaymentGateway(
-    paymentRequest: PaymentRequest
-  ): Promise<MockPaymentResult> {
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // Mock logic: 85% success rate
-    const isSuccess = Math.random() < 0.85;
-    
-    // Fail if amount is invalid
-    if (paymentRequest.amount <= 0) {
-      return {
-        success: false,
-        message: "Invalid payment amount",
-        timestamp: new Date(),
-      };
-    }
-
-    if (isSuccess) {
-      return {
-        success: true,
-        transactionId: `TXN_${Date.now()}_${Math.random().toString(36).substring(2, 11).toUpperCase()}`,
-        message: "Payment processed successfully",
-        timestamp: new Date(),
-      };
-    } else {
-      
-      return {
-        success: false,
-        message: "Payment Failure",
-        timestamp: new Date(),
-      };
-    }
-  }
-}

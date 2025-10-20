@@ -1,6 +1,7 @@
 node_modules
 dist
 .env
+.idea
 
 /src/generated/prisma
 /prisma/generated
@@ -8,5 +9,6 @@ dist
 
 .idea
 
-upload/*
+upload/driver/*
+upload/restaurant/*
 !upload/example.jpg
