@@ -65,10 +65,9 @@ export class CustomerController {
       const userId = req.user!.id;
       const order = await this.customerService.createOrder(userId, req.body);
 
-      res.status(StatusCodes.CREATED).json({
-        message: "Order created successfully",
+      res.status(StatusCodes.CREATED).json(
         order
-      });
+      );
     } catch (error) {
       this.handleError(error, res);
     }
