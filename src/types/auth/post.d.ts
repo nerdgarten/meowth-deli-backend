@@ -1,13 +1,8 @@
-import type {
-  UserRole,
-  ICustomer,
-  IBaseUser,
-  IDriver,
-  IRestaurant,
-} from "@/types/user";
+import type { ICustomer, IBaseUser, IDriver, IRestaurant } from "@/types/user";
+import type { Role } from "@/types/role";
 
 export interface SignInBody extends IBaseUser {
-  role: UserRole;
+  role: Role;
 }
 
 export type CustomerSignUpBody = ICustomer;

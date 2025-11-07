@@ -97,8 +97,6 @@ export class AdminController {
   }
   async getPendingVerifiedDrivers(req: Request, res: Response) {
     try {
-
-
       const result = await this.adminService.getPendingVerifications(
         req.query as FilePaginationQuery,
         "driver"
@@ -142,7 +140,6 @@ export class AdminController {
   }
   async getPendingVerifiedRestaurants(req: Request, res: Response) {
     try {
-
       const result = await this.adminService.getPendingVerifications(
         req.query as FilePaginationQuery,
         "restaurant"
