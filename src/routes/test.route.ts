@@ -7,7 +7,7 @@ export class TestRouter extends BaseRouter {
 
   constructor() {
     super({
-      prefix: "/api-test",
+      prefix: "/test",
       middleware: [authMiddleware],
     });
 
@@ -19,6 +19,10 @@ export class TestRouter extends BaseRouter {
     this.router.post(
       "/middleware",
       this.testController.testMiddleware.bind(this.testController),
+    );
+    this.router.post(
+      "/seed",
+      this.testController.seedDatabase.bind(this.testController),
     );
   }
 }

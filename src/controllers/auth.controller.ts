@@ -14,6 +14,7 @@ export class AuthController {
 
   async signIn(req: Request, res: Response) {
     try {
+      console.log("Signin request body:", req.body);
       const token = await this.authService.signIn(req.body);
 
       res.cookie("token", token, {

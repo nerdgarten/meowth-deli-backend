@@ -30,6 +30,7 @@ export default class CustomerRepository {
   }
 
   async createOrder(data: ICreateOrderRepository): Promise<Order & { orderDishes: OrderDish[] }> {
+    console.log(data)
     return prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {

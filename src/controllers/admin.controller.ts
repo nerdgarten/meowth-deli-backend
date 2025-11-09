@@ -3,6 +3,9 @@ import { StatusCodes } from "http-status-codes";
 
 import AdminService from "@/services/admin.service";
 import { FilePaginationQuery } from "@/types/file/file";
+import path from "path";
+import fs from "fs/promises";
+import { constants as fsConstants } from "fs";
 import {
   AdminVerificationRequest,
   AdminVerificationQuery,
@@ -208,11 +211,38 @@ export class AdminController {
         fileId,
         "driver"
       );
-      console.log(result.filePath);
-      res.sendFile(result.filePath);
-      // res.status(StatusCodes.OK).json({
-      //   message: result.message,
-      // });
+      const filePath = result.filePath;
+       const BASE_DIR = path.resolve(__dirname, "../../uploads/drivers"); // adjust to your real location
+
+       const resolvedPath = path.resolve(BASE_DIR, path.normalize(filePath));
+
+       const baseWithSep = BASE_DIR.endsWith(path.sep)
+         ? BASE_DIR
+         : BASE_DIR + path.sep;
+       if (!resolvedPath.startsWith(baseWithSep)) {
+         return res.status(StatusCodes.BAD_REQUEST).json({
+           success: false,
+           message: "Invalid file path",
+         });
+       }
+
+      const stat = await fs.stat(resolvedPath);
+      if (!stat.isFile()) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          message: "File not found",
+        });
+      }
+
+      res.sendFile(resolvedPath, (err) => {
+        if (err) {
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Failed to send file",
+          });
+        }
+      });
+
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({
@@ -243,7 +273,37 @@ export class AdminController {
         fileId,
         "restaurant"
       );
-      res.sendFile(result.filePath);
+      const filePath = result.filePath;
+      const BASE_DIR = path.resolve(__dirname, "../../uploads/drivers"); // adjust to your real location
+
+      const resolvedPath = path.resolve(BASE_DIR, path.normalize(filePath));
+
+      const baseWithSep = BASE_DIR.endsWith(path.sep)
+        ? BASE_DIR
+        : BASE_DIR + path.sep;
+      if (!resolvedPath.startsWith(baseWithSep)) {
+        return res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "Invalid file path",
+        });
+      }
+
+      const stat = await fs.stat(resolvedPath);
+      if (!stat.isFile()) {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          success: false,
+          message: "File not found",
+        });
+      }
+
+      res.sendFile(resolvedPath, (err) => {
+        if (err) {
+          res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+            success: false,
+            message: "Failed to send file",
+          });
+        }
+      });
     } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({

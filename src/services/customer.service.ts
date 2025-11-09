@@ -228,7 +228,7 @@ export default class CustomerService {
     );
 
     // Create order
-    
+    console.log(customerId);
     return this.customerRepository.createOrder({
       customerId,
       restaurant_id: restaurant.id,
