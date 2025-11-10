@@ -62,4 +62,32 @@ export default class RestaurantService {
     }
     return restaurant;
   }
+  async getRestaurantTransactions(restaurantId: number, startDate?: string, endDate?: string) {
+    if (!restaurantId || isNaN(restaurantId)) {
+      throw new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST);
+    }
+
+    const start = startDate ? new Date(startDate) : undefined;
+    const end = endDate ? new Date(endDate) : undefined;
+
+    const transactions = await this.restaurantRepository.findTransactionsByRestaurantId(restaurantId, start, end);
+
+    return transactions.map(transaction => ({
+      id: transaction.id,
+      status: transaction.status,
+      totalAmount: transaction.total_amount,
+      driverFee: transaction.driver_fee,
+      createdAt: transaction.created_at,
+      dishes: transaction.orderDishes.map(orderDish => ({
+        name: orderDish.dish.name,
+        amount: orderDish.amount,
+        price: orderDish.dish.price,
+      })),
+      payments: transaction.payments.map(payment => ({
+        id: payment.id,
+        status: payment.status,
+        createdAt: payment.created_at,
+      })),
+    }));
+  }
 }

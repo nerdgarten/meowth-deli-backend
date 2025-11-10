@@ -39,5 +39,13 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
+    this.router.get(
+      "/:id/transactions",
+      authMiddleware,
+      this.restaurantController.getRestaurantTransactions.bind(
+        this.restaurantController
+      )
+    );
   }
+  
 }

@@ -31,4 +31,26 @@ export default class RestaurantRepository {
       where: { restaurant_id: restaurantId },
     });
   }
+  async findTransactionsByRestaurantId(restaurantId: number, startDate?: Date, endDate?: Date) {
+    return prisma.order.findMany({
+      where: {
+        restaurant_id: restaurantId,
+        created_at: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        orderDishes: {
+          include: {
+            dish: true,
+          },
+        },
+        payments: true,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+  }
 }

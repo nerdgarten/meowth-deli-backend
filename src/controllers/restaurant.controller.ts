@@ -115,4 +115,27 @@ export class RestaurantController {
       });
     }
   }
+  async getRestaurantTransactions(req: Request, res: Response) {
+    try {
+      const restaurantId = Number(req.params.id);
+      const { startDate, endDate } = req.query;
+
+      const transactions = await this.restaurantService.getRestaurantTransactions(
+        restaurantId,
+        startDate as string | undefined,
+        endDate as string | undefined
+      );
+
+      res.status(StatusCodes.OK).json(transactions);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+        return;
+      }
+      console.error("Unexpected error during fetching restaurant transactions:", error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
 }
