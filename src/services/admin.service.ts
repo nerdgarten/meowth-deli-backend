@@ -161,4 +161,15 @@ export default class AdminService {
       ),
     };
   }
+  async getUserAdmin() {
+    const adminUsers = await this.adminRepository.getUserAdmin();
+    if (!adminUsers || adminUsers.length === 0) {
+      throw new AppError("No admin users found", StatusCodes.NOT_FOUND);
+    }
+    return {
+      success: true,
+      message: "Admin users retrieved successfully",
+      data: adminUsers,
+    };
+  }
 }

@@ -58,6 +58,10 @@ export class AdminRouter extends BaseRouter {
       "/restaurants/files/:id/:fileId",
       this.controller.getRestaurantFileById.bind(this.controller),
     );
+    this.router.get(
+      "/user/admin",
+      this.controller.getUserAdmin.bind(this.controller)
+    );
   }
 
   public getRouter(): Router {

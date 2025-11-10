@@ -1,6 +1,6 @@
 import { Prisma, VerificationStatus } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
-
+import { Role } from "@/generated/prisma/client";
 export default class AdminRepository {
   private readonly userSelect = {
     id: true,
@@ -52,6 +52,24 @@ export default class AdminRepository {
         verification_status: status,
       },
       include: this.defaultOptions.include,
+    });
+  }
+  async getUserAdmin() {
+    return prisma.user.findMany({
+      where: {
+        roles: {
+          some: {
+            role: Role.admin
+          }
+        }
+      },
+      select: {
+        id: true,
+        email: true,
+        roles: true,
+        created_at: true,
+        updated_at: true,
+      },
     });
   }
 }
