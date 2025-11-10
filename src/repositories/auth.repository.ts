@@ -10,18 +10,6 @@ export default class AuthRepository {
     });
   }
 
-  getUserRoles(userId: number) {
-    const roles = prisma.userRole.findMany({
-      where: {
-        user_id: userId,
-      },
-      select: {
-        role: true,
-      },
-    });
-    return roles.then((r) => r.map((role) => role.role));
-  }
-
   createCustomerUser(customer: ICustomer) {
     return prisma.user.create({
       data: {
@@ -30,11 +18,7 @@ export default class AuthRepository {
         accepted_term_of_service: customer.accepted_term_of_service || false,
         accepted_pdpa: customer.accepted_pdpa || false,
         accepted_cookie_tracking: customer.accepted_cookie_tracking || false,
-        roles: {
-          create: {
-            role: "customer",
-          },
-        },
+        role: "customer",
         customer: {
           create: {
             firstname: customer.firstname,
@@ -44,7 +28,6 @@ export default class AuthRepository {
         },
       },
       include: {
-        roles: true,
         customer: true,
       },
     });
@@ -58,11 +41,7 @@ export default class AuthRepository {
         accepted_term_of_service: driver.accepted_term_of_service || false,
         accepted_pdpa: driver.accepted_pdpa || false,
         accepted_cookie_tracking: driver.accepted_cookie_tracking || false,
-        roles: {
-          create: {
-            role: "driver",
-          },
-        },
+        role: "driver",
         driver: {
           create: {
             firstname: driver.firstname,
@@ -75,7 +54,6 @@ export default class AuthRepository {
         },
       },
       include: {
-        roles: true,
         driver: true,
       },
     });
@@ -89,11 +67,7 @@ export default class AuthRepository {
         accepted_term_of_service: restaurant.accepted_term_of_service || false,
         accepted_pdpa: restaurant.accepted_pdpa || false,
         accepted_cookie_tracking: restaurant.accepted_cookie_tracking || false,
-        roles: {
-          create: {
-            role: "restaurant",
-          },
-        },
+        role: "restaurant",
         restaurant: {
           create: {
             name: restaurant.name,
@@ -105,7 +79,6 @@ export default class AuthRepository {
         },
       },
       include: {
-        roles: true,
         restaurant: true,
       },
     });

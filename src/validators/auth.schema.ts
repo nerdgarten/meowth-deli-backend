@@ -5,7 +5,6 @@ export const signInSchema = z.object({
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters long" }),
-  role: z.enum(["customer", "restaurant", "driver"]),
 });
 
 export const signUpCustomerSchema = z.object({
@@ -22,7 +21,6 @@ export const signUpCustomerSchema = z.object({
 
 export const signUpRestaurantSchema = z.object({
   name: z.string().min(1, { message: "First name is required" }),
-  description: z.string().min(1, { message: "Last name is required" }),
   tel: z.string().regex(/^\+?[1-9]\d{1,14}$/, {
     message: "Invalid phone number format",
   }),

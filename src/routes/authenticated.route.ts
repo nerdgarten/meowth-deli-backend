@@ -17,7 +17,7 @@ export class AuthenticateRouter extends BaseRouter {
 
   private setUpRoutes() {
     this.router.get(
-      "/authenticatedAs",
+      "/",
       this.authenticatedController.authenticatedAs.bind(
         this.authenticatedController
       )

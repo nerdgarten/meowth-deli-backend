@@ -18,7 +18,7 @@ import urlConfig from "@/config/url";
 import emailConfig from "@/config/email";
 
 import { AppError } from "@/types/error";
-import { UserRole } from "@/types/role";
+import { Role } from "@/types/role";
 import { signJwt } from "@/utils/jwt";
 import {
   signInSchema,
@@ -41,7 +41,7 @@ export default class AuthService {
   }
 
   async signIn(body: SignInBody) {
-    const { email, password, role } = body;
+    const { email, password } = body;
     signInSchema.parse(body);
 
     const user = await this.authRepository.findUserByEmail(email);
@@ -49,18 +49,12 @@ export default class AuthService {
       throw new AppError("User not found", StatusCodes.NOT_FOUND);
     }
 
-    const userRoles = await this.authRepository.getUserRoles(user.id);
-
-    if (!userRoles.some((userRole) => userRole == role)) {
-      throw new AppError("Unauthorized role", StatusCodes.UNAUTHORIZED);
-    }
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new AppError("Invalid credentials", StatusCodes.UNAUTHORIZED);
     }
 
-    const token = signJwt(user.id, user.email, role);
+    const token = signJwt(user.id, user.email, user.role);
 
     return token;
   }
@@ -75,7 +69,7 @@ export default class AuthService {
     return {
       id: createdUser.id,
       email: createdUser.email,
-      role: UserRole.Customer,
+      role: Role.customer,
     };
   }
 
@@ -89,7 +83,7 @@ export default class AuthService {
     return {
       id: createdUser.id,
       email: createdUser.email,
-      role: UserRole.Driver,
+      role: Role.driver,
     };
   }
 
@@ -103,7 +97,7 @@ export default class AuthService {
     return {
       id: createdUser.id,
       email: createdUser.email,
-      role: UserRole.Restaurant,
+      role: Role.restaurant,
     };
   }
 

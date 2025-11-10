@@ -22,11 +22,11 @@ export class AuthRouter extends BaseRouter {
     );
     this.router.post(
       "/signup/driver",
-      this.authController.signUpDriver.bind(this.authController),
+      this.authController.signUpDriver.bind(this.authController)
     );
     this.router.post(
       "/signup/restaurant",
-      this.authController.signUpRestaurant.bind(this.authController),
+      this.authController.signUpRestaurant.bind(this.authController)
     );
     this.router.post(
       "/reset/request",
