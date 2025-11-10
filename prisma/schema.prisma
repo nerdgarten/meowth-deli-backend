@@ -88,14 +88,14 @@ model Customer {
   created_at DateTime @default(now()) @db.Timestamptz
   updated_at DateTime @updatedAt @db.Timestamptz
 
-  user           User                 @relation(fields: [id], references: [id])
-  locations      Location[]
-  favorites      FavoriteRestaurant[]
-  favoriteDishes FavoriteDish[]
-  orders         Order[]
-  couponUsages   CouponUsage[]
-  driverReviews  DriverReview[]
-  allergies      Allergy[]
+  user              User               @relation(fields: [id], references: [id])
+  locations         Location[]
+  favorites         Restaurant[]
+  favoriteDishes    Dish[]
+  orders            Order[]
+  restaurantReviews RestaurantReview[]
+  driverReviews     DriverReview[]
+  allergy           Allergy[]
 
   @@index([firstname, lastname])
 }
