@@ -1,0 +1,161 @@
+id,restaurant_id,name,allergy,price,detail,is_out_of_stock,created_at,updated_at
+1,121,Pad Thai,,27.98,Way such four prepare mission.,False,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+2,121,California Roll,peanuts,10.21,Onto his Republican challenge.,False,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+3,121,Margherita Pizza,dairy,10.77,Quickly girl drop gas. Case ago movement kitchen high.,False,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+4,121,Filet Mignon,,20.03,About take including easy answer beat.,False,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+5,121,Pad Thai,,11.68,Company foot without set sit.,False,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+6,121,Spaghetti Carbonara,gluten,20.07,Same movement return.,False,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+7,121,Pad Thai,peanuts,13.24,Whatever yeah age political would skin. Exactly hope else.,False,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+8,121,Fried Chicken,,18.84,Expert today history human finally point pretty.,True,2025-03-07 04:03:13.680046,2025-03-07 04:03:13.680046
+9,122,Fried Chicken,dairy,10.46,Perform present dinner two more write because choose.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+10,122,Caesar Salad,,21.46,Fund explain thank want interesting attorney family.,True,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+11,122,Green Curry,,28.8,Mind condition director wait market left finally.,True,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+12,122,Spaghetti Carbonara,,20.53,Once which reveal. Help expect produce task.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+13,122,California Roll,,19.9,Little suffer own reach happy run same.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+14,122,Ramen,,16.76,Deep politics think memory member above.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+15,122,Margherita Pizza,gluten,14.44,Off operation site meeting head science.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+16,122,Pad Thai,,18.98,Necessary radio your. All concern data central body.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+17,122,Cheeseburger,,11.03,Media really job administration avoid officer minute.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+18,122,Pad Thai,,29.18,Different suffer thank air.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+19,122,Spaghetti Carbonara,,11.89,By ball speech these large your.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+20,122,Cheeseburger,dairy,12.93,Professional push good happen wind.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+21,122,Fried Chicken,,29.8,Summer protect morning control accept.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+22,122,Ramen,gluten,14.13,Of more thing feel program so front. Loss eight remember.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+23,122,Margherita Pizza,,28.98,Institution hospital response next five cold.,False,2025-09-20 21:13:40.682808,2025-09-20 21:13:40.682808
+24,123,Spaghetti Carbonara,,9.76,Author light million role half activity business.,False,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+25,123,Fried Chicken,dairy,12.37,Easy plan almost third only affect whole.,True,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+26,123,Filet Mignon,dairy,19.01,Impact walk us writer always machine sell.,True,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+27,123,Green Curry,,20.48,Reveal movie fight day campaign east agree doctor.,False,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+28,123,Filet Mignon,gluten,7.83,Local lay face couple meet baby college but.,False,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+29,123,Caesar Salad,dairy,25.63,Hair collection go large later.,False,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+30,123,Pad Thai,gluten,20.08,A attack ball should.,True,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+31,123,Caesar Salad,gluten,28.06,Site store these real large mean.,False,2025-03-05 20:00:54.206722,2025-03-05 20:00:54.206722
+32,124,Fried Chicken,,23.68,Almost ok word. Stop one cut. Claim I idea.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+33,124,Green Curry,gluten,17.92,Prepare describe lead avoid scene project.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+34,124,Margherita Pizza,dairy,8.85,Miss something raise sound government usually.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+35,124,Pad Thai,,15.23,Pattern cold level only remain heart less.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+36,124,Ramen,dairy,6.31,Yard everything six keep can wife.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+37,124,Spaghetti Carbonara,,23.05,Morning say month music. Town strategy might.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+38,124,California Roll,gluten,18.94,Leave any office hospital responsibility decide start.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+39,124,California Roll,dairy,18.61,Reflect sense week from.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+40,124,California Roll,dairy,14.29,Such without week movie agency.,False,2025-01-26 04:04:44.845521,2025-01-26 04:04:44.845521
+41,125,Green Curry,,28.4,Defense democratic memory camera. Property cost indeed.,False,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+42,125,Caesar Salad,gluten,27.02,Myself leader ago machine. Century whether rich instead.,False,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+43,125,Filet Mignon,peanuts,7.79,Human voice actually month sell cell see.,False,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+44,125,California Roll,peanuts,16.91,Machine drive treat owner speak oil.,False,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+45,125,Ramen,gluten,15.37,Couple start new. Hit also PM production yeah put.,True,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+46,125,Pad Thai,,23.13,American might person each race night.,False,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+47,125,Green Curry,peanuts,17.2,Budget reveal food cup physical life affect.,True,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+48,125,Ramen,gluten,11.52,Sure thus yet nearly.,False,2025-04-23 07:22:12.048235,2025-04-23 07:22:12.048235
+49,126,Pad Thai,,12.79,Blue quality top plant worker each.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+50,126,Cheeseburger,dairy,6.59,American dream coach indeed but less painting.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+51,126,Ramen,dairy,18.49,Radio sort which fall fish who drop east.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+52,126,Caesar Salad,dairy,14.55,Sea attorney teach fly far minute.,True,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+53,126,Green Curry,peanuts,17.01,Significant guy then better modern important bill.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+54,126,Caesar Salad,gluten,21.92,Situation five develop political pattern.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+55,126,Ramen,gluten,13.42,Maintain fire difference most follow.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+56,126,Filet Mignon,peanuts,28.11,It wrong nation. Toward maintain bad month.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+57,126,Cheeseburger,dairy,10.93,Ago expect character someone investment why often five.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+58,126,Pad Thai,gluten,27.16,Agency remain western people.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+59,126,Caesar Salad,,18.56,Fact audience final ten adult gun offer.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+60,126,Spaghetti Carbonara,gluten,7.92,Could in huge.,False,2025-04-07 21:01:06.971578,2025-04-07 21:01:06.971578
+61,127,Caesar Salad,gluten,19.1,Administration conference artist physical.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+62,127,Pad Thai,,21.56,Establish pressure stage people western son easy.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+63,127,Caesar Salad,dairy,24.85,College nature crime event check debate.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+64,127,Spaghetti Carbonara,dairy,10.99,View whole night model. Common car test reach executive.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+65,127,Spaghetti Carbonara,gluten,25.18,Congress behavior bank hot less recent light table.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+66,127,California Roll,peanuts,10.68,Those great keep sport edge.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+67,127,Caesar Salad,,14.48,Network after community prove address.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+68,127,Filet Mignon,peanuts,13.85,Religious effort condition thousand sport near direction.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+69,127,Caesar Salad,gluten,6.71,View view company test agency anyone less.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+70,127,Margherita Pizza,,21.05,Level alone see range high son.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+71,127,Caesar Salad,peanuts,17.53,A free soon discussion successful check push.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+72,127,Spaghetti Carbonara,,7.35,Fall finally camera we city final cause administration.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+73,127,Pad Thai,gluten,24.26,On effect senior compare ball.,False,2025-05-01 11:02:17.967630,2025-05-01 11:02:17.967630
+74,128,Cheeseburger,dairy,19.36,Physical large environment religious.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+75,128,Green Curry,dairy,9.31,Reflect step shoulder.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+76,128,Spaghetti Carbonara,dairy,10.67,State number agreement situation trial account position.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+77,128,Ramen,gluten,23.07,Body maintain range discussion evidence bank generation.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+78,128,Cheeseburger,,28.11,Easy indeed will for recognize month nature.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+79,128,California Roll,dairy,25.83,Physical development method glass our father Mr.,True,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+80,128,Green Curry,gluten,28.48,Soldier class work learn. Special word analysis person.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+81,128,Cheeseburger,gluten,7.65,Toward story step our. Pm yeah politics ok degree.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+82,128,Spaghetti Carbonara,dairy,12.76,Television rock blood herself.,False,2025-07-13 00:37:11.803817,2025-07-13 00:37:11.803817
+83,129,Cheeseburger,peanuts,28.83,Full stay behavior they. Fear she grow number.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+84,129,Spaghetti Carbonara,dairy,17.76,East reveal letter last country time.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+85,129,Caesar Salad,dairy,10.83,Town economy middle kitchen great game answer church.,True,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+86,129,Ramen,gluten,14.84,Side everybody goal actually.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+87,129,Ramen,dairy,28.71,Quality commercial blood run read.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+88,129,Margherita Pizza,dairy,24.67,Various song eight break wait contain.,True,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+89,129,Pad Thai,,24.48,Head behavior break treat.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+90,129,Fried Chicken,dairy,25.19,Approach create apply force money understand.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+91,129,Ramen,peanuts,16.69,Record boy economic author thought.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+92,129,California Roll,gluten,6.88,Able anything four run practice buy.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+93,129,Spaghetti Carbonara,,13.71,Plan force important high probably even economic.,True,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+94,129,Green Curry,gluten,11.29,Off bank color major play win.,False,2025-07-02 20:21:36.135461,2025-07-02 20:21:36.135461
+95,130,Filet Mignon,dairy,19.01,Place red answer very.,False,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+96,130,Cheeseburger,,29.36,Pattern within glass blood.,False,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+97,130,Ramen,dairy,6.9,Deal interesting magazine spring.,False,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+98,130,Pad Thai,peanuts,21.28,Strategy international data green mother reality.,False,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+99,130,Margherita Pizza,dairy,16.36,Energy effect middle artist policy discuss.,True,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+100,130,Fried Chicken,,7.96,Serious control society hand put. Arrive design national.,True,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+101,130,Filet Mignon,dairy,18.68,Activity Republican look man talk.,False,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+102,130,Spaghetti Carbonara,gluten,27.24,Hit seem political none listen impact office.,False,2025-07-14 16:23:42.282568,2025-07-14 16:23:42.282568
+103,131,Margherita Pizza,peanuts,7.33,Share become suffer bank street suffer huge full.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+104,131,California Roll,,23.53,Sure charge light onto between than nature add.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+105,131,Filet Mignon,dairy,12.18,After step cost store hospital. Doctor night through.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+106,131,Margherita Pizza,,17.9,Artist out exactly join system open knowledge art.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+107,131,Cheeseburger,,23.29,Manage represent five international fast.,True,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+108,131,Ramen,peanuts,21.86,Others poor force. Center past itself.,True,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+109,131,Margherita Pizza,dairy,22.73,Big join chair play. Free produce administration me pay.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+110,131,Pad Thai,dairy,10.2,Necessary mother argue above hit fill yeah.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+111,131,Green Curry,dairy,28.49,Majority important now field usually thought.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+112,131,Green Curry,peanuts,28.91,Family teach part into behind top tough.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+113,131,Caesar Salad,gluten,26.02,Simple trouble church data rate.,False,2025-07-02 10:34:34.519124,2025-07-02 10:34:34.519124
+114,132,California Roll,dairy,8.84,Director poor eye think war night reason marriage.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+115,132,Filet Mignon,peanuts,26.49,Now child politics amount way. Indeed large weight your.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+116,132,Caesar Salad,gluten,26.68,Task finish really ten challenge care.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+117,132,Cheeseburger,,19.45,Practice author actually certainly.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+118,132,Spaghetti Carbonara,dairy,24.85,Race wonder value its find. Remain leader position police.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+119,132,Filet Mignon,,10.21,Unit eat ground southern capital have card.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+120,132,Ramen,gluten,6.42,Always red turn well push.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+121,132,Ramen,,8.63,Else role firm build instead.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+122,132,Cheeseburger,,26.09,Network miss bed require staff money.,True,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+123,132,Fried Chicken,,21.53,Tree specific well newspaper season.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+124,132,Spaghetti Carbonara,,22.58,Table understand bring someone whatever.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+125,132,California Roll,gluten,29.36,Conference figure you.,True,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+126,132,California Roll,,19.21,A reflect recent. Not bed may alone head side field.,True,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+127,132,Ramen,peanuts,9.4,Note maybe student man.,False,2025-08-30 15:49:15.622790,2025-08-30 15:49:15.622790
+128,133,Filet Mignon,gluten,18.24,Tell yard indeed also just need off at.,True,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+129,133,Green Curry,dairy,9.96,Federal stage knowledge mind. True bank five recognize.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+130,133,Green Curry,dairy,16.5,Must large understand cultural receive for song heart.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+131,133,Caesar Salad,gluten,26.02,Pull method beyond TV.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+132,133,California Roll,gluten,23.09,Which ground after fund they recently thing.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+133,133,California Roll,,22.91,Minute view relate rate risk buy. Voice offer example.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+134,133,California Roll,,26.04,Bag claim us friend every too south.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+135,133,Filet Mignon,dairy,15.38,Sometimes cup once deal kind.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+136,133,Filet Mignon,gluten,12.36,Continue her two analysis meeting apply but.,True,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+137,133,Spaghetti Carbonara,,21.38,Despite concern news gas term mind.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+138,133,Filet Mignon,,26.04,Firm language white ready exactly. National away model pay.,True,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+139,133,Green Curry,gluten,17.61,Protect for father enjoy forward. Thank new tough well.,False,2025-08-18 19:31:37.500193,2025-08-18 19:31:37.500193
+140,134,Margherita Pizza,,14.8,Still war pass go deep less foot sister.,False,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+141,134,Filet Mignon,dairy,21.53,Nearly possible value trip especially year religious.,False,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+142,134,Ramen,gluten,15.66,Show partner relationship trial. Nor likely class turn.,False,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+143,134,Margherita Pizza,peanuts,8.27,Bank find sometimes read reduce.,True,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+144,134,Pad Thai,peanuts,18.37,Price we sign phone recognize beautiful political.,True,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+145,134,Ramen,gluten,8.59,These fact society coach.,False,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+146,134,Margherita Pizza,,10.97,Early join attack happy society minute.,False,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+147,134,Pad Thai,,9.13,President cell choose use. Anyone beat color each.,False,2025-02-20 17:56:52.280059,2025-02-20 17:56:52.280059
+148,135,Spaghetti Carbonara,,20.28,Many recent much little month carry use spend.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+149,135,Margherita Pizza,,20.29,Should low either organization special.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+150,135,Filet Mignon,,29.13,With sell purpose culture board.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+151,135,Caesar Salad,gluten,12.41,Answer available nature several social.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+152,135,Fried Chicken,gluten,21.86,Officer those agency line. Decade simply test.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+153,135,Ramen,gluten,13.54,Wait suffer dream front off few.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+154,135,Cheeseburger,dairy,25.6,School family look into learn upon medical.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+155,135,Filet Mignon,,14.4,Responsibility home whose in capital.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+156,135,Filet Mignon,peanuts,29.91,Discuss specific security history oil argue involve.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+157,135,Margherita Pizza,peanuts,18.42,Medical speech degree short beyond trial agent.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+158,135,California Roll,gluten,16.39,Behind most she later good room television.,True,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+159,135,Green Curry,,26.89,Wonder music subject sea bad fear.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136
+160,135,Filet Mignon,gluten,6.25,Dream think full fine.,False,2025-05-27 04:17:40.919136,2025-05-27 04:17:40.919136

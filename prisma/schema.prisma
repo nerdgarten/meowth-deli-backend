@@ -51,6 +51,19 @@ enum CouponType {
   fixed
 }
 
+enum Allergy {
+  gluten
+  peanuts
+  seafood
+  dairy
+  eggs
+  soy
+  tree_nuts
+  wheat
+  fish
+  shellfish
+}
+
 // ---------------- MODELS ----------------
 model User {
   id                       Int      @id @default(autoincrement())
@@ -88,6 +101,7 @@ model Customer {
   orders         Order[]
   couponUsages   CouponUsage[]
   driverReviews  DriverReview[]
+  allergy        Allergy[]
 
   @@index([firstname, lastname])
 }
@@ -213,15 +227,15 @@ model DriverLocation {
 }
 
 model Dish {
-  id              Int      @id @default(autoincrement())
+  id              Int       @id @default(autoincrement())
   restaurant_id   Int
   name            String
-  allergy         String?
+  allergy         Allergy[]
   price           Float
   detail          String?
-  is_out_of_stock Boolean  @default(false)
-  created_at      DateTime @default(now()) @db.Timestamptz
-  updated_at      DateTime @updatedAt @db.Timestamptz
+  is_out_of_stock Boolean   @default(false)
+  created_at      DateTime  @default(now()) @db.Timestamptz
+  updated_at      DateTime  @updatedAt @db.Timestamptz
 
   restaurant  Restaurant     @relation(fields: [restaurant_id], references: [id])
   favorites   FavoriteDish[]
