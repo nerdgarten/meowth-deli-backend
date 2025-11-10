@@ -101,7 +101,7 @@ model Customer {
   orders         Order[]
   couponUsages   CouponUsage[]
   driverReviews  DriverReview[]
-  allergy        Allergy[]
+  allergies       Allergy[]
 
   @@index([firstname, lastname])
 }
