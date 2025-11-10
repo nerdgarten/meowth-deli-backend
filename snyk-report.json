@@ -1,0 +1,236 @@
+{
+  "vulnerabilities": [
+    {
+      "id": "SNYK-JS-NODEMAILER-13378253",
+      "title": "Interpretation Conflict",
+      "CVSSv3": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N/E:P",
+      "credit": [
+        "xclow3n"
+      ],
+      "semver": {
+        "vulnerable": [
+          "<7.0.7"
+        ]
+      },
+      "exploit": "Proof of Concept",
+      "fixedIn": [
+        "7.0.7"
+      ],
+      "patches": [],
+      "insights": {
+        "triageAdvice": null
+      },
+      "language": "js",
+      "severity": "medium",
+      "cvssScore": 6.9,
+      "functions": [],
+      "malicious": false,
+      "isDisputed": false,
+      "moduleName": "nodemailer",
+      "references": [
+        {
+          "url": "https://github.com/nodemailer/nodemailer/commit/1150d99fba77280df2cfb1885c43df23109a8626",
+          "title": "GitHub Commit"
+        }
+      ],
+      "cvssDetails": [],
+      "cvssSources": [
+        {
+          "type": "primary",
+          "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N/E:P",
+          "assigner": "Snyk",
+          "severity": "medium",
+          "baseScore": 6.9,
+          "cvssVersion": "4.0",
+          "modificationTime": "2025-10-07T15:24:25.602270Z"
+        },
+        {
+          "type": "secondary",
+          "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N/E:P",
+          "assigner": "Snyk",
+          "severity": "medium",
+          "baseScore": 5.3,
+          "cvssVersion": "3.1",
+          "modificationTime": "2025-10-07T15:24:25.602270Z"
+        }
+      ],
+      "description": "## Overview\n[nodemailer](https://www.npmjs.org/package/nodemailer) is an Easy as cake e-mail sending from your Node.js applications\n\nAffected versions of this package are vulnerable to Interpretation Conflict due to improper handling of quoted local-parts containing `@`. An attacker can cause emails to be sent to unintended external recipients or bypass domain-based access controls by crafting specially formatted email addresses with quoted local-parts containing the `@` character.\n## Remediation\nUpgrade `nodemailer` to version 7.0.7 or higher.\n## References\n- [GitHub Commit](https://github.com/nodemailer/nodemailer/commit/1150d99fba77280df2cfb1885c43df23109a8626)\n",
+      "epssDetails": null,
+      "identifiers": {
+        "CVE": [],
+        "CWE": [
+          "CWE-436"
+        ],
+        "GHSA": [
+          "GHSA-mm7p-fcc7-pg87"
+        ]
+      },
+      "packageName": "nodemailer",
+      "proprietary": false,
+      "creationTime": "2025-10-07T15:24:25.180459Z",
+      "functions_new": [],
+      "alternativeIds": [],
+      "disclosureTime": "2025-10-07T13:42:02Z",
+      "exploitDetails": {
+        "sources": [
+          "Snyk"
+        ],
+        "maturityLevels": [
+          {
+            "type": "secondary",
+            "level": "Proof of Concept",
+            "format": "CVSSv3"
+          },
+          {
+            "type": "primary",
+            "level": "Proof of Concept",
+            "format": "CVSSv4"
+          }
+        ]
+      },
+      "packageManager": "npm",
+      "publicationTime": "2025-10-07T15:24:25.503951Z",
+      "severityBasedOn": "CVSS",
+      "modificationTime": "2025-10-07T15:24:25.602270Z",
+      "socialTrendAlert": false,
+      "severityWithCritical": "medium",
+      "from": [
+        "meowth-deli-backend@1.0.0",
+        "nodemailer@7.0.6"
+      ],
+      "upgradePath": [
+        false,
+        "nodemailer@7.0.7"
+      ],
+      "isUpgradable": true,
+      "isPatchable": false,
+      "name": "nodemailer",
+      "version": "7.0.6"
+    }
+  ],
+  "ok": false,
+  "dependencyCount": 165,
+  "org": "mounteverestt",
+  "policy": "# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.\nversion: v1.25.1\nignore: {}\npatch: {}\n",
+  "isPrivate": true,
+  "licensesPolicy": {
+    "severities": {},
+    "orgLicenseRules": {
+      "AGPL-1.0": {
+        "licenseType": "AGPL-1.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "AGPL-3.0": {
+        "licenseType": "AGPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "Artistic-1.0": {
+        "licenseType": "Artistic-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "Artistic-2.0": {
+        "licenseType": "Artistic-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CDDL-1.0": {
+        "licenseType": "CDDL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "CPOL-1.02": {
+        "licenseType": "CPOL-1.02",
+        "severity": "high",
+        "instructions": ""
+      },
+      "EPL-1.0": {
+        "licenseType": "EPL-1.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "GPL-2.0": {
+        "licenseType": "GPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "GPL-3.0": {
+        "licenseType": "GPL-3.0",
+        "severity": "high",
+        "instructions": ""
+      },
+      "LGPL-2.0": {
+        "licenseType": "LGPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-2.1": {
+        "licenseType": "LGPL-2.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "LGPL-3.0": {
+        "licenseType": "LGPL-3.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-1.1": {
+        "licenseType": "MPL-1.1",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MPL-2.0": {
+        "licenseType": "MPL-2.0",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "MS-RL": {
+        "licenseType": "MS-RL",
+        "severity": "medium",
+        "instructions": ""
+      },
+      "SimPL-2.0": {
+        "licenseType": "SimPL-2.0",
+        "severity": "high",
+        "instructions": ""
+      }
+    }
+  },
+  "packageManager": "pnpm",
+  "ignoreSettings": {
+    "adminOnly": false,
+    "reasonRequired": false,
+    "disregardFilesystemIgnores": false
+  },
+  "summary": "1 vulnerable dependency path",
+  "remediation": {
+    "unresolved": [],
+    "upgrade": {
+      "nodemailer@7.0.6": {
+        "upgradeTo": "nodemailer@7.0.7",
+        "upgrades": [
+          "nodemailer@7.0.6"
+        ],
+        "vulns": [
+          "SNYK-JS-NODEMAILER-13378253"
+        ]
+      }
+    },
+    "patch": {},
+    "ignore": {},
+    "pin": {}
+  },
+  "filesystemPolicy": false,
+  "filtered": {
+    "ignore": [],
+    "patch": []
+  },
+  "uniqueCount": 1,
+  "projectName": "meowth-deli-backend",
+  "foundProjectCount": 1,
+  "displayTargetFile": "pnpm-lock.yaml",
+  "hasUnknownVersions": false,
+  "path": "C:\\meowth-deli-backend"
+}

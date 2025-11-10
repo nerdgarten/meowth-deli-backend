@@ -1,4 +1,6 @@
 import { prisma } from "@/libs/prisma";
+import { Allergy } from "@/generated/prisma/client";
+
 import { ICustomer, ICustomerProfile, ICreateOrderRepository } from "@/types/user";
 import { type Order, type OrderDish, type Dish, OrderStatus, VerificationStatus} from "@/generated/prisma/client";
 export default class CustomerRepository {
@@ -399,5 +401,21 @@ export default class CustomerRepository {
         total_amount: true,
       },
     });
+  }
+  async getAllergies(userId: number): Promise<Allergy[]> {
+    const customer = await prisma.customer.findUnique({
+      where: { id: userId },
+      select: { allergies: true }
+    });
+    return customer?.allergies || [];
+  }
+
+  async updateAllergies(userId: number, allergies: Allergy[]): Promise<Allergy[]> {
+    const updatedCustomer = await prisma.customer.update({
+      where: { id: userId },
+      data: { allergies },
+      select: { allergies: true }
+    });
+    return updatedCustomer.allergies;
   }
 }

@@ -79,5 +79,15 @@ export class CustomerRouter extends BaseRouter {
       "/payment/mock",
       this.customerController.processMockPayment.bind(this.customerController),
     );
+
+    this.router.get(
+      "/allergies",
+      this.customerController.getAllergies.bind(this.customerController)
+    );
+
+    this.router.post(
+      "/allergies",
+      this.customerController.updateAllergies.bind(this.customerController)
+    );
   }
 }

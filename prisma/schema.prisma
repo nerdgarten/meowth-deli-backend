@@ -51,6 +51,19 @@ enum CouponType {
   fixed
 }
 
+enum Allergy {
+  gluten
+  peanuts
+  seafood
+  dairy
+  eggs
+  soy
+  tree_nuts
+  wheat
+  fish
+  shellfish
+}
+
 // ---------------- MODELS ----------------
 model User {
   id                       Int      @id @default(autoincrement())
@@ -100,6 +113,7 @@ model Customer {
   orders         Order[]
   couponUsages   CouponUsage[]
   driverReviews  DriverReview[]
+  allergies       Allergy[]
 
   @@index([firstname, lastname])
 }

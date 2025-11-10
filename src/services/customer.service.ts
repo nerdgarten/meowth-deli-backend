@@ -1,5 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { prisma,  } from "@/libs/prisma";
+import { Allergy } from "@/generated/prisma/client";
 
 import CustomerRepository from "@/repositories/customer.repository";
 import { AppError } from "@/types/error";
@@ -458,5 +459,13 @@ export default class CustomerService {
     }
     return undefined;
   }
+  async getAllergies(userId: number): Promise<Allergy[]> {
+    return this.customerRepository.getAllergies(userId);
+  }
 
+  async updateAllergies(userId: number, allergies: Allergy[]): Promise<Allergy[]> {
+    // Validate allergies if needed
+    const validAllergies = allergies.filter(allergy => Object.values(Allergy).includes(allergy));
+    return this.customerRepository.updateAllergies(userId, validAllergies);
+  }
 }

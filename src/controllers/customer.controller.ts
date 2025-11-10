@@ -277,4 +277,24 @@ export class CustomerController {
         .json({ message: "Internal Server Error" });
     }
   }
+  async getAllergies(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const allergies = await this.customerService.getAllergies(userId);
+      res.status(StatusCodes.OK).json(allergies);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
+
+  async updateAllergies(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { allergies } = req.body;
+      const updatedAllergies = await this.customerService.updateAllergies(userId, allergies);
+      res.status(StatusCodes.OK).json(updatedAllergies);
+    } catch (error) {
+      this.handleError(error, res);
+    }
+  }
 }
