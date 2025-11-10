@@ -54,4 +54,29 @@ export default class AdminRepository {
       include: this.defaultOptions.include,
     });
   }
+  async listRestaurantReviews() {
+    return prisma.restaurantReview.findMany({
+      include: {
+        user: {
+          select: {
+            id: true,
+            email: true,
+          },
+        },
+        restaurant: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: { created_at: 'desc' },
+    });
+  }
+
+  async deleteRestaurantReview(reviewId: number) {
+    return prisma.restaurantReview.delete({
+      where: { id: reviewId },
+    });
+  }
 }

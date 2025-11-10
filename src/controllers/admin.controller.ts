@@ -258,4 +258,42 @@ export class AdminController {
       });
     }
   }
+  async listRestaurantReviews(req: Request, res: Response) {
+    try {
+      const result = await this.adminService.listRestaurantReviews();
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+      } else {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: "Internal server error",
+        });
+      }
+    }
+  }
+
+  async deleteRestaurantReview(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const result = await this.adminService.deleteRestaurantReview(Number(id));
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+      } else {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          success: false,
+          message: "Failed to delete restaurant review",
+        });
+      }
+    }
+  }
 }
