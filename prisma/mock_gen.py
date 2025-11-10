@@ -14,7 +14,6 @@ WEEK_DAYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "
 ORDER_STATUSES = ["pending", "preparing", "delivered", "rejected", "success"]
 PAYMENT_TYPES = ["cash", "mobilebanking", "creditcard"]
 VERIFICATION_STATUSES = ["pending", "rejected", "approved"]
-COUPON_TYPES = ["percent", "fixed"]
 ALLERGY_TYPES = ["gluten", "peanuts", "seafood", "dairy", "eggs", "soy", "tree_nuts", "wheat", "fish", "shellfish"]
 
 # --- MOCK CONFIG ---
@@ -23,7 +22,6 @@ NUM_DRIVERS = 20
 NUM_RESTAURANTS = 15
 NUM_ADMINS = 3
 NUM_ORDERS_PER_CUSTOMER = 5
-NUM_COUPONS = 10
 
 # --- FOOD DATA ---
 FOOD_ITEMS = [
@@ -38,7 +36,7 @@ data = {
     "Location": [], "DriverLocation": [], "RestaurantTag": [],
     "RestaurantGallery": [], "AvailableTime": [], "Dish": [],
     "FavoriteRestaurant": [], "FavoriteDish": [], "PaymentMethod": [],
-    "Coupon": [], "CouponUsage": [], "Payment": [], "Order": [],
+    "Payment": [], "Order": [],
     "OrderDish": [], "RestaurantReview": [], "DriverReview": [],
     "VerifyToken": [], "ResetToken": []
 }
@@ -46,7 +44,7 @@ data = {
 # --- ID Counters ---
 id_counters = {
     "User": 1, "Location": 1, "RestaurantTag": 1, "RestaurantGallery": 1,
-    "AvailableTime": 1, "Dish": 1, "PaymentMethod": 1, "Coupon": 1,
+    "AvailableTime": 1, "Dish": 1, "PaymentMethod": 1,
     "Payment": 1, "Order": 1, "RestaurantReview": 1, "DriverReview": 1,
     "ResetToken": 1
 }
@@ -65,7 +63,6 @@ def create_user(role):
         "password": fake.password(),
         "accepted_term_of_service": True,
         "accepted_pdpa": True,
-        "accepted_cookie_tracking": random.choice([True, False]),
         "created_at": now,
         "updated_at": now,
         "role": role
@@ -169,11 +166,12 @@ for rest in data["Restaurant"]:
             "updated_at": rest["updated_at"],
         })
     for _ in range(random.randint(8, 15)):
+        allergies = random.sample(ALLERGY_TYPES, random.randint(0, 3))
         data["Dish"].append({
             "id": get_id("Dish"),
             "restaurant_id": rid,
             "name": random.choice(FOOD_ITEMS),
-            "allergy": random.choice([None, "peanuts", "gluten", "dairy"]),
+            "allergy": "{%s}" % ",".join(allergies),
             "price": round(random.uniform(5.99, 29.99), 2),
             "detail": fake.text(60),
             "is_out_of_stock": random.random() < 0.2,
@@ -256,21 +254,8 @@ for cust in data["Customer"]:
             })
 
 # -------------------------------
-# PHASE 4: COUPONS & TOKENS
+# PHASE 4: & TOKENS
 # -------------------------------
-for _ in range(NUM_COUPONS):
-    ctype = random.choice(COUPON_TYPES)
-    data["Coupon"].append({
-        "id": get_id("Coupon"),
-        "code": "".join(random.choices(string.ascii_uppercase + string.digits, k=8)),
-        "amount": random.randint(50, 200),
-        "value": round(random.uniform(5, 20), 2) if ctype == "fixed" else round(random.uniform(0.1, 0.3), 2),
-        "type": ctype,
-        "is_empty": False,
-        "created_at": datetime.now(),
-        "updated_at": datetime.now(),
-    })
-
 for u in data["User"]:
     if random.random() < 0.1:
         data["VerifyToken"].append({
@@ -317,8 +302,7 @@ db_params = {
 tables = [
     "User", "Customer", "Driver", "Restaurant", "Location", "DriverLocation",
     "RestaurantTag", "RestaurantGallery", "AvailableTime", "Dish",
-    "FavoriteRestaurant", "FavoriteDish", "PaymentMethod", "Coupon",
-    "CouponUsage", "Order", "OrderDish", "Payment", "RestaurantReview",
+    "FavoriteRestaurant", "FavoriteDish", "PaymentMethod", "Order", "OrderDish", "Payment", "RestaurantReview",
     "DriverReview", "VerifyToken", "ResetToken"
 ]
 
@@ -343,7 +327,7 @@ try:
 
     auto_tables = [
         "User", "Location", "RestaurantTag", "RestaurantGallery",
-        "AvailableTime", "Dish", "PaymentMethod", "Coupon",
+        "AvailableTime", "Dish", "PaymentMethod",
         "Payment", "Order", "RestaurantReview", "DriverReview", "ResetToken"
     ]
     print("\n--- Syncing autoincrement sequences ---")
@@ -362,9 +346,3 @@ except Exception as e:
 finally:
     if 'cur' in locals(): cur.close()
     if 'conn' in locals(): conn.close()
-
-    auto_tables = [
-    "User", "Location", "RestaurantTag", "RestaurantGallery",
-    "AvailableTime", "Dish", "PaymentMethod", "Coupon",
-    "Payment", "Order", "RestaurantReview", "DriverReview", "ResetToken"
-]

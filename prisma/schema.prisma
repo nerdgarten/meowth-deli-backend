@@ -66,17 +66,17 @@ model User {
   password                 String
   accepted_term_of_service Boolean  @default(false)
   accepted_pdpa            Boolean  @default(false)
-  accepted_cookie_tracking Boolean  @default(false)
   created_at               DateTime @default(now()) @db.Timestamptz
   updated_at               DateTime @updatedAt @db.Timestamptz
 
-  role           Role
-  customer       Customer?
-  driver         Driver?
-  restaurant     Restaurant?
-  paymentMethods PaymentMethod[]
-  verifyTokens   VerifyToken[]
-  resetTokens    ResetToken[]
+  role              Role
+  customer          Customer?
+  driver            Driver?
+  restaurant        Restaurant?
+  paymentMethods    PaymentMethod[]
+  restaurantReviews RestaurantReview[]
+  verifyTokens      VerifyToken[]
+  resetTokens       ResetToken[]
 }
 
 model Customer {
@@ -88,14 +88,13 @@ model Customer {
   created_at DateTime @default(now()) @db.Timestamptz
   updated_at DateTime @updatedAt @db.Timestamptz
 
-  user              User               @relation(fields: [id], references: [id])
-  locations         Location[]
-  favorites         Restaurant[]
-  favoriteDishes    Dish[]
-  orders            Order[]
-  restaurantReviews RestaurantReview[]
-  driverReviews     DriverReview[]
-  allergy           Allergy[]
+  user           User                 @relation(fields: [id], references: [id])
+  locations      Location[]
+  favorites      FavoriteRestaurant[]
+  favoriteDishes FavoriteDish[]
+  orders         Order[]
+  driverReviews  DriverReview[]
+  allergy        Allergy[]
 
   @@index([firstname, lastname])
 }
@@ -133,13 +132,25 @@ model Restaurant {
   created_at          DateTime           @default(now()) @db.Timestamptz
   updated_at          DateTime           @updatedAt @db.Timestamptz
 
-  user       User                @relation(fields: [id], references: [id])
-  gallery    RestaurantGallery[]
-  times      AvailableTime[]
-  dishes     Dish[]
-  reviews    RestaurantReview[]
-  customer   Customer?           @relation(fields: [customerId], references: [id])
-  customerId Int?
+  user      User                 @relation(fields: [id], references: [id])
+  tags      RestaurantTag[]
+  gallery   RestaurantGallery[]
+  times     AvailableTime[]
+  dishes    Dish[]
+  favorites FavoriteRestaurant[]
+  reviews   RestaurantReview[]
+}
+
+model RestaurantTag {
+  id            Int      @id @default(autoincrement())
+  restaurant_id Int
+  tag           String
+  created_at    DateTime @default(now()) @db.Timestamptz
+  updated_at    DateTime @updatedAt @db.Timestamptz
+
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
+
+  @@index([restaurant_id])
 }
 
 model RestaurantGallery {
@@ -169,16 +180,16 @@ model AvailableTime {
 }
 
 model Location {
-  id         Int      @id @default(autoincrement())
-  user_id    Int
-  address    String
-  is_default Boolean  @default(false)
-  created_at DateTime @default(now()) @db.Timestamptz
-  updated_at DateTime @updatedAt @db.Timestamptz
+  id          Int      @id @default(autoincrement())
+  customer_id Int
+  address     String
+  is_default  Boolean  @default(false)
+  created_at  DateTime @default(now()) @db.Timestamptz
+  updated_at  DateTime @updatedAt @db.Timestamptz
 
-  customer Customer @relation(fields: [user_id], references: [id])
+  customer Customer @relation(fields: [customer_id], references: [id])
 
-  @@index([user_id])
+  @@index([customer_id])
 }
 
 model DriverLocation {
@@ -205,12 +216,66 @@ model Dish {
   created_at      DateTime  @default(now()) @db.Timestamptz
   updated_at      DateTime  @updatedAt @db.Timestamptz
 
-  restaurant  Restaurant  @relation(fields: [restaurant_id], references: [id])
+  restaurant  Restaurant     @relation(fields: [restaurant_id], references: [id])
+  favorites   FavoriteDish[]
   orderDishes OrderDish[]
-  customer    Customer?   @relation(fields: [customerId], references: [id])
-  customerId  Int?
 
   @@index([restaurant_id])
+}
+
+model FavoriteRestaurant {
+  customer_id   Int
+  restaurant_id Int
+  created_at    DateTime @default(now()) @db.Timestamptz
+  updated_at    DateTime @updatedAt @db.Timestamptz
+
+  customer   Customer   @relation(fields: [customer_id], references: [id])
+  restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
+
+  @@id([customer_id, restaurant_id])
+}
+
+model FavoriteDish {
+  customer_id Int
+  dish_id     Int
+  created_at  DateTime @default(now()) @db.Timestamptz
+  updated_at  DateTime @updatedAt @db.Timestamptz
+
+  customer Customer @relation(fields: [customer_id], references: [id])
+  dish     Dish     @relation(fields: [dish_id], references: [id])
+
+  @@id([customer_id, dish_id])
+}
+
+model PaymentMethod {
+  id         Int         @id @default(autoincrement())
+  user_id    Int
+  title      String
+  type       PaymentType
+  detail     String
+  created_at DateTime    @default(now()) @db.Timestamptz
+  updated_at DateTime    @updatedAt @db.Timestamptz
+
+  user     User      @relation(fields: [user_id], references: [id])
+  payments Payment[]
+
+  @@index([user_id])
+}
+
+model Payment {
+  id                Int                @id @default(autoincrement())
+  order_id          Int
+  payment_method_id Int
+  image             String?
+  status            VerificationStatus @default(pending)
+  created_at        DateTime           @default(now()) @db.Timestamptz
+  updated_at        DateTime           @updatedAt @db.Timestamptz
+
+  order         Order         @relation(fields: [order_id], references: [id])
+  paymentMethod PaymentMethod @relation(fields: [payment_method_id], references: [id])
+
+  @@index([order_id])
+  @@index([payment_method_id])
 }
 
 model Order {
@@ -251,40 +316,9 @@ model OrderDish {
   @@id([order_id, dish_id])
 }
 
-model PaymentMethod {
-  id         Int         @id @default(autoincrement())
-  user_id    Int
-  title      String
-  type       PaymentType
-  detail     String
-  created_at DateTime    @default(now()) @db.Timestamptz
-  updated_at DateTime    @updatedAt @db.Timestamptz
-
-  user     User      @relation(fields: [user_id], references: [id])
-  payments Payment[]
-
-  @@index([user_id])
-}
-
-model Payment {
-  id                Int                @id @default(autoincrement())
-  order_id          Int
-  payment_method_id Int
-  image             String?
-  status            VerificationStatus @default(pending)
-  created_at        DateTime           @default(now()) @db.Timestamptz
-  updated_at        DateTime           @updatedAt @db.Timestamptz
-
-  order         Order         @relation(fields: [order_id], references: [id])
-  paymentMethod PaymentMethod @relation(fields: [payment_method_id], references: [id])
-
-  @@index([order_id])
-  @@index([payment_method_id])
-}
-
 model RestaurantReview {
   id            Int      @id @default(autoincrement())
-  customer_id   Int
+  user_id       Int
   restaurant_id Int
   order_id      Int
   rate          Float
@@ -292,7 +326,7 @@ model RestaurantReview {
   created_at    DateTime @default(now()) @db.Timestamptz
   updated_at    DateTime @updatedAt @db.Timestamptz
 
-  customer   Customer   @relation(fields: [customer_id], references: [id])
+  user       User       @relation(fields: [user_id], references: [id])
   restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
   order      Order      @relation(fields: [order_id], references: [id])
 
