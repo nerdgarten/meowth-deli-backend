@@ -59,7 +59,7 @@ export class AdminRouter extends BaseRouter {
       this.controller.getRestaurantFileById.bind(this.controller),
     );
     this.router.get(
-      "/user/admin",
+      "/user",
       this.controller.getUserAdmin.bind(this.controller)
     );
   }
