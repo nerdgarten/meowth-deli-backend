@@ -12,8 +12,10 @@ export class DriverService {
     this.driverRepository = new DriverRepository();
   }
 
-  async getDriverOrdersByStatus(driver_id: number, status: OrderStatus | undefined) {
-
+  async getDriverOrdersByStatus(
+    driver_id: number,
+    status: OrderStatus | undefined
+  ) {
     if (status && !Object.values(OrderStatus).includes(status)) {
       throw new AppError("Invalid status value", StatusCodes.BAD_REQUEST);
     }
@@ -23,7 +25,8 @@ export class DriverService {
       status: status,
     };
 
-    const orders = await this.driverRepository.getDriverOrdersByStatus(whereClause);
+    const orders =
+      await this.driverRepository.getDriverOrdersByStatus(whereClause);
     return orders;
   }
 
@@ -33,9 +36,14 @@ export class DriverService {
       id: order_id,
     };
     const order = await this.driverRepository.getDriverOrderById(whereClause);
-    if(!order) {
+    if (!order) {
       throw new AppError("Order not found", StatusCodes.NOT_FOUND);
     }
     return order;
   }
+  async getDriverPayments(driver_id: number) {
+    const payments = await this.driverRepository.getDriverPayments(driver_id);
+    return payments;
+  }
+  
 }

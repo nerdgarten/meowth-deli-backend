@@ -80,7 +80,8 @@ export class RestaurantController {
     try {
       const restaurantId = Number(req.params.id);
 
-      const dishes = await this.restaurantService.getDishesByRestaurantId(restaurantId);
+      const dishes =
+        await this.restaurantService.getDishesByRestaurantId(restaurantId);
       res.status(StatusCodes.OK).json(dishes);
     } catch (error: unknown) {
       if (error instanceof AppError) {
@@ -99,7 +100,8 @@ export class RestaurantController {
   async getRestaurantById(req: Request, res: Response) {
     try {
       const restaurantId = Number(req.params.id);
-      const restaurant = await this.restaurantService.getRestaurantById(restaurantId);
+      const restaurant =
+        await this.restaurantService.getRestaurantById(restaurantId);
       res.status(StatusCodes.OK).json(restaurant);
     } catch (error: unknown) {
       if (error instanceof AppError) {
@@ -110,6 +112,28 @@ export class RestaurantController {
         "Unexpected error during restaurant availability update:",
         error
       );
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
+  async getRestaurantPayments(req: Request, res: Response) {
+    try {
+      const { id, role } = req.user!;
+      if (role !== "restaurant") {
+        res.status(StatusCodes.FORBIDDEN).json({ message: "Forbidden" });
+        return;
+      }
+      const payments = await this.restaurantService.getRestaurantPayments(id);
+      res.status(StatusCodes.OK).json(payments);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+
+        return;
+      }
+      console.error("Unexpected error during get driver orders:", error);
+
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",
       });

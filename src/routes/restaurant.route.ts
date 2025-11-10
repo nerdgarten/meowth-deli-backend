@@ -39,5 +39,11 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
+    this.router.get(
+      "/payments",
+      this.restaurantController.getRestaurantPayments.bind(
+        this.restaurantController
+      )
+    );
   }
 }

@@ -4,6 +4,7 @@ datasource db {
 }
 generator custom_generator {
   provider = "prisma-generator-fake-data"
+  output   = "../src/utils/fake.ts" /// optional,
   /// by default, the file will be generated at `./prisma/fake-data.ts`
 }
 

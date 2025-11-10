@@ -24,5 +24,9 @@ export class DriverRouter extends BaseRouter {
       "/orders/:id",
       this.driverController.getDriverOrderById.bind(this.driverController),
     );
+    this.router.get(
+      "/payments",
+      this.driverController.getDriverPayments.bind(this.driverController)
+    );
   }
 }

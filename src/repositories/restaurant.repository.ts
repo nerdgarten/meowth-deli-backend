@@ -31,4 +31,13 @@ export default class RestaurantRepository {
       where: { restaurant_id: restaurantId },
     });
   }
+  async getRestaurantPayments(restaurant_id: number) {
+    return prisma.payment.findMany({
+      where: {
+        order: {
+          restaurant_id,
+        },
+      },
+    });
+  }
 }

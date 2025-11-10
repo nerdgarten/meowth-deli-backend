@@ -4,12 +4,21 @@ import { OrderWhereClause } from "@/types/order/order";
 export default class DriverRepository {
   async getDriverOrdersByStatus(whereClause: OrderWhereClause) {
     return prisma.order.findMany({
-      where: whereClause
+      where: whereClause,
     });
   }
   async getDriverOrderById(whereClause: OrderWhereClause) {
     return prisma.order.findFirst({
-      where: whereClause
+      where: whereClause,
+    });
+  }
+  async getDriverPayments(driver_id: number) {
+    return prisma.payment.findMany({
+      where: {
+        order: {
+          driver_id,
+        },
+      },
     });
   }
 }

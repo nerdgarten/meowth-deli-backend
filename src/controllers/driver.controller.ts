@@ -17,17 +17,19 @@ export class DriverController {
       const { id } = req.user!;
       const { status } = req.query;
 
-      const orders = await this.driverService.getDriverOrdersByStatus(id, (status as OrderStatus) || undefined);
+      const orders = await this.driverService.getDriverOrdersByStatus(
+        id,
+        (status as OrderStatus) || undefined
+      );
       res.status(StatusCodes.OK).json(orders);
-    }
-    catch (error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
 
         return;
       }
       console.error("Unexpected error during get driver orders:", error);
-      
+
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",
       });
@@ -39,17 +41,41 @@ export class DriverController {
       const { id } = req.user!;
       const order_id = req.params.id;
 
-      const orders = await this.driverService.getDriverOrderById(id, Number(order_id));
+      const orders = await this.driverService.getDriverOrderById(
+        id,
+        Number(order_id)
+      );
       res.status(StatusCodes.OK).json(orders);
-    }
-    catch (error: unknown) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         res.status(error.statusCode).json({ message: error.message });
 
         return;
       }
       console.error("Unexpected error during get driver order by id:", error);
-      
+
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
+  async getDriverPayments(req: Request, res: Response) {
+    try {
+      const { id, role } = req.user!;
+      if (role !== "driver") {
+        res.status(StatusCodes.FORBIDDEN).json({ message: "Forbidden" });
+        return;
+      }
+      const payments = await this.driverService.getDriverPayments(id);
+      res.status(StatusCodes.OK).json(payments);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({ message: error.message });
+
+        return;
+      }
+      console.error("Unexpected error during get driver orders:", error);
+
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",
       });
