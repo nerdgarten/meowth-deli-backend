@@ -335,7 +335,7 @@ try:
         try:
             cur.execute(f"""
                 SELECT setval(pg_get_serial_sequence('"{{t}}"', 'id'),
-                COALESCE((SELECT MAX(id) FROM "{{t}}"), 1), false);
+                COALESCE((SELECT MAX(id) FROM "{{t}}")+1, 1), false);
             """.format(t=t))
             print(f"Sequence synced for {t}")
         except Exception as e:
