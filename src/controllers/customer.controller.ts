@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import { ICreateOrderRequest } from "@/types/user";
 import CustomerService from "@/services/customer.service";
 import { AppError } from "@/types/error";
-import { OrderStatus} from "@/generated/prisma/client";
+import { OrderStatus } from "@/generated/prisma/client";
 
 export class CustomerController {
   private customerService: CustomerService;
@@ -18,16 +18,16 @@ export class CustomerController {
     console.error(error); // Log the full error for internal tracking
 
     if (error instanceof AppError) {
-      res.status(error.statusCode).json({ 
-        message: error.message 
+      res.status(error.statusCode).json({
+        message: error.message,
       });
     } else if (error instanceof Error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message || "Unexpected error occurred"
+        message: error.message || "Unexpected error occurred",
       });
     } else {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "An unexpected error occurred"
+        message: "An unexpected error occurred",
       });
     }
   }
@@ -50,7 +50,7 @@ export class CustomerController {
       const userId = req.user!.id;
       const data = await this.customerService.updateCustomerProfile(
         userId,
-        req.body,
+        req.body
       );
 
       res.status(StatusCodes.OK).json(data);
@@ -65,9 +65,7 @@ export class CustomerController {
       const userId = req.user!.id;
       const order = await this.customerService.createOrder(userId, req.body);
 
-      res.status(StatusCodes.CREATED).json(
-        order
-      );
+      res.status(StatusCodes.CREATED).json(order);
     } catch (error) {
       this.handleError(error, res);
     }
@@ -76,14 +74,14 @@ export class CustomerController {
     try {
       const customerId = req.user!.id;
       const orderId = parseInt(req.params.orderId);
-      
+
       if (isNaN(orderId)) {
-        res.status(StatusCodes.BAD_REQUEST).json({ 
-          message: "Invalid order ID" 
+        res.status(StatusCodes.BAD_REQUEST).json({
+          message: "Invalid order ID",
         });
         return;
       }
-      
+
       const orderStatus = await this.customerService.getOrderStatus(
         customerId,
         orderId
@@ -91,7 +89,7 @@ export class CustomerController {
 
       res.status(StatusCodes.OK).json({
         success: true,
-        data: orderStatus
+        data: orderStatus,
       });
     } catch (error: unknown) {
       if (error instanceof AppError) {
@@ -110,7 +108,7 @@ export class CustomerController {
     try {
       const customerId = req.user!.id;
       const { status } = req.query;
-      
+
       const orders = await this.customerService.getAllOrdersWithStatus(
         customerId,
         status as OrderStatus
@@ -118,7 +116,7 @@ export class CustomerController {
 
       res.status(StatusCodes.OK).json({
         success: true,
-        data: orders
+        data: orders,
       });
     } catch (error: unknown) {
       if (error instanceof AppError) {
@@ -139,8 +137,8 @@ export class CustomerController {
       const { orderId, amount, paymentMethod } = req.body;
 
       if (!orderId || !amount) {
-        res.status(StatusCodes.BAD_REQUEST).json({ 
-          message: "Order ID and amount are required" 
+        res.status(StatusCodes.BAD_REQUEST).json({
+          message: "Order ID and amount are required",
         });
         return;
       }
@@ -156,7 +154,7 @@ export class CustomerController {
 
       res.status(StatusCodes.OK).json({
         success: paymentResult.success,
-        data: paymentResult
+        data: paymentResult,
       });
     } catch (error: unknown) {
       if (error instanceof AppError) {
@@ -260,10 +258,7 @@ export class CustomerController {
         return;
       }
 
-      const items = await this.customerService.getReorderItems(
-        userId,
-        orderId
-      );
+      const items = await this.customerService.getReorderItems(userId, orderId);
 
       res.status(StatusCodes.OK).json(items);
     } catch (error: unknown) {
@@ -291,7 +286,10 @@ export class CustomerController {
     try {
       const userId = req.user!.id;
       const { allergies } = req.body;
-      const updatedAllergies = await this.customerService.updateAllergies(userId, allergies);
+      const updatedAllergies = await this.customerService.updateAllergy(
+        userId,
+        allergies
+      );
       res.status(StatusCodes.OK).json(updatedAllergies);
     } catch (error) {
       this.handleError(error, res);

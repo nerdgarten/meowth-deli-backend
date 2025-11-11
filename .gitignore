@@ -5,6 +5,7 @@ dist
 
 /src/generated/prisma
 /prisma/generated
+/prisma/data
 /coverage
 
 .idea

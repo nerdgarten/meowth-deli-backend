@@ -41,10 +41,10 @@ export interface OrderDishWithRestaurant {
   dish: {
     id: number;
     name: string;
-    detail: string | null; 
+    detail: string | null;
     price: number;
-    allergy: string | null;  
-    is_out_of_stock: boolean; 
+    allergy: string[];
+    is_out_of_stock: boolean;
     restaurant: {
       id: number;
       name: string;

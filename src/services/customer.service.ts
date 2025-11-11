@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
-import { prisma,  } from "@/libs/prisma";
-import { Allergy } from "@/generated/prisma/client";
+import { prisma } from "@/libs/prisma";
+import { Allergy } from "@/types/allergy";
 
 import CustomerRepository from "@/repositories/customer.repository";
 import { AppError } from "@/types/error";
@@ -15,9 +15,13 @@ import {
   MockPaymentResult,
   PaymentRequest,
   OrderStatusInfo,
-  OrderDishWithRestaurant
+  OrderDishWithRestaurant,
 } from "@/types/order";
-import { OrderStatus, VerificationStatus, type Order } from "@/generated/prisma/client";
+import {
+  OrderStatus,
+  VerificationStatus,
+  type Order,
+} from "@/generated/prisma/client";
 
 export default class CustomerService {
   private customerRepository: CustomerRepository;
@@ -118,9 +122,7 @@ export default class CustomerService {
   }
 
   async getOrderStatistics(userId: number) {
-    const statistics = await this.customerRepository.getOrderStatistics(
-      userId
-    );
+    const statistics = await this.customerRepository.getOrderStatistics(userId);
 
     // Transform the grouped data into a more readable format
     const stats = {
@@ -168,31 +170,35 @@ export default class CustomerService {
   private groupDishesByRestaurant(orderDishes: OrderDishWithRestaurant[]) {
     type GroupedResult = {
       restaurant: OrderDishWithRestaurant["dish"]["restaurant"];
-      dishes: Array<OrderDishWithRestaurant["dish"] & {
-        amount: number;
-        remark?: string | null;
-      }>;
+      dishes: Array<
+        OrderDishWithRestaurant["dish"] & {
+          amount: number;
+          remark?: string | null;
+        }
+      >;
     };
 
-    const grouped = orderDishes.reduce<Record<number, GroupedResult>>((acc, item) => {
-      const restaurantId = item.dish.restaurant.id;
-      if (!acc[restaurantId]) {
-        acc[restaurantId] = {
-          restaurant: item.dish.restaurant,
-          dishes: [],
-        };
-      }
-      acc[restaurantId].dishes.push({
-        ...item.dish,
-        amount: item.amount,
-        remark: item.remark,
-      });
-      return acc;
-    }, {});
+    const grouped = orderDishes.reduce<Record<number, GroupedResult>>(
+      (acc, item) => {
+        const restaurantId = item.dish.restaurant.id;
+        if (!acc[restaurantId]) {
+          acc[restaurantId] = {
+            restaurant: item.dish.restaurant,
+            dishes: [],
+          };
+        }
+        acc[restaurantId].dishes.push({
+          ...item.dish,
+          amount: item.amount,
+          remark: item.remark,
+        });
+        return acc;
+      },
+      {}
+    );
 
     return Object.values(grouped);
   }
-
 
   // ========================
   // ORDER CREATION SECTION
@@ -229,7 +235,7 @@ export default class CustomerService {
     );
 
     // Create order
-    
+
     return this.customerRepository.createOrder({
       customerId,
       restaurant_id: restaurant.id,
@@ -247,7 +253,10 @@ export default class CustomerService {
     }
 
     if (!orderData.dishes?.length) {
-      throw new AppError("At least one dish is required", StatusCodes.BAD_REQUEST);
+      throw new AppError(
+        "At least one dish is required",
+        StatusCodes.BAD_REQUEST
+      );
     }
 
     const isValidDishes = orderData.dishes.every(
@@ -341,17 +350,20 @@ export default class CustomerService {
     );
 
     if (!order) {
-      throw new AppError("Order not found or access denied", StatusCodes.NOT_FOUND);
+      throw new AppError(
+        "Order not found or access denied",
+        StatusCodes.NOT_FOUND
+      );
     }
 
     const statusDescription = this.getStatusDescription(order.status);
 
-    const items: Array<{ name: string; quantity: number; price: number }> = 
-    order.orderDishes?.map((orderDish) => ({
-      name: orderDish.dish.name,
-      quantity: orderDish.amount,
-      price: orderDish.dish.price,
-    })) ?? [];
+    const items: Array<{ name: string; quantity: number; price: number }> =
+      order.orderDishes?.map((orderDish) => ({
+        name: orderDish.dish.name,
+        quantity: orderDish.amount,
+        price: orderDish.dish.price,
+      })) ?? [];
 
     const restaurantName =
       order.orderDishes?.[0]?.dish?.restaurant?.name || "Restaurant";
@@ -463,9 +475,14 @@ export default class CustomerService {
     return this.customerRepository.getAllergies(userId);
   }
 
-  async updateAllergies(userId: number, allergies: Allergy[]): Promise<Allergy[]> {
+  async updateAllergy(
+    userId: number,
+    allergies: Allergy[]
+  ): Promise<Allergy[]> {
     // Validate allergies if needed
-    const validAllergies = allergies.filter(allergy => Object.values(Allergy).includes(allergy));
-    return this.customerRepository.updateAllergies(userId, validAllergies);
+    const validAllergies = allergies.filter((allergy) =>
+      Object.values(Allergy).includes(allergy)
+    );
+    return this.customerRepository.updateAllergy(userId, validAllergies);
   }
 }

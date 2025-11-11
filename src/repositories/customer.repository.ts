@@ -1,8 +1,18 @@
 import { prisma } from "@/libs/prisma";
 import { Allergy } from "@/generated/prisma/client";
 
-import { ICustomer, ICustomerProfile, ICreateOrderRepository } from "@/types/user";
-import { type Order, type OrderDish, type Dish, OrderStatus, VerificationStatus} from "@/generated/prisma/client";
+import {
+  ICustomer,
+  ICustomerProfile,
+  ICreateOrderRepository,
+} from "@/types/user";
+import {
+  type Order,
+  type OrderDish,
+  type Dish,
+  OrderStatus,
+  VerificationStatus,
+} from "@/generated/prisma/client";
 export default class CustomerRepository {
   getCustomerProfile(userId: number) {
     return prisma.customer.findFirst({
@@ -31,7 +41,9 @@ export default class CustomerRepository {
     });
   }
 
-  async createOrder(data: ICreateOrderRepository): Promise<Order & { orderDishes: OrderDish[] }> {
+  async createOrder(
+    data: ICreateOrderRepository
+  ): Promise<Order & { orderDishes: OrderDish[] }> {
     return prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
@@ -42,24 +54,24 @@ export default class CustomerRepository {
           remark: data.note ?? null,
           total_amount: data.total_amount,
           driver_fee: data.driver_fee,
-          driver_id: null
-        }
+          driver_id: null,
+        },
       });
 
       await tx.orderDish.createMany({
-        data: data.dishes.map(dish => ({
+        data: data.dishes.map((dish) => ({
           order_id: order.id,
           dish_id: dish.dishId,
           amount: dish.quantity,
-          remark: dish.note ?? null
-        }))
+          remark: dish.note ?? null,
+        })),
       });
 
       return {
         ...order,
         orderDishes: await tx.orderDish.findMany({
-          where: { order_id: order.id }
-        })
+          where: { order_id: order.id },
+        }),
       };
     });
   }
@@ -69,15 +81,15 @@ export default class CustomerRepository {
       where: {
         id: { in: dishIds },
         restaurant_id: restaurantId,
-        is_out_of_stock: false
+        is_out_of_stock: false,
       },
       select: {
         id: true,
-        name: true, 
+        name: true,
         price: true,
-        restaurant_id: true
-      }
-    })
+        restaurant_id: true,
+      },
+    });
   }
   async getOrderWithDetails(orderId: number, customerId: number) {
     return prisma.order.findFirst({
@@ -106,7 +118,7 @@ export default class CustomerRepository {
               select: {
                 id: true,
                 name: true,
-                detail: true,  // Changed from description
+                detail: true, // Changed from description
                 price: true,
                 allergy: true,
                 is_out_of_stock: true,
@@ -131,7 +143,7 @@ export default class CustomerRepository {
             },
           },
           orderBy: {
-            created_at: 'desc',
+            created_at: "desc",
           },
           take: 1,
         },
@@ -140,10 +152,7 @@ export default class CustomerRepository {
   }
 
   // Get all customer orders with optional status filter
-  async getCustomerOrders(
-    customerId: number,
-    statusFilter?: OrderStatus
-  ) {
+  async getCustomerOrders(customerId: number, statusFilter?: OrderStatus) {
     const whereClause: { customer_id: number; status?: OrderStatus } = {
       customer_id: customerId,
     };
@@ -162,7 +171,7 @@ export default class CustomerRepository {
         },
       },
       orderBy: {
-        created_at: 'desc',
+        created_at: "desc",
       },
     });
   }
@@ -204,7 +213,7 @@ export default class CustomerRepository {
     return prisma.paymentMethod.findMany({
       select: {
         id: true,
-        title: true,  // Changed from name
+        title: true, // Changed from name
         type: true,
       },
     });
@@ -405,17 +414,17 @@ export default class CustomerRepository {
   async getAllergies(userId: number): Promise<Allergy[]> {
     const customer = await prisma.customer.findUnique({
       where: { id: userId },
-      select: { allergies: true }
+      select: { allergy: true },
     });
-    return customer?.allergies || [];
+    return customer?.allergy || [];
   }
 
-  async updateAllergies(userId: number, allergies: Allergy[]): Promise<Allergy[]> {
+  async updateAllergy(userId: number, allergy: Allergy[]): Promise<Allergy[]> {
     const updatedCustomer = await prisma.customer.update({
       where: { id: userId },
-      data: { allergies },
-      select: { allergies: true }
+      data: { allergy },
+      select: { allergy: true },
     });
-    return updatedCustomer.allergies;
+    return updatedCustomer.allergy;
   }
 }

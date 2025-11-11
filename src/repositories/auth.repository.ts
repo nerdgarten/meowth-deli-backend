@@ -17,7 +17,6 @@ export default class AuthRepository {
         password: customer.password,
         accepted_term_of_service: customer.accepted_term_of_service || false,
         accepted_pdpa: customer.accepted_pdpa || false,
-        accepted_cookie_tracking: customer.accepted_cookie_tracking || false,
         role: "customer",
         customer: {
           create: {
@@ -40,7 +39,6 @@ export default class AuthRepository {
         password: driver.password,
         accepted_term_of_service: driver.accepted_term_of_service || false,
         accepted_pdpa: driver.accepted_pdpa || false,
-        accepted_cookie_tracking: driver.accepted_cookie_tracking || false,
         role: "driver",
         driver: {
           create: {
@@ -66,7 +64,6 @@ export default class AuthRepository {
         password: restaurant.password,
         accepted_term_of_service: restaurant.accepted_term_of_service || false,
         accepted_pdpa: restaurant.accepted_pdpa || false,
-        accepted_cookie_tracking: restaurant.accepted_cookie_tracking || false,
         role: "restaurant",
         restaurant: {
           create: {
