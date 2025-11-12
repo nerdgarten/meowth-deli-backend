@@ -1,8 +1,10 @@
+import { apiReference } from '@scalar/express-api-reference';
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
 import express, { type Express } from "express";
 import { StatusCodes } from "http-status-codes";
+import swaggerJsdoc from "swagger-jsdoc";
 
 import { RouterManager } from "@/routes";
 
@@ -24,6 +26,35 @@ const corsOptions: CorsOptions = {
   optionsSuccessStatus: 200,
 };
 
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'Meowth Deli API',
+      version: '1.0.0',
+      description: 'API documentation for Meowth Deli Backend',
+    },
+    servers: [
+      {
+        url: 'http://localhost:3030',
+        description: 'Development server',
+      },
+    ],
+    components: {
+      securitySchemes: {
+        cookieAuth: {
+          type: 'apiKey',
+          in: 'cookie',
+          name: 'token',
+        },
+      },
+    },
+  },
+  apis: ['./src/routes/*.ts'], // Add paths to files with JSDoc comments if needed
+};
+
+const specs = swaggerJsdoc(swaggerOptions);
+
 const app: Express = express();
 
 app.use((req, res, next) => {
@@ -34,6 +65,17 @@ app.use((req, res, next) => {
 app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.json());
+
+app.get('/openapi.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(specs);
+});
+
+app.use('/api-docs', apiReference({
+  spec: {
+    url: '/openapi.json',
+  },
+}));
 
 const routerManager = new RouterManager();
 

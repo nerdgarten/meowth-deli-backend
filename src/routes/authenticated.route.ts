@@ -16,6 +16,18 @@ export class AuthenticateRouter extends BaseRouter {
   }
 
   private setUpRoutes() {
+    /**
+     * @swagger
+     * /authenticated/authenticatedAs:
+     *   get:
+     *     summary: Get authenticated user info
+     *     tags: [Authenticated]
+     *     security:
+     *       - cookieAuth: []
+     *     responses:
+     *       200:
+     *         description: User info
+     */
     this.router.get(
       "/authenticatedAs",
       this.authenticatedController.authenticatedAs.bind(
@@ -23,6 +35,18 @@ export class AuthenticateRouter extends BaseRouter {
       )
     );
 
+    /**
+     * @swagger
+     * /authenticated/logout:
+     *   post:
+     *     summary: Logout user
+     *     tags: [Authenticated]
+     *     security:
+     *       - cookieAuth: []
+     *     responses:
+     *       200:
+     *         description: Logged out
+     */
     this.router.post(
       "/logout",
       this.authenticatedController.logout.bind(this.authenticatedController)
