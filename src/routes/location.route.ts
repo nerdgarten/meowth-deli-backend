@@ -1,12 +1,11 @@
 import { Router } from "express";
 
 import { LocationController } from "@/controllers/location.controller";
-import { authMiddleware } from "@/middlewares/auth.middleware";
 
 import { BaseRouter } from "./baseRouter";
 
 export class LocationRouter extends BaseRouter {
-  private controller: LocationController;
+  private readonly controller: LocationController;
 
   constructor() {
     super({

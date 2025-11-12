@@ -7,13 +7,13 @@ import { CustomerRouter } from "@/routes/customer.route";
 import { DishRouter } from "@/routes/dish.route";
 import { DriverRouter } from "@/routes/driver.route";
 import { FileRouter } from "@/routes/file.route";
+import { LocationRouter } from "@/routes/location.route";
 import { RestaurantRouter } from "@/routes/restaurant.route";
 import { ReviewRouter } from "@/routes/review.route";
 import { TestRouter } from "@/routes/test.route";
-import { LocationRouter } from "@/routes/location.route";
 
 export class RouterManager {
-  private router: Router;
+  private readonly router: Router;
 
   constructor() {
     this.router = Router();

@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import AuthService from "@/services/auth.service";
-import { AppError } from "@/types/error";
 import { ResetPasswordBody } from "@/types/auth/post";
+import { AppError } from "@/types/error";
 
 export class AuthController {
   private authService: AuthService;

@@ -6,8 +6,8 @@ import { Transporter, createTransport } from "nodemailer";
 import emailConfig from "@/config/email";
 import { generateVerificationEmail } from "@/constant/email/email";
 import EmailRepository from "@/repositories/email.repository";
-import { AppError } from "@/types/error";
 import { IEmail } from "@/types/email/email";
+import { AppError } from "@/types/error";
 
 export default class EmailService {
   private emailRepository: EmailRepository;

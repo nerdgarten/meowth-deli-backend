@@ -1,22 +1,20 @@
 import { StatusCodes } from "http-status-codes";
-import { prisma,  } from "@/libs/prisma";
 
+import { OrderStatus, VerificationStatus, type Order } from "@/generated/prisma/client";
+import { prisma,  } from "@/libs/prisma";
 import CustomerRepository from "@/repositories/customer.repository";
 import { AppError } from "@/types/error";
-import {
-  ICustomer,
-  ICreateOrderRequest,
-  IOrderDishRepository,
-  IDriver,
-  IRestaurant,
-} from "@/types/user";
 import {
   MockPaymentResult,
   PaymentRequest,
   OrderStatusInfo,
   OrderDishWithRestaurant
 } from "@/types/order";
-import { OrderStatus, VerificationStatus, type Order } from "@/generated/prisma/client";
+import {
+  ICustomer,
+  ICreateOrderRequest,
+  IOrderDishRepository,
+} from "@/types/user";
 
 export default class CustomerService {
   private customerRepository: CustomerRepository;

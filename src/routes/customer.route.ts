@@ -1,10 +1,11 @@
+import { z } from "zod";
+
 import { CustomerController } from "@/controllers/customer.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { validateRequest } from "@/middlewares/validate.middleware";
+import { ICreateOrderRequest } from "@/types/user";
 
 import { BaseRouter } from "./baseRouter";
-import { ICreateOrderRequest } from "@/types/user";
-import { z } from "zod";
 
 export class CustomerRouter extends BaseRouter {
   private customerController: CustomerController;

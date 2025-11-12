@@ -1,12 +1,15 @@
+import crypto from "crypto";
+import fs from "fs";
+import path from "path";
+
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import multer from "multer";
-import fs from "fs";
-import path from "path";
 import { parse, stringify } from "yaml";
+
 import { FileStatus } from "@/types/file/file";
 import { FileManagement } from "@/types/file/file";
-import crypto from "crypto";
+
 
 const updateFileStatus = (
   uploadPath: string,
@@ -24,7 +27,7 @@ const updateFileStatus = (
 
   fs.writeFileSync(statusPath, stringify(fileStatus));
 };
-const uploadManageFilseStatus = (
+const uploadManageFilesStatus = (
   managePath: string,
   id: string,
   status: "yes" | "no",
@@ -124,7 +127,7 @@ export function fileMiddleware(
         return;
       }
 
-      uploadManageFilseStatus(
+      uploadManageFilesStatus(
         managePath,
         req.user.id.toString(),
         "no",

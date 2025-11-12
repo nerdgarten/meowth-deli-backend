@@ -1,6 +1,6 @@
+import { type Order, type OrderDish, OrderStatus, VerificationStatus} from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
-import { ICustomer, ICustomerProfile, ICreateOrderRepository } from "@/types/user";
-import { type Order, type OrderDish, type Dish, OrderStatus, VerificationStatus} from "@/generated/prisma/client";
+import {ICustomerProfile, ICreateOrderRepository } from "@/types/user";
 export default class CustomerRepository {
   getCustomerProfile(userId: number) {
     return prisma.customer.findFirst({

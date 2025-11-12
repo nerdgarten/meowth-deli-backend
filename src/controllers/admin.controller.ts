@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import AdminService from "@/services/admin.service";
-import { FilePaginationQuery } from "@/types/file/file";
 import {
   AdminVerificationRequest,
   AdminVerificationQuery,
 } from "@/types/admin/verification";
 import { AppError } from "@/types/error";
+import { FilePaginationQuery } from "@/types/file/file";
 
 export class AdminController {
   private adminService: AdminService;

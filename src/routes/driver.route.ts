@@ -1,11 +1,11 @@
+import { DriverController } from "@/controllers/driver.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 
 import { BaseRouter } from "./baseRouter";
 
-import { DriverController } from "@/controllers/driver.controller";
 
 export class DriverRouter extends BaseRouter {
-  private driverController: DriverController;
+  private readonly driverController: DriverController;
 
   constructor() {
     super({ prefix: "/driver", middleware: [authMiddleware] });
