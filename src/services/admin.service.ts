@@ -163,4 +163,15 @@ export default class AdminService {
       ),
     };
   }
+  async listRestaurantReviews() {
+    return this.adminRepository.listRestaurantReviews();
+  }
+
+  async deleteRestaurantReview(reviewId: number) {
+    await this.adminRepository.deleteRestaurantReview(reviewId);
+    return {
+      success: true,
+      message: "Restaurant review deleted successfully",
+    };
+  }
 }
