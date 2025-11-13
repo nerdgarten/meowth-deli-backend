@@ -258,4 +258,22 @@ export class AdminController {
       });
     }
   }
+  async getUserAdmin(req: Request, res: Response) {
+    try {
+      const result = await this.adminService.getUserAdmin();
+      res.status(StatusCodes.OK).json(result);
+    } catch (error: unknown) {
+      if (error instanceof AppError) {
+        res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+        });
+        return;
+      }
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        success: false,
+        message: "Internal server error",
+      });
+    }
+  }
 }
