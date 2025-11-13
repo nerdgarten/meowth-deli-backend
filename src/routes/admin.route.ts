@@ -1,14 +1,14 @@
 import { Router } from "express";
 
 import { AdminController } from "@/controllers/admin.controller";
-import { authMiddleware } from "@/middlewares/auth.middleware";
+import { adminMiddleware, authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
 
 export class AdminRouter extends BaseRouter {
-  private controller: AdminController;
+  private readonly controller: AdminController;
 
   constructor() {
-    super({ prefix: "/admin", middleware: [authMiddleware] });
+    super({ prefix: "/admin", middleware: [authMiddleware, adminMiddleware] });
     this.controller = new AdminController();
     this.initializeRoutes();
   }
@@ -242,6 +242,11 @@ export class AdminRouter extends BaseRouter {
       "/restaurants/files/:id/:fileId",
       this.controller.getRestaurantFileById.bind(this.controller),
     );
+
+    this.router.delete(
+      "/users/:id",
+      this.controller.deleteUser.bind(this.controller),
+    )
   }
 
   public getRouter(): Router {

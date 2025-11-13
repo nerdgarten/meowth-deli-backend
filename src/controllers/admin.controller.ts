@@ -258,4 +258,29 @@ export class AdminController {
       });
     }
   }
+
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const userId = Number(req.params.id);
+      if(isNaN(userId)) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "UserId is invalid",
+        });
+        return;
+      }
+      await this.adminService.deleteUser(userId);
+    } catch(error: unknown) {
+      if(error instanceof AppError) {
+        res.status(error.statusCode).json({
+          message: error.message,
+        });
+        return ;
+      }
+      console.error(error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: "Internal server error",
+      });
+    }
+  }
 }
