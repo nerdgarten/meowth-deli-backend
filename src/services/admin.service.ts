@@ -163,4 +163,8 @@ export default class AdminService {
       ),
     };
   }
+
+  async deleteUser(userId: number) {
+    await this.adminRepository.deleteUser(userId);
+  }
 }

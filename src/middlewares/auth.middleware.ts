@@ -32,3 +32,15 @@ export function authMiddleware(
     res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
   }
 }
+
+export function adminMiddleware(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void {
+  if (req.user?.role !== "admin") {
+    res.status(StatusCodes.FORBIDDEN).json({ message: "Forbidden" });
+    return;
+  }
+  next();
+}
