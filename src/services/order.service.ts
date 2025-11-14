@@ -1,4 +1,5 @@
 import OrderRespository from "@/repositories/order.respository";
+
 import type { OrderCreateBody } from "@/types/order";
 
 export default class OrderService {

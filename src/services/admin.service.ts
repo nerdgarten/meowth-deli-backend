@@ -5,12 +5,12 @@ import { StatusCodes } from "http-status-codes";
 import { parse } from "yaml";
 
 import { VerificationStatus } from "@/generated/prisma/client";
+import DriverRepository from "@/repositories/driver.repository";
+import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 import { FileManagement } from "@/types/file/file";
 import { FileStatus } from "@/types/file/file";
 import { FilePaginationQuery } from "@/types/file/file";
-import RestaurantRepository from "@/repositories/restaurant.repository";
-import DriverRepository from "@/repositories/driver.repository";
 
 export default class AdminService {
   async getPendingVerifications(

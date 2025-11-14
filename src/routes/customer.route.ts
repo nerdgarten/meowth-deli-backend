@@ -1,11 +1,13 @@
 import { z } from "zod";
 
 import { CustomerController } from "@/controllers/customer.controller";
+import { Role } from "@/generated/prisma/browser";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { fileMiddleware } from "@/middlewares/file.middleware";
+import { roleMiddleware } from "@/middlewares/role.middleware";
+import { profilePictureConfig } from "@/utils/fileConfig";
 
 import { BaseRouter } from "./baseRouter";
-import { roleMiddleware } from "@/middlewares/role.middleware";
-import { Role } from "@/generated/prisma/browser";
 
 export class CustomerRouter extends BaseRouter {
   private customerController: CustomerController;
@@ -27,6 +29,7 @@ export class CustomerRouter extends BaseRouter {
     );
     this.router.patch(
       "/profile",
+      fileMiddleware(profilePictureConfig),
       this.customerController.updateCustomerProfile.bind(
         this.customerController
       )

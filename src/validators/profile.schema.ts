@@ -1,4 +1,5 @@
 import { z } from "zod";
+
 import { Allergy } from "@/types/allergy";
 
 export const customerUpdateProfileSchema = z.object({

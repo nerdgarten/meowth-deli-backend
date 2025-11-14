@@ -1,8 +1,9 @@
 import { OrderStatus } from "@/generated/prisma/enums";
-import { ICustomerProfile } from "@/types/users/customer";
-import { IRestaurantProfile } from "@/types/users/restaurant";
-import { IDriverProfile } from "@/types/users/driver";
 import { ILocation } from "@/types/location";
+
+import { ICustomerProfile } from "@/types/users/customer";
+import { IDriverProfile } from "@/types/users/driver";
+import { IRestaurantProfile } from "@/types/users/restaurant";
 
 export interface OrderDishBody {
   dish_id: number;

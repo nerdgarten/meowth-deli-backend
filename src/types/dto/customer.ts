@@ -1,4 +1,6 @@
-import { ICustomer } from "@/types/users/user";
+import { Customer } from "@/generated/prisma/client";
+
+export type ICustomer = Omit<Customer, "is_deleted">;
 
 export type UpdateCustomerProfileRequestDTO = Pick<
   ICustomer,

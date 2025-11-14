@@ -27,10 +27,19 @@ export class CustomerController {
 
   async updateCustomerProfile(req: Request, res: Response) {
     try {
+      let filePath: string | undefined = undefined;
+
+      if (req.file) {
+        filePath = `${process.env.BASE_URL}/upload/${req.uploadFolder}/${req.file.filename}`;
+      }
+      console.log(filePath);
       const userId = req.user!.id;
       const data = await this.customerService.updateCustomerProfileById(
         userId,
-        req.body
+        {
+          ...req.body,
+          image: filePath,
+        }
       );
 
       res.status(StatusCodes.OK).json(data);

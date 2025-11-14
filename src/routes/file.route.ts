@@ -1,11 +1,11 @@
 import { Router } from "express";
 
 import { FileController } from "@/controllers/file.controller";
+import { Role } from "@/generated/prisma/client";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { fileMiddleware } from "@/middlewares/file.middleware";
 
 import { BaseRouter } from "./baseRouter";
-import { Role } from "@/generated/prisma/client";
 
 export class FileRouter extends BaseRouter {
   private controller: FileController;

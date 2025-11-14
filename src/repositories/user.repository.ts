@@ -1,5 +1,5 @@
-import { prisma } from "@/libs/prisma";
 import { Prisma } from "@/generated/prisma/client";
+import { prisma } from "@/libs/prisma";
 
 export default class UserRepository {
   async getUsers() {
@@ -38,6 +38,15 @@ export default class UserRepository {
       where: { id: userId },
       data: {
         password: hashedPassword,
+      },
+    });
+  }
+
+  async deleteUserById(userId: number) {
+    return await prisma.user.update({
+      where: { id: userId },
+      data: {
+        is_deleted: true,
       },
     });
   }

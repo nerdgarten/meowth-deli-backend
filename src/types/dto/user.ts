@@ -1,6 +1,9 @@
 import { User } from "@/generated/prisma/client";
 
-export type BaseSignUpBody = Omit<User, "id" | "created_at" | "updated_at">;
+export type BaseSignUpBody = Omit<
+  User,
+  "id" | "created_at" | "updated_at" | "is_deleted"
+>;
 
 export type CreateCustomerRequestDTO = {
   firstname: string;

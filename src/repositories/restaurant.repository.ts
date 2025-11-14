@@ -1,6 +1,6 @@
+import { Prisma } from "@/generated/prisma/browser";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
-import { IRestaurantProfile } from "@/types/users/restaurant";
 
 export default class RestaurantRepository {
   async getRestaurants() {
@@ -27,23 +27,23 @@ export default class RestaurantRepository {
     });
   }
 
-  async findRestaurantsByStatus(
-    status: VerificationStatus,
-    limit: number,
-    offset: number
-  ) {
-    return prisma.restaurant.findMany({
-      where: {
-        verification_status: status,
-      },
-      take: limit,
-      skip: offset,
-    });
-  }
+  // async findRestaurantsByStatus(
+  //   status: VerificationStatus,
+  //   limit: number,
+  //   offset: number
+  // ) {
+  //   return prisma.restaurant.findMany({
+  //     where: {
+  //       verification_status: status,
+  //     },
+  //     take: limit,
+  //     skip: offset,
+  //   });
+  // }
 
   async updateRestaurnatProfileById(
     id: number,
-    data: Partial<IRestaurantProfile>
+    data: Prisma.RestaurantUpdateInput
   ) {
     return prisma.restaurant.update({
       where: { id },

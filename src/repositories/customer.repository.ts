@@ -38,10 +38,7 @@ export default class CustomerRepository {
     });
   }
 
-  async setDefaultLocation(
-    customerId: number,
-    locationId: number
-  ): Promise<void> {
+  async setDefaultLocation(customerId: number, locationId: number) {
     await prisma.customer.update({
       where: { id: customerId },
       data: { default_location_id: locationId },

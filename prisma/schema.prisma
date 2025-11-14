@@ -66,6 +66,7 @@ model User {
   password                 String
   accepted_term_of_service Boolean  @default(false)
   accepted_pdpa            Boolean  @default(false)
+  is_deleted               Boolean  @default(false)
   created_at               DateTime @default(now()) @db.Timestamptz
   updated_at               DateTime @updatedAt @db.Timestamptz
 

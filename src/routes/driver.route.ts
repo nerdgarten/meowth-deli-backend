@@ -1,8 +1,8 @@
 import { DriverController } from "@/controllers/driver.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { Role } from "@/types/role";
 
 import { BaseRouter } from "./baseRouter";
-import { Role } from "@/types/role";
 
 export class DriverRouter extends BaseRouter {
   private driverController: DriverController;

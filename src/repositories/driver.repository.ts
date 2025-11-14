@@ -1,24 +1,41 @@
+import { Prisma } from "@/generated/prisma/browser";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
 
 // import { OrderWhereClause } from "@/types/order/order";
 
 export default class DriverRepository {
-  async getDriverOrdersByStatus(status: VerificationStatus) {
-    return prisma.order.findMany({
-      where: {
-        driver: {
-          verification_status: status,
-        },
-      },
+  async getDrivers() {
+    return prisma.driver.findMany({
+      orderBy: { id: "desc" },
     });
   }
 
-  // async getDriverOrderById(whereClause: OrderWhereClause) {
-  //   return prisma.order.findFirst({
-  //     where: whereClause,
+  async getDriverProfileById(id: number) {
+    return prisma.driver.findUnique({
+      where: { id },
+    });
+  }
+
+  // async getDriverOrdersByStatus(status: VerificationStatus) {
+  //   return prisma.order.findMany({
+  //     where: {
+  //       driver: {
+  //         verification_status: status,
+  //       },
+  //     },
   //   });
   // }
+
+  async updateDriverProfileById(
+    driverId: number,
+    data: Prisma.DriverUpdateInput
+  ) {
+    return prisma.driver.update({
+      where: { id: driverId },
+      data: data,
+    });
+  }
 }
 
 /*

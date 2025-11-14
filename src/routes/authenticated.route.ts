@@ -1,7 +1,7 @@
 import { AuthenticatedController } from "@/controllers/authenticated.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
-import { BaseRouter } from "@/routes/baseRouter";
 import { roleMiddleware } from "@/middlewares/role.middleware";
+import { BaseRouter } from "@/routes/baseRouter";
 
 export class AuthenticateRouter extends BaseRouter {
   private authenticatedController: AuthenticatedController;

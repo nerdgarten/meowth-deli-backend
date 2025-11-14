@@ -1,11 +1,12 @@
 import { StatusCodes } from "http-status-codes";
+
 import CustomerRepository from "@/repositories/customer.repository";
 import { Allergy } from "@/types/allergy";
-import { AppError } from "@/types/error";
 import {
   GetCustomerResponseDTO,
   UpdateCustomerProfileRequestDTO,
 } from "@/types/dto/customer";
+import { AppError } from "@/types/error";
 import {
   allergyUpdateSchema,
   customerUpdateProfileSchema,

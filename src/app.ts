@@ -1,3 +1,5 @@
+import path from "path";
+
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
@@ -45,5 +47,6 @@ app.get("/healthz", (req, res) => {
     uptime: process.uptime(),
   });
 });
+app.use("/upload", express.static(path.join(__dirname, "../upload")));
 
 export default app;

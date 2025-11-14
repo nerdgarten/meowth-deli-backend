@@ -5,20 +5,10 @@ import { StatusCodes } from "http-status-codes";
 
 import emailConfig from "@/config/email";
 import urlConfig from "@/config/url";
-import UserRepository from "@/repositories/user.repository";
 import ResetTokenRepository from "@/repositories/resettoken.repository";
-import { ResetToken } from "@/types/auth/token";
-import { IEmail } from "@/types/email/email";
-import { AppError } from "@/types/error";
-import { signJwt } from "@/utils/jwt";
-import {
-  signInSchema,
-  signUpCustomerSchema,
-  signUpRestaurantSchema,
-  signUpDriverSchema,
-} from "@/validators/auth.schema";
-
+import UserRepository from "@/repositories/user.repository";
 import EmailService from "@/services/email.service";
+import { ResetToken } from "@/types/auth/token";
 import {
   CreateCustomerRequestDTO,
   CreateCustomerResponseDTO,
@@ -30,7 +20,17 @@ import {
   SignInRequestDTO,
   GetUserResponseDTO,
 } from "@/types/dto/user";
+import { IEmail } from "@/types/email/email";
+import { AppError } from "@/types/error";
 import { Role } from "@/types/role";
+import { signJwt } from "@/utils/jwt";
+import {
+  signInSchema,
+  signUpCustomerSchema,
+  signUpRestaurantSchema,
+  signUpDriverSchema,
+} from "@/validators/auth.schema";
+
 
 export default class UserService {
   private userRepository: UserRepository;
@@ -190,5 +190,9 @@ export default class UserService {
     await this.userRepository.updateUserPassword(user.id, hashedPassword);
     await this.resetTokenRepository.deleteResetToken(resetBody.token);
     return;
+  }
+
+  async deleteUserById(userId: number): Promise<void> {
+    await this.userRepository.deleteUserById(userId);
   }
 }

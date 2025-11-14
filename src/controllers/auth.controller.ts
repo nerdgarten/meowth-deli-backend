@@ -2,9 +2,8 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import UserService from "@/services/user.service";
-
-import { handleError } from "@/utils/handleError";
 import { ResetPasswordRequestDTO } from "@/types/dto/user";
+import { handleError } from "@/utils/handleError";
 
 export class AuthController {
   private userService: UserService;

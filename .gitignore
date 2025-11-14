@@ -12,7 +12,7 @@ dist
 .vscode
 data
 
-upload
+uploads
 mock-data
 
 .DS_Store
