@@ -1,21 +1,21 @@
 import { StatusCodes } from "http-status-codes";
 
-import AuthRepository from "@/repositories/auth.repository";
 import DishRepository from "@/repositories/dish.repository";
+import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 
 export class RestaurantOwnershipValidator {
-  private authRepository: AuthRepository;
+  private restaurantRepository: RestaurantRepository;
   private dishRepository: DishRepository;
 
   constructor() {
-    this.authRepository = new AuthRepository();
+    this.restaurantRepository = new RestaurantRepository();
     this.dishRepository = new DishRepository();
   }
 
   async validateUserIsRestaurantOwner(userId: number) {
     const userRestaurant =
-      await this.authRepository.findRestaurantByUserId(userId);
+      await this.restaurantRepository.getRestaurantById(userId);
     if (!userRestaurant) {
       throw new AppError(
         "User is not a restaurant owner",

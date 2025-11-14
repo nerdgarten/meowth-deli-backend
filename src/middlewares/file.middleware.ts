@@ -1,12 +1,15 @@
+import crypto from "crypto";
+import fs from "fs";
+import path from "path";
+
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import multer from "multer";
-import fs from "fs";
-import path from "path";
 import { parse, stringify } from "yaml";
+
 import { FileStatus } from "@/types/file/file";
 import { FileManagement } from "@/types/file/file";
-import crypto from "crypto";
+
 
 const updateFileStatus = (
   uploadPath: string,
@@ -28,33 +31,39 @@ const uploadManageFilseStatus = (
   managePath: string,
   id: string,
   status: "yes" | "no",
-  status_path: string,
+  status_path: string
 ) => {
   const statusPath = path.join(managePath, "manage.yaml");
   if (!fs.existsSync(statusPath)) {
-    fs.writeFileSync(path.join(statusPath), stringify({ userFiles: [] } as FileManagement));
+    fs.writeFileSync(
+      path.join(statusPath),
+      stringify({ userFiles: [] } as FileManagement)
+    );
   }
-  const fileContent = fs.readFileSync(statusPath, 'utf8');
+  const fileContent = fs.readFileSync(statusPath, "utf8");
   const fileStatus: FileManagement = parse(fileContent);
-  const userFileIndex = fileStatus.userFiles.findIndex(file => file.id === id);
+  const userFileIndex = fileStatus.userFiles.findIndex(
+    (file) => file.id === id
+  );
   if (userFileIndex !== -1) {
     fileStatus.userFiles[userFileIndex].is_verified_decided = status;
   } else {
     fileStatus.userFiles.push({ id, is_verified_decided: status, status_path });
   }
-  fs.writeFileSync(statusPath, stringify(fileStatus));   
-}
-
-
+  fs.writeFileSync(statusPath, stringify(fileStatus));
+};
 
 export function fileMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void {
   try {
-    
-    const pdfFileFilter: multer.Options["fileFilter"] = (req, file, callback) => {
+    const pdfFileFilter: multer.Options["fileFilter"] = (
+      req,
+      file,
+      callback
+    ) => {
       if (file.mimetype === "application/pdf") {
         callback(null, true);
       } else {
@@ -73,7 +82,10 @@ export function fileMiddleware(
         );
         if (!fs.existsSync(uploadPath)) {
           fs.mkdirSync(uploadPath, { recursive: true });
-          fs.writeFileSync(path.join(uploadPath, "status.yaml"), stringify({ files: [] } as FileStatus));
+          fs.writeFileSync(
+            path.join(uploadPath, "status.yaml"),
+            stringify({ files: [] } as FileStatus)
+          );
         }
         callback(null, uploadPath);
       },
@@ -105,8 +117,6 @@ export function fileMiddleware(
         req.user.id.toString()
       );
 
-      
-
       if (err instanceof multer.MulterError) {
         res.status(StatusCodes.BAD_REQUEST).json({ message: err.message });
         return;
@@ -117,6 +127,7 @@ export function fileMiddleware(
           .json({ message: err.message || "File Upload Error" });
         return;
       }
+      console.log(req.file);
       if (!req.file) {
         res
           .status(StatusCodes.BAD_REQUEST)
@@ -132,7 +143,7 @@ export function fileMiddleware(
       );
 
       updateFileStatus(uploadPath, {
-        id: crypto.randomBytes(8).toString('hex'), // generates a random 32-character hex string
+        id: crypto.randomBytes(8).toString("hex"), // generates a random 32-character hex string
         filename: req.file.filename,
         uploadedAt: new Date().toISOString(),
         status: "pending",

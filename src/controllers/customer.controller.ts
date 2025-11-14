@@ -1,298 +1,101 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { ICreateOrderRequest } from "@/types/user";
 import CustomerService from "@/services/customer.service";
-import { AppError } from "@/types/error";
-import { OrderStatus } from "@/generated/prisma/client";
+import LocationService from "@/services/location.service";
+import { handleError } from "@/utils/handleError";
 
 export class CustomerController {
   private customerService: CustomerService;
+  private locationService: LocationService;
 
   constructor() {
     this.customerService = new CustomerService();
+    this.locationService = new LocationService();
   }
 
-  // Error handling method
-  private handleError(error: unknown, res: Response) {
-    console.error(error); // Log the full error for internal tracking
-
-    if (error instanceof AppError) {
-      res.status(error.statusCode).json({
-        message: error.message,
-      });
-    } else if (error instanceof Error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: error.message || "Unexpected error occurred",
-      });
-    } else {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "An unexpected error occurred",
-      });
-    }
-  }
-
-  // Get Customer Profile
   async getCustomerProfile(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
-      const profile = await this.customerService.getCustomerProfile(userId);
+      const profile = await this.customerService.getCustomerProfileById(userId);
 
       res.status(StatusCodes.OK).json(profile);
     } catch (error) {
-      this.handleError(error, res);
+      handleError(error, res);
     }
   }
 
-  // Update Customer Profile
   async updateCustomerProfile(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
-      const data = await this.customerService.updateCustomerProfile(
+      const data = await this.customerService.updateCustomerProfileById(
         userId,
         req.body
       );
 
       res.status(StatusCodes.OK).json(data);
     } catch (error) {
-      this.handleError(error, res);
+      handleError(error, res);
     }
   }
 
-  // Create Order
-  async createOrder(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const order = await this.customerService.createOrder(userId, req.body);
-
-      res.status(StatusCodes.CREATED).json(order);
-    } catch (error) {
-      this.handleError(error, res);
-    }
-  }
-  async getOrderStatus(req: Request, res: Response) {
-    try {
-      const customerId = req.user!.id;
-      const orderId = parseInt(req.params.orderId);
-
-      if (isNaN(orderId)) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-          message: "Invalid order ID",
-        });
-        return;
-      }
-
-      const orderStatus = await this.customerService.getOrderStatus(
-        customerId,
-        orderId
-      );
-
-      res.status(StatusCodes.OK).json({
-        success: true,
-        data: orderStatus,
-      });
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
-    }
-  }
-
-  // View all orders with their status
-  async getAllOrdersWithStatus(req: Request, res: Response) {
-    try {
-      const customerId = req.user!.id;
-      const { status } = req.query;
-
-      const orders = await this.customerService.getAllOrdersWithStatus(
-        customerId,
-        status as OrderStatus
-      );
-
-      res.status(StatusCodes.OK).json({
-        success: true,
-        data: orders,
-      });
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
-    }
-  }
-
-  // Mock payment endpoint
-  async processMockPayment(req: Request, res: Response) {
-    try {
-      const customerId = req.user!.id;
-      const { orderId, amount, paymentMethod } = req.body;
-
-      if (!orderId || !amount) {
-        res.status(StatusCodes.BAD_REQUEST).json({
-          message: "Order ID and amount are required",
-        });
-        return;
-      }
-
-      const paymentResult = await this.customerService.processMockPayment(
-        customerId,
-        orderId,
-        {
-          amount,
-          paymentMethod: paymentMethod || "creditcard",
-        }
-      );
-
-      res.status(StatusCodes.OK).json({
-        success: paymentResult.success,
-        data: paymentResult,
-      });
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
-    }
-  }
-  async getOrderHistory(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const { page, limit, status, sortBy, sortOrder } = req.query;
-
-      const options = {
-        page: page ? parseInt(page as string) : undefined,
-        limit: limit ? parseInt(limit as string) : undefined,
-        status: status as OrderStatus | undefined,
-        sortBy: sortBy as "created_at" | "total_amount" | undefined,
-        sortOrder: sortOrder as "asc" | "desc" | undefined,
-      };
-
-      const orderHistory = await this.customerService.getCustomerOrderHistory(
-        userId,
-        options
-      );
-
-      res.status(StatusCodes.OK).json(orderHistory);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
-    }
-  }
-
-  async getOrderById(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const orderId = parseInt(req.params.orderId);
-
-      if (isNaN(orderId)) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Invalid order ID" });
-        return;
-      }
-
-      const order = await this.customerService.getCustomerOrderById(
-        userId,
-        orderId
-      );
-
-      res.status(StatusCodes.OK).json(order);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
-    }
-  }
-
-  async getOrderStatistics(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const statistics = await this.customerService.getOrderStatistics(userId);
-
-      res.status(StatusCodes.OK).json(statistics);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
-    }
-  }
-
-  async getReorderItems(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const orderId = parseInt(req.params.orderId);
-
-      if (isNaN(orderId)) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Invalid order ID" });
-        return;
-      }
-
-      const items = await this.customerService.getReorderItems(userId, orderId);
-
-      res.status(StatusCodes.OK).json(items);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: "Internal Server Error" });
-    }
-  }
-  async getAllergies(req: Request, res: Response) {
+  async getAllergy(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
       const allergies = await this.customerService.getAllergies(userId);
       res.status(StatusCodes.OK).json(allergies);
     } catch (error) {
-      this.handleError(error, res);
+      handleError(error, res);
     }
   }
 
-  async updateAllergies(req: Request, res: Response) {
+  async updateAllergy(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
       const { allergies } = req.body;
-      const updatedAllergies = await this.customerService.updateAllergy(
+      const updatedAllergies = await this.customerService.updateAllergies(
         userId,
         allergies
       );
       res.status(StatusCodes.OK).json(updatedAllergies);
     } catch (error) {
-      this.handleError(error, res);
+      handleError(error, res);
+    }
+  }
+
+  async createLocation(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const locationData = req.body;
+      const createdLocation = await this.locationService.createCustomerLocation(
+        userId,
+        locationData
+      );
+      res.status(StatusCodes.CREATED).json(createdLocation);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
+
+  async getLocationsByCustomerId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const locations =
+        await this.locationService.getLocationsByCustomerId(userId);
+      res.status(StatusCodes.OK).json(locations);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
+
+  async getDefaultLocationByCustomerId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const location =
+        await this.locationService.getDefaultLocationByCustomerId(userId);
+      res.status(StatusCodes.OK).json(location);
+    } catch (error) {
+      handleError(error, res);
     }
   }
 }

@@ -4,7 +4,7 @@ import { StatusCodes } from "http-status-codes";
 import UserService from "@/services/user.service";
 
 import { handleError } from "@/utils/handleError";
-import { ResetPasswordRequestDTO } from "@/types/dto/user.dto";
+import { ResetPasswordRequestDTO } from "@/types/dto/user";
 
 export class AuthController {
   private userService: UserService;

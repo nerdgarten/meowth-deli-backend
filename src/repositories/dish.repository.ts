@@ -1,5 +1,5 @@
-import { Allergy } from "@/types/allergy";
 import { prisma } from "@/libs/prisma";
+import { Allergy } from "@/types/allergy";
 import { DishWhereClause } from "@/types/dish/dish";
 
 export default class DishRepository {
@@ -102,6 +102,12 @@ export default class DishRepository {
           },
         },
       },
+    });
+  }
+
+  async findDishesByRestaurantId(restaurantId: number) {
+    return prisma.dish.findMany({
+      where: { restaurant_id: restaurantId },
     });
   }
 }

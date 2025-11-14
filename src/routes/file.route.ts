@@ -5,6 +5,7 @@ import { authMiddleware } from "@/middlewares/auth.middleware";
 import { fileMiddleware } from "@/middlewares/file.middleware";
 
 import { BaseRouter } from "./baseRouter";
+import { Role } from "@/generated/prisma/client";
 
 export class FileRouter extends BaseRouter {
   private controller: FileController;
@@ -12,7 +13,15 @@ export class FileRouter extends BaseRouter {
   constructor() {
     super({
       prefix: "/file",
-      middleware: [authMiddleware, fileMiddleware],
+      middleware: [
+        authMiddleware([
+          Role.admin,
+          Role.customer,
+          Role.driver,
+          Role.restaurant,
+        ]),
+        fileMiddleware,
+      ],
     });
     this.controller = new FileController();
     this.initializeRoutes();
@@ -22,7 +31,7 @@ export class FileRouter extends BaseRouter {
     // Restaurant verification routes
     this.router.post(
       "/upload",
-      this.controller.uploadFile.bind(this.controller),
+      this.controller.uploadFile.bind(this.controller)
     );
   }
 

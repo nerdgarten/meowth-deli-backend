@@ -10,8 +10,6 @@ dist
 
 .idea
 
-upload/driver/*
-upload/restaurant/*
-!upload/example.jpg
+upload
 
 .DS_Store

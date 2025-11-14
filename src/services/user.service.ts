@@ -29,7 +29,7 @@ import {
   ResetPasswordRequestDTO,
   SignInRequestDTO,
   GetUserResponseDTO,
-} from "@/types/dto/user.dto";
+} from "@/types/dto/user";
 import { Role } from "@/types/role";
 
 export default class UserService {
@@ -85,6 +85,7 @@ export default class UserService {
 
     return {
       id: data.id,
+      role: data.role,
       email: data.email,
       firstname: data.customer!.firstname,
       lastname: data.customer!.lastname,
@@ -111,6 +112,7 @@ export default class UserService {
 
     return {
       id: data.id,
+      role: data.role,
       email: data.email,
       firstname: data.driver!.firstname,
       lastname: data.driver!.lastname,
@@ -135,6 +137,7 @@ export default class UserService {
     });
     return {
       id: data.id,
+      role: data.role,
       email: data.email,
       name: data.restaurant!.name,
       tel: data.restaurant!.tel,

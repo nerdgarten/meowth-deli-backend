@@ -1,34 +1,92 @@
+import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
-import { RestaurantWhereClause } from "@/types/restaurant/restaurant";
+import { IRestaurantProfile } from "@/types/users/restaurant";
 
 export default class RestaurantRepository {
-  async findRestaurantsByStatus(
-    whereClause: RestaurantWhereClause,
-    limit: number,
-    offset: number
-  ) {
+  async getRestaurants() {
     return prisma.restaurant.findMany({
-      where: whereClause,
-      take: limit,
-      skip: offset,
+      orderBy: { id: "desc" },
     });
   }
 
-  async findRestaurantById(id: number) {
+  async getRestaurantProfileById(id: number) {
     return prisma.restaurant.findUnique({
       where: { id },
     });
   }
 
-  async updateRestaurantAvailability(id: number, is_available: boolean) {
+  async getFavoriteRestaurantByUserId(userId: number) {
+    return prisma.restaurant.findMany({
+      where: {
+        favorites: {
+          some: {
+            customer_id: userId,
+          },
+        },
+      },
+    });
+  }
+
+  async findRestaurantsByStatus(
+    status: VerificationStatus,
+    limit: number,
+    offset: number
+  ) {
+    return prisma.restaurant.findMany({
+      where: {
+        verification_status: status,
+      },
+      take: limit,
+      skip: offset,
+    });
+  }
+
+  async updateRestaurnatProfileById(
+    id: number,
+    data: Partial<IRestaurantProfile>
+  ) {
+    return prisma.restaurant.update({
+      where: { id },
+      data: data,
+    });
+  }
+
+  async updateRestaurantAvailabilityById(id: number, is_available: boolean) {
     return prisma.restaurant.update({
       where: { id },
       data: { is_available },
     });
   }
-  async findDishesByRestaurantId(restaurantId: number) {
-    return prisma.dish.findMany({
-      where: { restaurant_id: restaurantId },
+}
+
+/*
+ private readonly defaultOptions = {
+    include: {
+      user: {
+        select: {
+          id: true,
+          email: true,
+          roles: true,
+        },
+      },
+    },
+    orderBy: { id: "desc" as const },
+  };
+
+async listRestaurants(where?: Prisma.RestaurantWhereInput) {
+    return prisma.restaurant.findMany({
+      where,
+      ...this.defaultOptions,
     });
   }
-}
+
+  async updateRestaurant(restaurantId: number, status: VerificationStatus) {
+    return prisma.restaurant.update({
+      where: { id: restaurantId },
+      data: {
+        verification_status: status,
+      },
+      include: this.defaultOptions.include,
+    });
+  }
+*/

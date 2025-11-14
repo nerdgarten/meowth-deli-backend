@@ -28,7 +28,6 @@ export const signUpRestaurantSchema = z.object({
   password: z
     .string()
     .min(6, { message: "Password must be at least 6 characters long" }),
-  location: z.string().min(1, { message: "Location is required" }),
 });
 
 export const signUpDriverSchema = z.object({

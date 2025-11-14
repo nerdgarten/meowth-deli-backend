@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { OrderStatus } from "@/generated/prisma/enums";
 import DriverRepository from "@/repositories/driver.repository";
 import { AppError } from "@/types/error";
+
 import { OrderWhereClause } from "@/types/order/order";
 
 export class DriverService {

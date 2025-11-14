@@ -1,80 +1,18 @@
+import fs from "fs";
+import path from "path";
+
 import { StatusCodes } from "http-status-codes";
+import { parse } from "yaml";
 
 import { VerificationStatus } from "@/generated/prisma/client";
-import AdminRepository from "@/repositories/admin.repository";
 import { AppError } from "@/types/error";
-import fs from "fs";
-import { parse } from "yaml";
 import { FileManagement } from "@/types/file/file";
 import { FileStatus } from "@/types/file/file";
 import { FilePaginationQuery } from "@/types/file/file";
-import path from "path";
+import RestaurantRepository from "@/repositories/restaurant.repository";
+import DriverRepository from "@/repositories/driver.repository";
+
 export default class AdminService {
-  private adminRepository: AdminRepository;
-
-  constructor() {
-    this.adminRepository = new AdminRepository();
-  }
-
-  async listRestaurants(status?: VerificationStatus) {
-    if (!status) {
-      throw new AppError(
-        "Failed to status restaurant",
-        StatusCodes.BAD_REQUEST
-      );
-    }
-    return this.adminRepository.listRestaurants(
-      status ? { verification_status: status } : undefined
-    );
-  }
-
-  async verifyRestaurant(restaurantId: number, status: VerificationStatus) {
-    if (!status) {
-      throw new AppError(
-        "Failed to status restaurant",
-        StatusCodes.BAD_REQUEST
-      );
-    }
-
-    const result = await this.adminRepository.updateRestaurant(
-      restaurantId,
-      status
-    );
-    return {
-      success: true,
-      message: `Restaurant verification status updated to ${status.toLowerCase()}`,
-      data: {
-        ...result,
-        status: status,
-      },
-    };
-  }
-
-  async verifyDriver(driverId: number, status: VerificationStatus) {
-    if (!status) {
-      throw new AppError("Failed to status driver", StatusCodes.BAD_REQUEST);
-    }
-
-    const result = await this.adminRepository.updateDriver(driverId, status);
-    return {
-      success: true,
-      message: `Driver verification status updated to ${status.toLowerCase()}`,
-      data: {
-        ...result,
-        status: status,
-      },
-    };
-  }
-
-  async listDrivers(status?: VerificationStatus) {
-    if (!status) {
-      throw new AppError("Failed to status driver", StatusCodes.BAD_REQUEST);
-    }
-    return this.adminRepository.listDrivers(
-      status ? { verification_status: status } : undefined
-    );
-  }
-
   async getPendingVerifications(
     paging: FilePaginationQuery,
     role: "restaurant" | "driver"
@@ -91,7 +29,6 @@ export default class AdminService {
     const limit = Math.min(Number(paging.limit) || 10, 100);
     const offset = Math.max(Number(paging.offset) || 0, 0);
 
-
     const paginatedData = pendingVerifications.slice(
       offset,
       Math.max(offset + limit, pendingVerifications.length)
@@ -106,11 +43,12 @@ export default class AdminService {
       limit: limit,
     };
   }
+
   async getFileIdPendingVerified(
     driverId: number,
     role: "restaurant" | "driver"
   ) {
-    if(!driverId){
+    if (!driverId) {
       throw new AppError("Driver ID is required", StatusCodes.BAD_REQUEST);
     }
     const userFilePath = `./upload/driver/${driverId}/status.yaml`;
@@ -134,6 +72,7 @@ export default class AdminService {
       data: driverFile,
     };
   }
+
   async getFileById(
     driverId: number,
     fileId: string,

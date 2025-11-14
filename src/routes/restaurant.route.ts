@@ -6,7 +6,10 @@ export class RestaurantRouter extends BaseRouter {
   private restaurantController: RestaurantController;
 
   constructor() {
-    super({ prefix: "/restaurant" });
+    super({
+      prefix: "/restaurant",
+      middleware: [authMiddleware],
+    });
 
     this.restaurantController = new RestaurantController();
     this.setUpRoutes();
@@ -19,7 +22,7 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
-    
+
     this.router.patch(
       "/availability",
       authMiddleware,

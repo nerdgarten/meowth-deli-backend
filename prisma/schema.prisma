@@ -176,7 +176,6 @@ model CustomerLocation {
   id          Int      @id @default(autoincrement())
   customer_id Int
   location_id Int
-  address     String
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
 
