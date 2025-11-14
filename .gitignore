@@ -9,7 +9,10 @@ dist
 /coverage
 
 .idea
+.vscode
+data
 
 upload
+mock-data
 
 .DS_Store
