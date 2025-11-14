@@ -321,6 +321,7 @@ model RestaurantReview {
   order_id      Int
   rate          Float
   review_text   String?
+  images        String[]
   created_at    DateTime @default(now()) @db.Timestamptz
   updated_at    DateTime @updatedAt @db.Timestamptz
 
@@ -339,6 +340,7 @@ model DriverReview {
   order_id    Int
   rate        Float
   review_text String?
+  images      String[]
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
 

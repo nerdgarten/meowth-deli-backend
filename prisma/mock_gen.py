@@ -182,7 +182,6 @@ for _ in range(NUM_CUSTOMERS):
             "id": cl_id,
             "customer_id": user["id"],
             "location_id": loc["id"],
-            "address": loc["address"],
             "created_at": user["created_at"],
             "updated_at": user["updated_at"],
         }
@@ -404,6 +403,7 @@ for customer in customers:
                     "restaurant_id": rest_id,
                     "order_id": order_id,
                     "rate": round(random.uniform(3.0, 5.0), 1),
+                    "images": text_array_literal([fake.image_url() for _ in range(random.randint(0, 2))]) if random.random() < 0.3 else text_array_literal([]),
                     "review_text": fake.text(max_nb_chars=80) if random.random() < 0.5 else None,
                     "created_at": order_ts,
                     "updated_at": order_ts,
@@ -418,6 +418,7 @@ for customer in customers:
                     "driver_id": driver_id,
                     "order_id": order_id,
                     "rate": round(random.uniform(3.0, 5.0), 1),
+                    "images": text_array_literal([fake.image_url() for _ in range(random.randint(0, 2))]) if random.random() < 0.3 else text_array_literal([]),
                     "review_text": fake.text(max_nb_chars=80) if random.random() < 0.4 else None,
                     "created_at": order_ts,
                     "updated_at": order_ts,
