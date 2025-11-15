@@ -60,8 +60,7 @@ export class OrderController {
       const userId = req.user!.id;
       const newOrder = await this.orderService.createOrder({
         ...req.body,
-        customer_id: userId,
-        amount: req.body.quantity,
+        customer_id: Number(userId),
       });
       res.status(201).json(newOrder);
     } catch (error) {

@@ -1,18 +1,18 @@
-import fs from "fs";
-import path from "path";
-
 import { StatusCodes } from "http-status-codes";
 import { parse } from "yaml";
-
-import { VerificationStatus } from "@/generated/prisma/client";
-import DriverRepository from "@/repositories/driver.repository";
-import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 import { FileManagement } from "@/types/file/file";
 import { FileStatus } from "@/types/file/file";
 import { FilePaginationQuery } from "@/types/file/file";
+import { User } from "@/generated//client";
+import UserRepository from "@/repositories/user.repository";
 
 export default class AdminService {
+  private userRepository: UserRepository;
+  constructor() {
+    this.userRepository = new UserRepository();
+  }
+
   async getPendingVerifications(
     paging: FilePaginationQuery,
     role: "restaurant" | "driver"
@@ -101,7 +101,10 @@ export default class AdminService {
     };
   }
 
-  async deleteUser(userId: number) {
-    await this.adminRepository.deleteUser(userId);
+  async deleteUserById(userId: number) {
+    if (!userId) {
+      throw new AppError("User ID is required", StatusCodes.BAD_REQUEST);
+    }
+    await this.userRepository.deleteUserById(userId);
   }
 }

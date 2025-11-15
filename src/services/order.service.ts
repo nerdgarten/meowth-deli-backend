@@ -149,7 +149,7 @@ export default class OrderService {
       remark: dto.remark,
       orderDishes: {
         create: dto.orderDishes.map((orderDish) => ({
-          amount: orderDish.amount,
+          amount: orderDish.quantity,
           remark: orderDish.remark,
           dish: {
             connect: { id: orderDish.dish_id },
