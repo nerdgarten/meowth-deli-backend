@@ -104,30 +104,29 @@ export default class OrderService {
     body: CreateOrderRequestDTO
   ): Promise<CreateOrderResponseDTO> {
     const dto = CreateOrderRequestSchema.parse(body);
-    const customer = await this.customerRepository.getCustomerProfileById(
-      dto.customer_id
-    );
-    if (!customer) {
+    if (
+      !(await this.customerRepository.getCustomerProfileById(dto.customer_id))
+    ) {
       throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
     }
-    const restaurant = await this.restaurantRepository.getRestaurantProfileById(
-      dto.restaurant_id
-    );
-    if (!restaurant) {
+
+    if (
+      !(await this.restaurantRepository.getRestaurantProfileById(
+        dto.restaurant_id
+      ))
+    ) {
       throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
     }
-    if (dto.driver_id !== undefined) {
-      const driver = await this.driverRepository.getDriverProfileById(
-        dto.driver_id
-      );
-      if (!driver) {
-        throw new AppError("Driver not found", StatusCodes.NOT_FOUND);
-      }
+    if (
+      dto.driver_id !== undefined &&
+      !(await this.driverRepository.getDriverProfileById(dto.driver_id))
+    ) {
+      throw new AppError("Driver not found", StatusCodes.NOT_FOUND);
     }
-    const location = await this.locationRepository.getLocationById(
-      dto.delivery_location_id
-    );
-    if (!location) {
+    if (
+      dto.delivery_location_id &&
+      !(await this.locationRepository.getLocationById(dto.delivery_location_id))
+    ) {
       throw new AppError("Location not found", StatusCodes.NOT_FOUND);
     }
     const data = await this.orderRepository.createOrder({

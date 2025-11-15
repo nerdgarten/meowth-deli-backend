@@ -10,6 +10,9 @@ export default class CustomerRepository {
   async getCustomerProfileById(userId: number) {
     return prisma.customer.findFirst({
       where: { id: userId },
+      include: {
+        user: true,
+      },
     });
   }
 
