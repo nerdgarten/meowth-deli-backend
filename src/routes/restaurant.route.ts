@@ -15,7 +15,6 @@ export class RestaurantRouter extends BaseRouter {
   constructor() {
     super({
       prefix: "/restaurant",
-      middleware: [authMiddleware],
     });
 
     this.restaurantController = new RestaurantController();
@@ -25,16 +24,26 @@ export class RestaurantRouter extends BaseRouter {
   private setUpRoutes() {
     this.router.get(
       "/",
+      authMiddleware,
       this.restaurantController.getRestaurants.bind(this.restaurantController)
     );
     this.router.get(
+      "/:restaurantId",
+      authMiddleware,
+      this.restaurantController.getRestaurantProfileById.bind(
+        this.restaurantController
+      )
+    );
+    this.router.get(
       "/profile",
+      authMiddleware,
       this.restaurantController.getRestaurantProfile.bind(
         this.restaurantController
       )
     );
     this.router.patch(
       "/profile",
+      authMiddleware,
       fileMiddleware(restaurantBannerConfig),
       this.restaurantController.updateRestaurantProfile.bind(
         this.restaurantController
@@ -49,6 +58,7 @@ export class RestaurantRouter extends BaseRouter {
     );
     this.router.post(
       "/upload",
+      authMiddleware,
       roleMiddleware(Role.restaurant),
       fileMiddleware(certificateFileConfig),
       this.restaurantController.uploadCertificateFile.bind(

@@ -32,6 +32,18 @@ export class RestaurantController {
     }
   }
 
+  async getRestaurantProfileById(req: Request, res: Response) {
+    try {
+      const restaurantId = Number(req.params.restaurantId);
+      const restaurant =
+        await this.restaurantService.getRestaurantProfileById(restaurantId);
+
+      res.status(StatusCodes.OK).json(restaurant);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
   async getRestaurantProfile(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
