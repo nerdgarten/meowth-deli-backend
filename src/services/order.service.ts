@@ -10,9 +10,23 @@ import {
   CreateOrderResponseDTO,
 } from "@/types/dto/order";
 import { CreateOrderRequestSchema } from "@/validators/order.schema";
-import { OrderStatus } from "@/generated/prisma/client";
+import { OrderStatus, Prisma } from "@/generated/prisma/client";
 import { AppError } from "@/types/error";
 import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+
+type RepositoryOrder = Prisma.OrderGetPayload<{
+  include: {
+    orderDishes: {
+      include: {
+        dish: true;
+      };
+    };
+    customer: true;
+    restaurant: true;
+    driver: true;
+    location: true;
+  };
+}>;
 
 export default class OrderService {
   private orderRepository: OrderRespository;
@@ -32,29 +46,11 @@ export default class OrderService {
   async getOrderById(orderId: number): Promise<GetOrderResponseDTO> {
     const order = await this.orderRepository.getOrderById(orderId);
     if (!order) {
-      throw new Error("Order not found");
+      throw new AppError("Order not found", StatusCodes.NOT_FOUND);
     }
     return {
-      id: order.id,
-      customer: order.customer,
-      restaurant: order.restaurant,
-      driver: order.driver,
-      location: order.location,
-      status: order.status,
-      total_amount: order.total_amount,
-      driver_fee: order.driver_fee,
-      remark: order.remark,
-      orderDishes: order.orderDishes.map((orderDish) => ({
-        amount: orderDish.amount,
-        remark: orderDish.remark,
-        dish: {
-          id: orderDish.dish.id,
-          name: orderDish.dish.name,
-          detail: orderDish.dish.detail,
-          price: orderDish.dish.price,
-          image: orderDish.dish.image,
-        },
-      })),
+      ...this.formatOrderResponse(order),
+      total_amount: await this.orderRepository.calculateTotalAmount(orderId),
     };
   }
 
@@ -65,28 +61,12 @@ export default class OrderService {
       throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
     }
     const orders = await this.orderRepository.getOrdersByCustomerId(customerId);
-    return orders.map((order) => ({
-      id: order.id,
-      customer: order.customer,
-      restaurant: order.restaurant,
-      driver: order.driver,
-      location: order.location,
-      status: order.status,
-      total_amount: order.total_amount,
-      driver_fee: order.driver_fee,
-      remark: order.remark,
-      orderDishes: order.orderDishes.map((orderDish) => ({
-        amount: orderDish.amount,
-        remark: orderDish.remark,
-        dish: {
-          id: orderDish.dish.id,
-          name: orderDish.dish.name,
-          detail: orderDish.dish.detail,
-          price: orderDish.dish.price,
-          image: orderDish.dish.image,
-        },
-      })),
-    }));
+    return Promise.all(
+      orders.map(async (order) => ({
+        ...this.formatOrderResponse(order),
+        total_amount: await this.orderRepository.calculateTotalAmount(order.id),
+      }))
+    );
   }
 
   async getOrdersByRestaurantId(
@@ -99,28 +79,12 @@ export default class OrderService {
     }
     const orders =
       await this.orderRepository.getOrdersByRestaurantId(restaurantId);
-    return orders.map((order) => ({
-      id: order.id,
-      customer: order.customer,
-      restaurant: order.restaurant,
-      driver: order.driver,
-      location: order.location,
-      status: order.status,
-      total_amount: order.total_amount,
-      driver_fee: order.driver_fee,
-      remark: order.remark,
-      orderDishes: order.orderDishes.map((orderDish) => ({
-        amount: orderDish.amount,
-        remark: orderDish.remark,
-        dish: {
-          id: orderDish.dish.id,
-          name: orderDish.dish.name,
-          detail: orderDish.dish.detail,
-          price: orderDish.dish.price,
-          image: orderDish.dish.image,
-        },
-      })),
-    }));
+    return Promise.all(
+      orders.map(async (order) => ({
+        ...this.formatOrderResponse(order),
+        total_amount: await this.orderRepository.calculateTotalAmount(order.id),
+      }))
+    );
   }
 
   async getOrdersByDriverId(driverId: number): Promise<GetOrderResponseDTO[]> {
@@ -128,28 +92,12 @@ export default class OrderService {
       throw new AppError("Driver not found", StatusCodes.NOT_FOUND);
     }
     const orders = await this.orderRepository.getOrdersByDriverId(driverId);
-    return orders.map((order) => ({
-      id: order.id,
-      customer: order.customer,
-      restaurant: order.restaurant,
-      driver: order.driver,
-      location: order.location,
-      status: order.status,
-      total_amount: order.total_amount,
-      driver_fee: order.driver_fee,
-      remark: order.remark,
-      orderDishes: order.orderDishes.map((orderDish) => ({
-        amount: orderDish.amount,
-        remark: orderDish.remark,
-        dish: {
-          id: orderDish.dish.id,
-          name: orderDish.dish.name,
-          detail: orderDish.dish.detail,
-          price: orderDish.dish.price,
-          image: orderDish.dish.image,
-        },
-      })),
-    }));
+    return Promise.all(
+      orders.map(async (order) => ({
+        ...this.formatOrderResponse(order),
+        total_amount: await this.orderRepository.calculateTotalAmount(order.id),
+      }))
+    );
   }
 
   async createOrder(
@@ -168,14 +116,16 @@ export default class OrderService {
     if (!restaurant) {
       throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
     }
-    const driver = await this.driverRepository.getDriverProfileById(
-      dto.driver_id
-    );
-    if (!driver) {
-      throw new AppError("Driver not found", StatusCodes.NOT_FOUND);
+    if (dto.driver_id !== undefined) {
+      const driver = await this.driverRepository.getDriverProfileById(
+        dto.driver_id
+      );
+      if (!driver) {
+        throw new AppError("Driver not found", StatusCodes.NOT_FOUND);
+      }
     }
     const location = await this.locationRepository.getLocationById(
-      dto.location_id
+      dto.delivery_location_id
     );
     if (!location) {
       throw new AppError("Location not found", StatusCodes.NOT_FOUND);
@@ -187,19 +137,21 @@ export default class OrderService {
       restaurant: {
         connect: { id: dto.restaurant_id },
       },
-      driver: {
-        connect: { id: dto.driver_id },
-      },
+      driver: dto.driver_id
+        ? {
+            connect: { id: dto.driver_id },
+          }
+        : undefined,
       location: {
-        connect: { id: dto.location_id },
+        connect: { id: dto.delivery_location_id },
       },
       status: dto.status,
-      total_amount: dto.total_amount,
       driver_fee: dto.driver_fee,
       remark: dto.remark,
       orderDishes: {
         create: dto.orderDishes.map((orderDish) => ({
           amount: orderDish.amount,
+          remark: orderDish.remark,
           dish: {
             connect: { id: orderDish.dish_id },
           },
@@ -211,11 +163,57 @@ export default class OrderService {
 
   async updateOrderStatus(orderId: number, status: OrderStatus): Promise<void> {
     if (!(await this.orderRepository.getOrderById(orderId))) {
-      throw new Error("Order not found");
+      throw new AppError("Order not found", StatusCodes.NOT_FOUND);
     }
-    const updatedOrder = await this.orderRepository.updateOrderStatus(
-      orderId,
-      status
-    );
+    await this.orderRepository.updateOrderStatus(orderId, status);
+  }
+
+  formatOrderResponse(
+    order: RepositoryOrder
+  ): Omit<GetOrderResponseDTO, "total_amount"> {
+    return {
+      id: order.id,
+      customer: {
+        firstname: order.customer.firstname,
+        lastname: order.customer.lastname,
+        tel: order.customer.tel,
+        image: order.customer.image,
+      },
+      restaurant: {
+        name: order.restaurant.name,
+        tel: order.restaurant.tel,
+        detail: order.restaurant.detail,
+        banner: order.restaurant.banner,
+      },
+      driver: order.driver
+        ? {
+            firstname: order.driver.firstname,
+            lastname: order.driver.lastname,
+            tel: order.driver.tel,
+            image: order.driver.image,
+            licence: order.driver.licence,
+            vehicle: order.driver.vehicle,
+          }
+        : null,
+      location: {
+        latitude: order.location.latitude,
+        longitude: order.location.longitude,
+        address: order.location.address,
+      },
+      status: order.status,
+      driver_fee: order.driver_fee,
+      remark: order.remark,
+      orderDishes: order.orderDishes.map((orderDish) => ({
+        amount: orderDish.amount,
+        remark: orderDish.remark,
+        dish: {
+          id: orderDish.dish.id,
+          name: orderDish.dish.name,
+          detail: orderDish.dish.detail,
+          price: orderDish.dish.price,
+          image: orderDish.dish.image,
+        },
+      })),
+    };
   }
 }

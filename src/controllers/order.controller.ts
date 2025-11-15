@@ -57,8 +57,11 @@ export class OrderController {
 
   async createOrder(req: Request, res: Response) {
     try {
-      const orderData = req.body;
-      const newOrder = await this.orderService.createOrder(orderData);
+      const userId = req.user!.id;
+      const newOrder = await this.orderService.createOrder({
+        ...req.body,
+        customer_id: userId,
+      });
       res.status(201).json(newOrder);
     } catch (error) {
       handleError(error, res);

@@ -1,6 +1,9 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
+import { AppError } from "@/types/error";
 import { OrderCreateBody, OrderStatus, OrderDishBody } from "@/types/order";
+import { StatusCodes } from "http-status-codes";
+import { get } from "node:http";
 
 export default class OrderRespository {
   async getOrderById(orderId: number) {
@@ -99,5 +102,17 @@ export default class OrderRespository {
         },
       },
     });
+  }
+
+  async calculateTotalAmount(orderId: number): Promise<number> {
+    let total = 0;
+    const order = await this.getOrderById(orderId);
+    if (!order) {
+      throw new AppError("Order not found", StatusCodes.NOT_FOUND);
+    }
+    for (const orderDish of order.orderDishes) {
+      total += orderDish.amount * orderDish.dish.price;
+    }
+    return total;
   }
 }

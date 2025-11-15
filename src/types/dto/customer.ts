@@ -1,9 +1,9 @@
 import { Customer } from "@/generated/prisma/client";
 
 export type ICustomer = Omit<Customer, "is_deleted">;
-export type ICustomerProfile = Omit<
+export type ICustomerProfile = Pick<
   Customer,
-  "is_deleted" | "id" | "created_at" | "updated_at"
+  "firstname" | "lastname" | "tel" | "image"
 >;
 
 export type UpdateCustomerProfileRequestDTO = Pick<

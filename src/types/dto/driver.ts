@@ -1,9 +1,9 @@
 import { Driver } from "@/generated/prisma/client";
 
 export type IDriver = Omit<Driver, "is_deleted">;
-export type IDriverProfile = Omit<
+export type IDriverProfile = Pick<
   Driver,
-  "is_deleted" | "id" | "created_at" | "updated_at"
+  "firstname" | "lastname" | "tel" | "image" | "licence" | "vehicle"
 >;
 
 export type UpdateDriverProfileRequestDTO = Pick<

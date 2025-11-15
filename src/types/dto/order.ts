@@ -28,10 +28,11 @@ export type GetOrderResponseDTO = Omit<
   customer: ICustomerProfile;
   restaurant: IRestaurantProfile;
   driver: IDriverProfile | null;
-  location: GetLocationResponseDTO;
+  location: Omit<GetLocationResponseDTO, "id">;
   orderDishes: Array<
     Omit<OrderDish, "dish_id" | "created_at" | "updated_at" | "order_id"> & {
       dish: Pick<Dish, "id" | "name" | "detail" | "price" | "image">;
     }
   >;
+  total_amount: number;
 };

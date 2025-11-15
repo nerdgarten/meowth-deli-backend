@@ -284,7 +284,6 @@ model Order {
   delivery_location_id Int
   status               OrderStatus @default(pending)
   remark               String?
-  total_amount         Float
   driver_fee           Float
   created_at           DateTime    @default(now()) @db.Timestamptz
   updated_at           DateTime    @updatedAt @db.Timestamptz
@@ -293,7 +292,7 @@ model Order {
   customer          Customer           @relation(fields: [customer_id], references: [id])
   restaurant        Restaurant         @relation(fields: [restaurant_id], references: [id])
   driver            Driver?            @relation(fields: [driver_id], references: [id])
-  orderDishes      OrderDish[]
+  orderDishes       OrderDish[]
   payments          Payment[]
   restaurantReviews RestaurantReview[]
   driverReviews     DriverReview[]
