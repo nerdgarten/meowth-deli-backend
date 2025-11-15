@@ -293,7 +293,7 @@ model Order {
   customer          Customer           @relation(fields: [customer_id], references: [id])
   restaurant        Restaurant         @relation(fields: [restaurant_id], references: [id])
   driver            Driver?            @relation(fields: [driver_id], references: [id])
-  order_dishes      OrderDish[]
+  orderDishes      OrderDish[]
   payments          Payment[]
   restaurantReviews RestaurantReview[]
   driverReviews     DriverReview[]

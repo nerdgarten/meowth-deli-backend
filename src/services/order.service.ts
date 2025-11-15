@@ -10,6 +10,7 @@ import {
   CreateOrderResponseDTO,
 } from "@/types/dto/order";
 import { CreateOrderRequestSchema } from "@/validators/order.schema";
+import { create } from "domain";
 export default class OrderService {
   private orderRepository: OrderRespository;
   private customerRepository: CustomerRepository;
@@ -78,6 +79,15 @@ export default class OrderService {
       total_amount: dto.total_amount,
       driver_fee: dto.driver_fee,
       remark: dto.remark,
+      orderDishes: {
+        create: dto.order_dishes.map((orderDish) => ({
+          quantity: orderDish.quantity,
+          special_request: orderDish.special_request,
+          dish: {
+            connect: { id: orderDish.dish_id },
+          },
+        })),
+      },
     });
     return data;
   }
