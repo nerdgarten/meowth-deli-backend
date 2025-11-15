@@ -24,6 +24,10 @@ export class RestaurantRouter extends BaseRouter {
 
   private setUpRoutes() {
     this.router.get(
+      "/",
+      this.restaurantController.getRestaurants.bind(this.restaurantController)
+    );
+    this.router.get(
       "/profile",
       this.restaurantController.getRestaurantProfile.bind(
         this.restaurantController

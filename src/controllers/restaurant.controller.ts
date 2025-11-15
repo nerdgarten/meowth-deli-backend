@@ -23,6 +23,15 @@ export class RestaurantController {
     this.restaurantService = new RestaurantService();
   }
 
+  async getRestaurants(req: Request, res: Response) {
+    try {
+      const restaurants = await this.restaurantService.getRestaurants();
+      res.status(StatusCodes.OK).json(restaurants);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
   async getRestaurantProfile(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
