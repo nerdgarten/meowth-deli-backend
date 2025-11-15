@@ -64,7 +64,7 @@ export default class ReviewRepository {
 
   createRestaurantReview(
     data: {
-      user_id: number;
+      customer_id: number;
       restaurant_id: number;
       order_id: number;
       rate: number;
@@ -149,7 +149,7 @@ export default class ReviewRepository {
     return client.restaurantReview.findFirst({
       where: {
         order_id: orderId,
-        user_id: userId,
+        customer_id: userId,
       },
       include: RESTAURANT_REVIEW_INCLUDE,
     });

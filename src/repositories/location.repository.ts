@@ -6,7 +6,7 @@ export default class LocationRepository {
   createLocation(data: ILocation): Promise<Location> {
     return prisma.location.create({
       data: {
-        customer_id: data.customer_id,
+        user_id: data.customer_id,
         address: data.address,
         is_default: data.is_default ?? undefined,
       },
@@ -20,7 +20,7 @@ export default class LocationRepository {
     return prisma.location.findFirst({
       where: {
         id: locationId,
-        customer_id: customerId,
+        user_id: customerId,
       },
     });
   }
@@ -28,7 +28,7 @@ export default class LocationRepository {
   listCustomerLocations(customerId: number): Promise<Location[]> {
     return prisma.location.findMany({
       where: {
-        customer_id: customerId,
+        user_id: customerId,
       },
       orderBy: {
         updated_at: "desc",
@@ -73,7 +73,7 @@ export default class LocationRepository {
     return prisma.$transaction(async (tx) => {
       await tx.location.updateMany({
         where: {
-          customer_id: customerId,
+          user_id: customerId,
           NOT: {
             id: locationId,
           },

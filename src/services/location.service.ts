@@ -70,7 +70,7 @@ export default class LocationService {
   private toResponse(location: Location) {
     return {
       id: location.id,
-      customer_id: location.customer_id,
+      customer_id: location.user_id,
       address: location.address,
       is_default: location.is_default,
     };

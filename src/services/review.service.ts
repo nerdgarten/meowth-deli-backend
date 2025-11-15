@@ -409,7 +409,7 @@ export default class ReviewService {
 
     return this.reviewRepository.createRestaurantReview(
       {
-        user_id: params.userId,
+        customer_id: params.userId,
         restaurant_id: params.restaurantId,
         order_id: params.order.id,
         rate: params.rate,

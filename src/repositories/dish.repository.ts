@@ -1,3 +1,4 @@
+import { Allergy } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
 import { DishWhereClause } from "@/types/dish/dish";
 
@@ -17,7 +18,7 @@ export default class DishRepository {
   async createDish(data: {
     restaurant_id: number;
     name: string;
-    allergy?: string;
+    allergy?: Allergy[];
     price: number;
     detail?: string;
   }) {
@@ -61,7 +62,7 @@ export default class DishRepository {
     id: number,
     data: Partial<{
       name: string;
-      allergy?: string;
+      allergy?: Allergy[];
       price: number;
       detail?: string;
       is_out_of_stock?: boolean;
