@@ -8,7 +8,7 @@ export class AuthenticateRouter extends BaseRouter {
 
   constructor() {
     super({
-      prefix: "/authenticated",
+      prefix: "/authenticate",
       middleware: [authMiddleware],
     });
 
