@@ -1,6 +1,8 @@
 import { DishController } from "@/controllers/dish.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { fileMiddleware } from "@/middlewares/file.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
+import { dishPictureConfig } from "@/utils/fileConfig";
 
 export class DishRouter extends BaseRouter {
   private dishController: DishController;
@@ -14,12 +16,12 @@ export class DishRouter extends BaseRouter {
 
   private setUpRoutes() {
     this.router.get(
-      "/search",
-      this.dishController.searchDishes.bind(this.dishController)
-    );
-    this.router.get(
       "/",
       this.dishController.getAllDishes.bind(this.dishController)
+    );
+    this.router.get(
+      "/restaurant/:id",
+      this.dishController.getDishesByRestaurantId.bind(this.dishController)
     );
     this.router.get(
       "/:id",
@@ -28,11 +30,13 @@ export class DishRouter extends BaseRouter {
     this.router.post(
       "/",
       authMiddleware,
+      fileMiddleware(dishPictureConfig),
       this.dishController.createDish.bind(this.dishController)
     );
     this.router.patch(
       "/:id",
       authMiddleware,
+      fileMiddleware(dishPictureConfig),
       this.dishController.updateDish.bind(this.dishController)
     );
     this.router.delete(

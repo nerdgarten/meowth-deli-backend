@@ -1,85 +1,48 @@
+import { Prisma } from "@/generated/prisma/browser";
 import { prisma } from "@/libs/prisma";
 import { Allergy } from "@/types/allergy";
 import { DishWhereClause } from "@/types/dish/dish";
 
 export default class DishRepository {
-  async findDishesByKeyword(
-    whereClause: DishWhereClause,
-    limit: number,
-    offset: number
-  ) {
-    return prisma.dish.findMany({
-      where: whereClause,
-      take: limit,
-      skip: offset,
-    });
+  async getAllDishes() {
+    return prisma.dish.findMany();
   }
 
-  async createDish(data: {
-    restaurant_id: number;
-    name: string;
-    allergy: Allergy[];
-    price: number;
-    detail?: string;
-  }) {
-    return prisma.dish.create({
-      data,
-    });
-  }
-
-  async findAllDishes(limit?: number, offset?: number) {
-    return prisma.dish.findMany({
-      take: limit,
-      skip: offset,
-      include: {
-        restaurant: {
-          select: {
-            id: true,
-            name: true,
-            location: true,
-          },
-        },
-      },
-    });
-  }
-
-  async findDishById(id: number) {
+  async getDishById(id: number) {
     return prisma.dish.findUnique({
       where: { id },
-      include: {
-        restaurant: {
-          select: {
-            id: true,
-            name: true,
-            location: true,
-          },
-        },
-      },
     });
   }
 
-  async updateDish(
-    id: number,
-    data: Partial<{
-      name: string;
-      allergy: Allergy[];
-      price: number;
-      detail?: string;
-      is_out_of_stock?: boolean;
-    }>
-  ) {
+  async isDishOwnerByUser(dishId: number, userId: number) {
+    const dish = await prisma.dish.findUnique({
+      where: { id: dishId },
+      include: {
+        restaurant: true,
+      },
+    });
+
+    if (!dish) {
+      return false;
+    }
+
+    return dish.restaurant.id === userId;
+  }
+
+  async getDishesByRestaurantId(restaurantId: number) {
+    return prisma.dish.findMany({
+      where: { restaurant_id: restaurantId },
+    });
+  }
+
+  async createDish(data: Prisma.DishCreateInput) {
+    return prisma.dish.create({ data });
+  }
+
+  async updateDish(data: Prisma.DishUpdateInput, id: number) {
     return prisma.dish.update({
       where: { id },
       data,
-      include: {
-        restaurant: {
-          select: {
-            id: true,
-            name: true,
-            location: true,
-          },
-        },
-      },
     });
   }
 
@@ -93,21 +56,6 @@ export default class DishRepository {
     return prisma.dish.update({
       where: { id },
       data: { is_out_of_stock },
-      include: {
-        restaurant: {
-          select: {
-            id: true,
-            name: true,
-            location: true,
-          },
-        },
-      },
-    });
-  }
-
-  async findDishesByRestaurantId(restaurantId: number) {
-    return prisma.dish.findMany({
-      where: { restaurant_id: restaurantId },
     });
   }
 }

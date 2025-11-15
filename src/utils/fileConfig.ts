@@ -50,6 +50,20 @@ export const profilePictureConfig: UploadConfig = {
   fieldName: "profilePicture",
 };
 
+export const dishPictureConfig: UploadConfig = {
+  folder: "dish_pictures",
+  allowedFileTypes: ["image/jpeg", "image/png", "image/jpg"],
+  filename(req: Request, file: Express.Multer.File): string {
+    return `/image_${req.user!.id}_${Date.now()}_${Math.random()
+      .toString(16)
+      .slice(2)}${path.extname(file.originalname)}`;
+  },
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB
+  },
+  fieldName: "dishPicture",
+};
+
 export const updateFileStatus = (
   uploadPath: string,
   fileInfo: FileStatus["files"][0]

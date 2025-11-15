@@ -7,7 +7,7 @@ import { CustomerRouter } from "@/routes/customer.route";
 import { RestaurantRouter } from "@/routes/restaurant.route";
 import { DriverRouter } from "@/routes/driver.route";
 import { LocationRouter } from "@/routes/location.route";
-// import { DishRouter } from "@/routes/dish.route";
+import { DishRouter } from "@/routes/dish.route";
 // import { ReviewRouter } from "@/routes/review.route";
 import { TestRouter } from "@/routes/test.route";
 
@@ -26,8 +26,8 @@ export class RouterManager {
     const restaurantRouter = new RestaurantRouter();
     const driverRouter = new DriverRouter();
     const locationRouter = new LocationRouter();
+    const dishRouter = new DishRouter();
     // const adminRouter = new AdminRouter();
-    // const dishRouter = new DishRouter();
     // const reviewRouter = new ReviewRouter();
     const testRouter = new TestRouter();
 
@@ -37,8 +37,8 @@ export class RouterManager {
     this.router.use("/restaurant", restaurantRouter.getRouter());
     this.router.use("/driver", driverRouter.getRouter());
     this.router.use("/location", locationRouter.getRouter());
+    this.router.use("/dish", dishRouter.getRouter());
     // this.router.use("/admin", adminRouter.getRouter());
-    // this.router.use("/dish", dishRouter.getRouter());
     // this.router.use("/review", reviewRouter.getRouter());
     this.router.use("/api-test", testRouter.getRouter());
   }

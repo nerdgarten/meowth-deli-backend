@@ -391,3 +391,14 @@ model ResetToken {
 
   @@index([user_id])
 }
+
+/**
+ * {
+ * "name": "Salmon Teriyaka",
+ * "allergy": [
+ * "seafood", "eggs"
+ * ],
+ * "price": 300,
+ * "detail": "delicious"
+ * }
+ */

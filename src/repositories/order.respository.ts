@@ -1,3 +1,4 @@
+import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
 import { OrderCreateBody, OrderStatus, OrderDishBody } from "@/types/order";
 
@@ -6,7 +7,11 @@ export default class OrderRespository {
     return await prisma.order.findUnique({
       where: { id: orderId },
       include: {
-        order_dishes: true,
+        order_dishes: {
+          include: {
+            dish: true,
+          },
+        },
         customer: true,
         restaurant: true,
         driver: true,
@@ -19,7 +24,11 @@ export default class OrderRespository {
     return await prisma.order.findMany({
       where: { customer_id: customerId },
       include: {
-        order_dishes: true,
+        order_dishes: {
+          include: {
+            dish: true,
+          },
+        },
         customer: true,
         restaurant: true,
         driver: true,
@@ -33,7 +42,11 @@ export default class OrderRespository {
     return await prisma.order.findMany({
       where: { restaurant_id: restaurantId },
       include: {
-        order_dishes: true,
+        order_dishes: {
+          include: {
+            dish: true,
+          },
+        },
         customer: true,
         restaurant: true,
         driver: true,
@@ -47,7 +60,11 @@ export default class OrderRespository {
     return await prisma.order.findMany({
       where: { driver_id: driverId },
       include: {
-        order_dishes: true,
+        order_dishes: {
+          include: {
+            dish: true,
+          },
+        },
         customer: true,
         restaurant: true,
         driver: true,
@@ -57,27 +74,29 @@ export default class OrderRespository {
     });
   }
 
-  async createOrder(data: OrderCreateBody) {
+  async createOrder(data: Prisma.OrderCreateInput) {
     return prisma.order.create({
-      data: {
-        customer_id: data.customer_id,
-        restaurant_id: data.restaurant_id,
-        delivery_location_id: data.delivery_location_id,
-        total_amount: data.total_amount,
-        driver_fee: data.driver_fee,
-        driver_id: data.driver_id || null,
-        status: data.status ?? OrderStatus.pending,
-        remark: data.remark || null,
+      data,
+      include: {
         order_dishes: {
-          create: data.order_dishes.map((dish: OrderDishBody) => ({
-            dish_id: dish.dish_id,
-            quantity: dish.amount,
-            remark: dish.remark || "",
-          })),
+          include: {
+            dish: true,
+          },
         },
       },
+    });
+  }
+
+  async updateOrderStatus(orderId: number, status: OrderStatus) {
+    return prisma.order.update({
+      where: { id: orderId },
+      data: { status },
       include: {
-        order_dishes: true,
+        order_dishes: {
+          include: {
+            dish: true,
+          },
+        },
       },
     });
   }
