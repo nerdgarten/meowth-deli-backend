@@ -24,6 +24,19 @@ export class DriverController {
 
   async getDriverProfileById(req: Request, res: Response) {
     try {
+      const { userId } = req.params;
+      const profile = await this.driverService.getDriverProfileById(
+        Number(userId)
+      );
+
+      res.status(StatusCodes.OK).json(profile);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async getDriverProfile(req: Request, res: Response) {
+    try {
       const userId = req.user!.id;
       const profile = await this.driverService.getDriverProfileById(userId);
 

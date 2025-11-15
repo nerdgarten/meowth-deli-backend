@@ -11,7 +11,7 @@ import { fileMiddleware } from "@/middlewares/file.middleware";
 import { roleMiddleware } from "@/middlewares/role.middleware";
 
 export class DriverRouter extends BaseRouter {
-  private readonly driverController: DriverController;
+  private driverController: DriverController;
 
   constructor() {
     super({
@@ -24,26 +24,13 @@ export class DriverRouter extends BaseRouter {
   }
 
   setUpRoutes() {
-    /**
-     * @swagger
-     * /driver/orders:
-     *   get:
-     *     summary: Get driver orders by status
-     *     tags: [Driver]
-     *     security:
-     *       - cookieAuth: []
-     *     parameters:
-     *       - in: query
-     *         name: status
-     *         schema:
-     *           type: string
-     *     responses:
-     *       200:
-     *         description: List of orders
-     */
+    this.router.get(
+      "/profile/:id",
+      this.driverController.getDriverProfileById.bind(this.driverController)
+    );
     this.router.get(
       "/profile",
-      this.driverController.getDriverProfileById.bind(this.driverController)
+      this.driverController.getDriverProfile.bind(this.driverController)
     );
     this.router.patch(
       "/profile",

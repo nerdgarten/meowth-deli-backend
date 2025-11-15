@@ -7,7 +7,7 @@ export default class OrderRespository {
     return await prisma.order.findUnique({
       where: { id: orderId },
       include: {
-        order_dishes: {
+        orderDishes: {
           include: {
             dish: true,
           },
@@ -24,7 +24,7 @@ export default class OrderRespository {
     return await prisma.order.findMany({
       where: { customer_id: customerId },
       include: {
-        order_dishes: {
+        orderDishes: {
           include: {
             dish: true,
           },
@@ -42,7 +42,7 @@ export default class OrderRespository {
     return await prisma.order.findMany({
       where: { restaurant_id: restaurantId },
       include: {
-        order_dishes: {
+        orderDishes: {
           include: {
             dish: true,
           },
@@ -60,7 +60,7 @@ export default class OrderRespository {
     return await prisma.order.findMany({
       where: { driver_id: driverId },
       include: {
-        order_dishes: {
+        orderDishes: {
           include: {
             dish: true,
           },
@@ -78,7 +78,7 @@ export default class OrderRespository {
     return prisma.order.create({
       data,
       include: {
-        order_dishes: {
+        orderDishes: {
           include: {
             dish: true,
           },
@@ -92,7 +92,7 @@ export default class OrderRespository {
       where: { id: orderId },
       data: { status },
       include: {
-        order_dishes: {
+        orderDishes: {
           include: {
             dish: true,
           },

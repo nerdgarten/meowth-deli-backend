@@ -8,6 +8,7 @@ import { RestaurantRouter } from "@/routes/restaurant.route";
 import { DriverRouter } from "@/routes/driver.route";
 import { LocationRouter } from "@/routes/location.route";
 import { DishRouter } from "@/routes/dish.route";
+import { OrderRouter } from "@/routes/order.route";
 // import { ReviewRouter } from "@/routes/review.route";
 import { MapRouter } from "@/routes/map.route";
 import { TestRouter } from "@/routes/test.route";
@@ -28,6 +29,7 @@ export class RouterManager {
     const driverRouter = new DriverRouter();
     const locationRouter = new LocationRouter();
     const dishRouter = new DishRouter();
+    const orderRouter = new OrderRouter();
     // const adminRouter = new AdminRouter();
     // const reviewRouter = new ReviewRouter();
     const mapRouter = new MapRouter();
@@ -40,6 +42,7 @@ export class RouterManager {
     this.router.use("/driver", driverRouter.getRouter());
     this.router.use("/location", locationRouter.getRouter());
     this.router.use("/dish", dishRouter.getRouter());
+    this.router.use("/order", orderRouter.getRouter());
     // this.router.use("/admin", adminRouter.getRouter());
     // this.router.use("/review", reviewRouter.getRouter());
     this.router.use("/map", mapRouter.getRouter());

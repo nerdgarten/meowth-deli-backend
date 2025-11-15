@@ -3,8 +3,8 @@ import { z } from "zod";
 
 export const OrderDishSchema = z.object({
   dish_id: z.number().positive("Dish ID must be positive"),
-  quantity: z.number().int().min(1, "Quantity must be at least 1"),
-  note: z.string().max(255, "Note is too long").optional(),
+  amount: z.number().int().min(1, "Amount must be at least 1"),
+  remark: z.string().max(255, "Remark is too long").optional(),
   name: z.string().optional(),
 });
 
@@ -25,4 +25,5 @@ export const CreateOrderRequestSchema = z.object({
   total_amount: z.number(),
   driver_fee: z.number(),
   status: z.enum(OrderStatus),
+  orderDishes: z.array(OrderDishSchema),
 });
