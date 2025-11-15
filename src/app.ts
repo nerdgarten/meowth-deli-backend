@@ -47,6 +47,6 @@ app.get("/healthz", (req, res) => {
     uptime: process.uptime(),
   });
 });
-app.use("/upload", express.static(path.join(__dirname, "../upload")));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 export default app;

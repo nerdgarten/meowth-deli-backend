@@ -38,10 +38,25 @@ export default class CustomerRepository {
     });
   }
 
+  async getDefaultLocationByCustomerId(customerId: number) {
+    const customer = await prisma.customer.findUnique({
+      where: { id: customerId },
+      select: { default_location_id: true },
+    });
+    if (!customer || !customer.default_location_id) {
+      return null;
+    }
+    return prisma.location.findUnique({
+      where: { id: customer.default_location_id },
+    });
+  }
+
   async setDefaultLocation(customerId: number, locationId: number) {
-    await prisma.customer.update({
+    const updated = await prisma.customer.update({
       where: { id: customerId },
       data: { default_location_id: locationId },
+      select: { default_location: true },
     });
+    return updated.default_location;
   }
 }

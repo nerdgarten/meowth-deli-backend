@@ -27,19 +27,11 @@ export default class RestaurantRepository {
     });
   }
 
-  // async findRestaurantsByStatus(
-  //   status: VerificationStatus,
-  //   limit: number,
-  //   offset: number
-  // ) {
-  //   return prisma.restaurant.findMany({
-  //     where: {
-  //       verification_status: status,
-  //     },
-  //     take: limit,
-  //     skip: offset,
-  //   });
-  // }
+  async getRestaurantsByStatus(status: VerificationStatus) {
+    return prisma.restaurant.findMany({
+      where: { verification_status: status },
+    });
+  }
 
   async updateRestaurnatProfileById(
     id: number,
@@ -58,35 +50,3 @@ export default class RestaurantRepository {
     });
   }
 }
-
-/*
- private readonly defaultOptions = {
-    include: {
-      user: {
-        select: {
-          id: true,
-          email: true,
-          roles: true,
-        },
-      },
-    },
-    orderBy: { id: "desc" as const },
-  };
-
-async listRestaurants(where?: Prisma.RestaurantWhereInput) {
-    return prisma.restaurant.findMany({
-      where,
-      ...this.defaultOptions,
-    });
-  }
-
-  async updateRestaurant(restaurantId: number, status: VerificationStatus) {
-    return prisma.restaurant.update({
-      where: { id: restaurantId },
-      data: {
-        verification_status: status,
-      },
-      include: this.defaultOptions.include,
-    });
-  }
-*/

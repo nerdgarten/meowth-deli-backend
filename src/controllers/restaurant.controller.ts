@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 
 import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantService from "@/services/restaurant.service";
-import { AppError } from "@/types/error";
+import { handleError } from "@/utils/handleError";
 
 export class RestaurantController {
   private restaurantService: RestaurantService;
@@ -12,34 +12,44 @@ export class RestaurantController {
     this.restaurantService = new RestaurantService();
   }
 
-  async getRestaurantsByStatus(req: Request, res: Response) {
+  async getRestaurantProfile(req: Request, res: Response) {
     try {
-      const { status, limit, offset } = req.query;
-      const result = await this.restaurantService.getRestaurantsByStatus(
-        (status as VerificationStatus) || undefined,
-        Number(limit) || 10,
-        Number(offset) || 0
+      const userId = req.user!.id;
+      const profile =
+        await this.restaurantService.getRestaurantProfileById(userId);
+
+      res.status(StatusCodes.OK).json(profile);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async updateRestaurantProfile(req: Request, res: Response) {
+    try {
+      let filePath: string | undefined = undefined;
+
+      if (req.file) {
+        filePath = `${process.env.BASE_UPLOAD_URL}/${req.uploadFolder}/${req.user!.id}${req.file.filename}`;
+      }
+      const userId = req.user!.id;
+      const data = await this.restaurantService.updateRestaurnatProfileById(
+        userId,
+        {
+          ...req.body,
+          banner: filePath,
+        }
       );
 
-      res.status(StatusCodes.OK).json(result);
+      res.status(StatusCodes.OK).json(data);
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during get restaurants:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
 
   async updateRestaurantAvailability(req: Request, res: Response) {
     try {
-      const { is_available, user_id } = req.body;
-      const userId = Number(user_id);
+      const userId = req.user!.id;
+      const { is_available } = req.body;
 
       if (!userId) {
         res
@@ -48,71 +58,15 @@ export class RestaurantController {
         return;
       }
 
-      if (typeof is_available !== "boolean") {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "is_available must be a boolean value" });
-        return;
-      }
-
       const updatedRestaurant =
-        await this.restaurantService.updateRestaurantAvailability(
+        await this.restaurantService.updateRestaurantAvailabilityById(
           userId,
           is_available
         );
 
       res.status(StatusCodes.OK).json(updatedRestaurant);
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-      console.error(
-        "Unexpected error during restaurant availability update:",
-        error
-      );
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
-    }
-  }
-  async getDishesByRestaurantId(req: Request, res: Response) {
-    try {
-      const restaurantId = Number(req.params.id);
-
-      const dishes = await this.restaurantService.getDishesByRestaurantId(restaurantId);
-      res.status(StatusCodes.OK).json(dishes);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-      console.error(
-        "Unexpected error during restaurant availability update:",
-        error
-      );
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
-    }
-  }
-  async getRestaurantById(req: Request, res: Response) {
-    try {
-      const restaurantId = Number(req.params.id);
-      const restaurant = await this.restaurantService.getRestaurantById(restaurantId);
-      res.status(StatusCodes.OK).json(restaurant);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-        return;
-      }
-      console.error(
-        "Unexpected error during restaurant availability update:",
-        error
-      );
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
 }

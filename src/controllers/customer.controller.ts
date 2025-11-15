@@ -30,9 +30,8 @@ export class CustomerController {
       let filePath: string | undefined = undefined;
 
       if (req.file) {
-        filePath = `${process.env.BASE_URL}/upload/${req.uploadFolder}/${req.file.filename}`;
+        filePath = `${process.env.BASE_UPLOAD_URL}/${req.uploadFolder}/${req.user!.id}${req.file.filename}`;
       }
-      console.log(filePath);
       const userId = req.user!.id;
       const data = await this.customerService.updateCustomerProfileById(
         userId,
@@ -67,42 +66,6 @@ export class CustomerController {
         allergies
       );
       res.status(StatusCodes.OK).json(updatedAllergies);
-    } catch (error) {
-      handleError(error, res);
-    }
-  }
-
-  async createLocation(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const locationData = req.body;
-      const createdLocation = await this.locationService.createCustomerLocation(
-        userId,
-        locationData
-      );
-      res.status(StatusCodes.CREATED).json(createdLocation);
-    } catch (error) {
-      handleError(error, res);
-    }
-  }
-
-  async getLocationsByCustomerId(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const locations =
-        await this.locationService.getLocationsByCustomerId(userId);
-      res.status(StatusCodes.OK).json(locations);
-    } catch (error) {
-      handleError(error, res);
-    }
-  }
-
-  async getDefaultLocationByCustomerId(req: Request, res: Response) {
-    try {
-      const userId = req.user!.id;
-      const location =
-        await this.locationService.getDefaultLocationByCustomerId(userId);
-      res.status(StatusCodes.OK).json(location);
     } catch (error) {
       handleError(error, res);
     }

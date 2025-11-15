@@ -6,29 +6,67 @@ import { authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "./baseRouter";
 
 export class LocationRouter extends BaseRouter {
-  private controller: LocationController;
+  private locationController: LocationController;
 
   constructor() {
     super({
       prefix: "/location",
+      middleware: [authMiddleware],
     });
-    this.controller = new LocationController();
+    this.locationController = new LocationController();
     this.initializeRoutes();
   }
 
   private initializeRoutes(): void {
     this.router.post(
-      "/:id/setDefault",
-      this.controller.setDefault.bind(this.controller)
+      "/customer",
+      this.locationController.createCustomerLocation.bind(
+        this.locationController
+      )
     );
-    this.router.post("/", this.controller.createLocation.bind(this.controller));
     this.router.get(
       "/customer",
-      this.controller.getLocations.bind(this.controller)
+      this.locationController.getLocationsByCustomerId.bind(
+        this.locationController
+      )
+    );
+    this.router.get(
+      "/customer/default",
+      this.locationController.getDefaultLocationByCustomerId.bind(
+        this.locationController
+      )
     );
     this.router.patch(
+      "/customer/default",
+      this.locationController.updateDefaultLocationByCustomerId.bind(
+        this.locationController
+      )
+    );
+    this.router.get(
+      "/restaurant",
+      this.locationController.getRestaurantLocationByRestaurantId.bind(
+        this.locationController
+      )
+    );
+    this.router.post(
+      "/restaurant",
+      this.locationController.createRestaurantLocation.bind(
+        this.locationController
+      )
+    );
+    this.router.get(
+      "/driver",
+      this.locationController.getDriverLocationByDriverId.bind(
+        this.locationController
+      )
+    );
+    this.router.post(
+      "/driver",
+      this.locationController.createDriverLocation.bind(this.locationController)
+    );
+    this.router.put(
       "/:id",
-      this.controller.updateLocation.bind(this.controller)
+      this.locationController.updateLocationById.bind(this.locationController)
     );
   }
 

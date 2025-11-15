@@ -5,8 +5,14 @@ export type CreateLocationRequestDTO = Omit<
   "id" | "created_at" | "updated_at"
 >;
 
-export type CreateLocationResponseDTO = {
+export type CreateCustomerLocationResponseDTO = {
   customer_id: number;
+  created_at: Date;
+  updated_at: Date;
+} & Location;
+
+export type CreateRestaurantLocationResponseDTO = {
+  restaurant_id: number;
   created_at: Date;
   updated_at: Date;
 } & Location;

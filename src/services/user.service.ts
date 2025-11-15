@@ -31,7 +31,6 @@ import {
   signUpDriverSchema,
 } from "@/validators/auth.schema";
 
-
 export default class UserService {
   private userRepository: UserRepository;
   private emailService: EmailService;

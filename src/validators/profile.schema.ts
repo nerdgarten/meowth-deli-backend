@@ -40,6 +40,6 @@ export const driverUpdateProfileSchema = z.object({
     })
     .optional(),
   image: z.string().url({ message: "Invalid URL format" }).optional(),
-  vechicle: z.string().optional(),
-  license: z.string().optional(),
+  vehicle: z.string().optional(),
+  licence: z.string().optional(),
 });

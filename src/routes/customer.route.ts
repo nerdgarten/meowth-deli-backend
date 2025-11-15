@@ -38,25 +38,9 @@ export class CustomerRouter extends BaseRouter {
       "/allergy",
       this.customerController.getAllergy.bind(this.customerController)
     );
-    this.router.post(
+    this.router.put(
       "/allergy",
       this.customerController.updateAllergy.bind(this.customerController)
-    );
-    this.router.post(
-      "/location",
-      this.customerController.createLocation.bind(this.customerController)
-    );
-    this.router.get(
-      "/location",
-      this.customerController.getLocationsByCustomerId.bind(
-        this.customerController
-      )
-    );
-    this.router.get(
-      "/location/default",
-      this.customerController.getDefaultLocationByCustomerId.bind(
-        this.customerController
-      )
     );
   }
 }

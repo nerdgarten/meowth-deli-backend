@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { OrderStatus } from "@/generated/prisma/browser";
 import { DriverService } from "@/services/driver.service";
-import { AppError } from "@/types/error";
+import { handleError } from "@/utils/handleError";
 
 export class DriverController {
   private driverService: DriverService;
@@ -12,47 +11,56 @@ export class DriverController {
     this.driverService = new DriverService();
   }
 
-  async getDriverOrdersByStatus(req: Request, res: Response) {
+  async getDriverProfileById(req: Request, res: Response) {
     try {
-      const { id } = req.user!;
-      const { status } = req.query;
+      const userId = req.user!.id;
+      const profile = await this.driverService.getDriverProfileById(userId);
 
-      const orders = await this.driverService.getDriverOrdersByStatus(id, (status as OrderStatus) || undefined);
-      res.status(StatusCodes.OK).json(orders);
-    }
-    catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during get driver orders:", error);
-      
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      res.status(StatusCodes.OK).json(profile);
+    } catch (error: unknown) {
+      handleError(error, res);
     }
   }
 
-  async getDriverOrderById(req: Request, res: Response) {
+  async updateDriverProfileById(req: Request, res: Response) {
     try {
-      const { id } = req.user!;
-      const order_id = req.params.id;
+      let filePath: string | undefined = undefined;
 
-      const orders = await this.driverService.getDriverOrderById(id, Number(order_id));
-      res.status(StatusCodes.OK).json(orders);
+      if (req.file) {
+        filePath = `${process.env.BASE_UPLOAD_URL}/${req.uploadFolder}/${req.user!.id}${req.file.filename}`;
+      }
+      const userId = req.user!.id;
+      const data = await this.driverService.updateDriverProfileById(userId, {
+        ...req.body,
+        image: filePath,
+      });
+
+      res.status(StatusCodes.OK).json(data);
+    } catch (error: unknown) {
+      handleError(error, res);
     }
-    catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
+  }
 
+  async updateDriverAvailability(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { is_available } = req.body;
+
+      if (!userId) {
+        res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ message: "User not authenticated" });
         return;
       }
-      console.error("Unexpected error during get driver order by id:", error);
-      
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+
+      const data = await this.driverService.updateDriverAvailabilityById(
+        userId,
+        is_available
+      );
+
+      res.status(StatusCodes.OK).json(data);
+    } catch (error: unknown) {
+      handleError(error, res);
     }
   }
 }

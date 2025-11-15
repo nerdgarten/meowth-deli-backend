@@ -7,4 +7,4 @@ export type UpdateDriverProfileRequestDTO = Pick<
   "firstname" | "lastname" | "tel" | "image" | "licence" | "vehicle"
 >;
 
-export type GetRestaurantResponseDTO = IDriver;
+export type GetDriverResponseDTO = IDriver;

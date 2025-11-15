@@ -2,8 +2,6 @@ import { Prisma } from "@/generated/prisma/browser";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
 
-// import { OrderWhereClause } from "@/types/order/order";
-
 export default class DriverRepository {
   async getDrivers() {
     return prisma.driver.findMany({
@@ -17,15 +15,11 @@ export default class DriverRepository {
     });
   }
 
-  // async getDriverOrdersByStatus(status: VerificationStatus) {
-  //   return prisma.order.findMany({
-  //     where: {
-  //       driver: {
-  //         verification_status: status,
-  //       },
-  //     },
-  //   });
-  // }
+  async getDriverByStatus(status: VerificationStatus) {
+    return prisma.driver.findMany({
+      where: { verification_status: status },
+    });
+  }
 
   async updateDriverProfileById(
     driverId: number,
@@ -34,6 +28,13 @@ export default class DriverRepository {
     return prisma.driver.update({
       where: { id: driverId },
       data: data,
+    });
+  }
+
+  async updateDriverAvailabilityById(id: number, is_available: boolean) {
+    return prisma.driver.update({
+      where: { id },
+      data: { is_available },
     });
   }
 }

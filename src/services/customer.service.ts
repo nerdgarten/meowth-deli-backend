@@ -20,38 +20,38 @@ export default class CustomerService {
   }
 
   async getCustomers(): Promise<GetCustomerResponseDTO[]> {
-    const data = await this.customerRepository.getCustomers();
-    return data.map((customer) => ({ ...customer }) as GetCustomerResponseDTO);
+    return await this.customerRepository.getCustomers();
   }
 
   async getCustomerProfileById(userId: number) {
-    const profile =
-      await this.customerRepository.getCustomerProfileById(userId);
-    if (!profile) {
+    const data = await this.customerRepository.getCustomerProfileById(userId);
+    if (!data) {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
     }
 
-    return profile;
+    return data;
   }
 
   async updateCustomerProfileById(
     userId: number,
     body: UpdateCustomerProfileRequestDTO
   ) {
-    const data = customerUpdateProfileSchema.parse(body);
-    const updatedProfile =
-      await this.customerRepository.updateCustomerProfileById(userId, data);
-    if (!updatedProfile) {
+    const dto = customerUpdateProfileSchema.parse(body);
+    const data = await this.customerRepository.updateCustomerProfileById(
+      userId,
+      dto
+    );
+    if (!data) {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
     }
 
-    return updatedProfile;
+    return data;
   }
 
   async getAllergies(userId: number): Promise<Allergy[]> {
     const result = await this.customerRepository.getAllergies(userId);
     if (!result) {
-      return [];
+      throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
     }
     return result.allergy ?? [];
   }
@@ -61,8 +61,13 @@ export default class CustomerService {
     allergies: Allergy[]
   ): Promise<Allergy[]> {
     const validAllergies = allergyUpdateSchema.parse({ allergies }).allergies;
-    return (
-      await this.customerRepository.updateAllergies(userId, validAllergies)
-    ).allergy;
+    const data = await this.customerRepository.updateAllergies(
+      userId,
+      validAllergies
+    );
+    if (!data) {
+      throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
+    }
+    return data.allergy;
   }
 }
