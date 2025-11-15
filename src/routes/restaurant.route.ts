@@ -13,6 +13,21 @@ export class RestaurantRouter extends BaseRouter {
   }
 
   private setUpRoutes() {
+    /**
+     * @swagger
+     * /restaurant:
+     *   get:
+     *     summary: Get restaurants by status
+     *     tags: [Restaurant]
+     *     parameters:
+     *       - in: query
+     *         name: status
+     *         schema:
+     *           type: string
+     *     responses:
+     *       200:
+     *         description: List of restaurants
+     */
     this.router.get(
       "/",
       this.restaurantController.getRestaurantsByStatus.bind(
@@ -20,6 +35,27 @@ export class RestaurantRouter extends BaseRouter {
       )
     );
     
+    /**
+     * @swagger
+     * /restaurant/availability:
+     *   patch:
+     *     summary: Update restaurant availability
+     *     tags: [Restaurant]
+     *     security:
+     *       - cookieAuth: []
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               available:
+     *                 type: boolean
+     *     responses:
+     *       200:
+     *         description: Availability updated
+     */
     this.router.patch(
       "/availability",
       authMiddleware,
@@ -27,12 +63,44 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
+    /**
+     * @swagger
+     * /restaurant/{id}/dish:
+     *   get:
+     *     summary: Get dishes by restaurant ID
+     *     tags: [Restaurant]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *     responses:
+     *       200:
+     *         description: List of dishes
+     */
     this.router.get(
       "/:id/dish",
       this.restaurantController.getDishesByRestaurantId.bind(
         this.restaurantController
       )
     );
+    /**
+     * @swagger
+     * /restaurant/{id}:
+     *   get:
+     *     summary: Get restaurant by ID
+     *     tags: [Restaurant]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *     responses:
+     *       200:
+     *         description: Restaurant details
+     */
     this.router.get(
       "/:id",
       this.restaurantController.getRestaurantById.bind(

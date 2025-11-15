@@ -2,12 +2,12 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import AdminService from "@/services/admin.service";
-import { FilePaginationQuery } from "@/types/file/file";
 import {
   AdminVerificationRequest,
   AdminVerificationQuery,
 } from "@/types/admin/verification";
 import { AppError } from "@/types/error";
+import { FilePaginationQuery } from "@/types/file/file";
 
 export class AdminController {
   private adminService: AdminService;
@@ -251,6 +251,31 @@ export class AdminController {
       }
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         success: false,
+        message: "Internal server error",
+      });
+    }
+  }
+
+  async deleteUser(req: Request, res: Response) {
+    try {
+      const userId = Number(req.params.id);
+      if(isNaN(userId)) {
+        res.status(StatusCodes.BAD_REQUEST).json({
+          success: false,
+          message: "UserId is invalid",
+        });
+        return;
+      }
+      await this.adminService.deleteUser(userId);
+    } catch(error: unknown) {
+      if(error instanceof AppError) {
+        res.status(error.statusCode).json({
+          message: error.message,
+        });
+        return ;
+      }
+      console.error(error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
         message: "Internal server error",
       });
     }

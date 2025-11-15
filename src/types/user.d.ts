@@ -1,10 +1,4 @@
 import { z } from "zod";
-import { 
-  Role, 
-  OrderStatus, 
-  PaymentType, 
-  VerificationStatus 
-} from "@prisma/client";
 
 // Base User Interfaces
 export interface IBaseUser {

@@ -1,4 +1,3 @@
-import { Prisma, VerificationStatus } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
 import { ResetToken } from "@/types/auth/token";
 export default class ResetTokenRepository {

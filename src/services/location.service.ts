@@ -1,8 +1,9 @@
 import { StatusCodes } from "http-status-codes";
+
+import { Prisma, type Location } from "@/generated/prisma/client";
 import LocationRepository from "@/repositories/location.repository";
 import { AppError } from "@/types/error";
 import { ILocation, LocationCreateBody } from "@/types/location";
-import { Prisma, type Location } from "@/generated/prisma/client";
 
 export default class LocationService {
   private locationRepository: LocationRepository;

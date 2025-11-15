@@ -54,4 +54,15 @@ export default class AdminRepository {
       include: this.defaultOptions.include,
     });
   }
+
+  async deleteUser(userId: number) {
+    return prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        is_deleted: true,
+      }
+    });
+  }
 }

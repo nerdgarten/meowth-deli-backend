@@ -1,5 +1,5 @@
-import { prisma } from "@/libs/prisma";
 import { Prisma, type Location } from "@/generated/prisma/client";
+import { prisma } from "@/libs/prisma";
 import { ILocation } from "@/types/location";
 
 export default class LocationRepository {

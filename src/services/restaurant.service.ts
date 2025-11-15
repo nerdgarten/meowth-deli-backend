@@ -4,7 +4,6 @@ import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
-import { IRestaurant } from "@/types/user";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;

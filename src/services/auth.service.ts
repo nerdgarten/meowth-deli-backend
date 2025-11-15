@@ -1,8 +1,11 @@
-import bcrypt from "bcrypt";
 import crypto from "crypto";
+
+import bcrypt from "bcrypt";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 
+import emailConfig from "@/config/email";
+import urlConfig from "@/config/url";
 import AuthRepository from "@/repositories/auth.repository";
 import ResetTokenRepository from "@/repositories/resettoken.repository";
 import {
@@ -14,9 +17,6 @@ import {
 } from "@/types/auth/post";
 import { ResetToken } from "@/types/auth/token";
 import { IEmail } from "@/types/email/email";
-import urlConfig from "@/config/url";
-import emailConfig from "@/config/email";
-
 import { AppError } from "@/types/error";
 import { Role } from "@/types/role";
 import { signJwt } from "@/utils/jwt";

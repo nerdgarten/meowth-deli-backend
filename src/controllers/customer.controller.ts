@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { ICreateOrderRequest } from "@/types/user";
+import { OrderStatus} from "@/generated/prisma/client";
 import CustomerService from "@/services/customer.service";
 import { AppError } from "@/types/error";
-import { OrderStatus} from "@/generated/prisma/client";
 
 export class CustomerController {
   private customerService: CustomerService;

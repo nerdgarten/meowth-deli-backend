@@ -1,14 +1,16 @@
+import fs from "fs";
+import path from "path";
+
 import { StatusCodes } from "http-status-codes";
+import { parse } from "yaml";
 
 import { VerificationStatus } from "@/generated/prisma/client";
 import AdminRepository from "@/repositories/admin.repository";
 import { AppError } from "@/types/error";
-import fs from "fs";
-import { parse } from "yaml";
 import { FileManagement } from "@/types/file/file";
 import { FileStatus } from "@/types/file/file";
 import { FilePaginationQuery } from "@/types/file/file";
-import path from "path";
+
 export default class AdminService {
   private adminRepository: AdminRepository;
 
@@ -160,5 +162,9 @@ export default class AdminService {
         File.filename
       ),
     };
+  }
+
+  async deleteUser(userId: number) {
+    await this.adminRepository.deleteUser(userId);
   }
 }
