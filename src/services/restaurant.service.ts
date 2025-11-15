@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 
-import { VerificationStatus } from "@/generated/prisma/enums";
+import { VerificationStatus, OrderStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
 import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
@@ -44,6 +44,37 @@ export default class RestaurantService {
 
     return updatedRestaurant;
   }
+
+  async getRestaurantOrders(userId: number, status?: OrderStatus) {
+    const userRestaurant = await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
+    
+    const orders = await this.restaurantRepository.getOrdersByRestaurantId(userRestaurant.id, status);
+    
+    return orders;
+  }
+
+  async updateOrderStatus(userId: number, orderId: number, status: OrderStatus) {
+    const userRestaurant = await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
+    
+    const order = await this.restaurantRepository.findOrderById(orderId);
+    if (!order || !order.orderDishes.some(od => od.dish.restaurant_id === userRestaurant.id)) {
+      throw new AppError("Order not found or doesn't belong to this restaurant", StatusCodes.NOT_FOUND);
+    }
+    
+    const allowedStatuses: OrderStatus[] = [OrderStatus.preparing, OrderStatus.rejected];
+    if (!allowedStatuses.includes(status)) {
+      throw new AppError("Invalid status. Restaurant can only set status to 'preparing' or 'rejected'", StatusCodes.BAD_REQUEST);
+    }
+    
+    if (order.status !== OrderStatus.pending) {
+      throw new AppError("Order status can only be updated when it's in 'pending' state", StatusCodes.BAD_REQUEST);
+    }
+    
+    const updatedOrder = await this.restaurantRepository.updateOrderStatus(orderId, status);
+    
+    return updatedOrder;
+  }
+
   async getDishesByRestaurantId(restaurantId: number) {
     if(!restaurantId || isNaN(restaurantId)) {
       throw new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST);

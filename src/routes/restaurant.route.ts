@@ -6,8 +6,8 @@ export class RestaurantRouter extends BaseRouter {
   private restaurantController: RestaurantController;
 
   constructor() {
-    super({ prefix: "/restaurant" });
-
+    super({ prefix: "/restaurant" , middleware: [authMiddleware]});
+     
     this.restaurantController = new RestaurantController();
     this.setUpRoutes();
   }
@@ -58,7 +58,6 @@ export class RestaurantRouter extends BaseRouter {
      */
     this.router.patch(
       "/availability",
-      authMiddleware,
       this.restaurantController.updateRestaurantAvailability.bind(
         this.restaurantController
       )
@@ -79,6 +78,15 @@ export class RestaurantRouter extends BaseRouter {
      *       200:
      *         description: List of dishes
      */
+    this.router.get(
+      "/orders",
+      this.restaurantController.getRestaurantOrders.bind(this.restaurantController)
+    );
+
+    this.router.patch(
+      "/orders/:orderId/status",
+      this.restaurantController.updateOrderStatus.bind(this.restaurantController)
+    );
     this.router.get(
       "/:id/dish",
       this.restaurantController.getDishesByRestaurantId.bind(

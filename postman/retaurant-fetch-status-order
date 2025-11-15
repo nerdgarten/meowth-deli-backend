@@ -1,0 +1,43 @@
+{
+	"info": {
+		"_postman_id": "110c2388-f222-4d97-90e1-7522e9250187",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "47973470",
+		"_collection_link": "https://poohmy-s-team.postman.co/workspace/Poohmy's-Workspace~69aa68a8-7839-42da-813f-958f0f1bf516/collection/47973470-110c2388-f222-4d97-90e1-7522e9250187?action=share&source=collection_link&creator=47973470"
+	},
+	"item": [
+		{
+			"name": "FetchAllOrder",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "FetchOrdersWithStatus",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "ChangeOrderStatus",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "RejectedOrder",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
