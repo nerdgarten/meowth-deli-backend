@@ -1,9 +1,19 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { OrderStatus } from "@/generated/prisma/browser";
 import { DriverService } from "@/services/driver.service";
+import { handleError } from "@/utils/handleError";
+import path from "path";
 import { AppError } from "@/types/error";
+import crypto from "crypto";
+import { cwd } from "process";
+import {
+  uploadManageFilesStatus,
+  updateFileStatus,
+  resultingFilePath,
+  resultingUploadPath,
+  resultingManagePath,
+} from "@/utils/fileConfig";
 
 export class DriverController {
   private driverService: DriverService;
@@ -12,47 +22,83 @@ export class DriverController {
     this.driverService = new DriverService();
   }
 
-  async getDriverOrdersByStatus(req: Request, res: Response) {
+  async getDriverProfileById(req: Request, res: Response) {
     try {
-      const { id } = req.user!;
-      const { status } = req.query;
+      const userId = req.user!.id;
+      const profile = await this.driverService.getDriverProfileById(userId);
 
-      const orders = await this.driverService.getDriverOrdersByStatus(id, (status as OrderStatus) || undefined);
-      res.status(StatusCodes.OK).json(orders);
-    }
-    catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during get driver orders:", error);
-      
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      res.status(StatusCodes.OK).json(profile);
+    } catch (error: unknown) {
+      handleError(error, res);
     }
   }
 
-  async getDriverOrderById(req: Request, res: Response) {
+  async updateDriverProfileById(req: Request, res: Response) {
     try {
-      const { id } = req.user!;
-      const order_id = req.params.id;
+      let filePath: string | undefined = undefined;
+      if (req.file) {
+        filePath = resultingFilePath(req);
+      }
+      const userId = req.user!.id;
+      const data = await this.driverService.updateDriverProfileById(userId, {
+        ...req.body,
+        image: filePath,
+      });
 
-      const orders = await this.driverService.getDriverOrderById(id, Number(order_id));
-      res.status(StatusCodes.OK).json(orders);
+      res.status(StatusCodes.OK).json(data);
+    } catch (error: unknown) {
+      handleError(error, res);
     }
-    catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
+  }
 
+  async updateDriverAvailability(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { is_available } = req.body;
+
+      if (!userId) {
+        res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ message: "User not authenticated" });
         return;
       }
-      console.error("Unexpected error during get driver order by id:", error);
-      
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
+
+      const data = await this.driverService.updateDriverAvailabilityById(
+        userId,
+        is_available
+      );
+
+      res.status(StatusCodes.OK).json(data);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async uploadCertificateFile(req: Request, res: Response) {
+    try {
+      if (!req.file)
+        throw new AppError("No file uploaded", StatusCodes.BAD_REQUEST);
+      const filePath = resultingFilePath(req);
+      const managePath = resultingManagePath(req);
+      const uploadPath = resultingUploadPath(req);
+
+      updateFileStatus(uploadPath, {
+        id: crypto.randomBytes(8).toString("hex"), // generates a random 32-character hex string
+        filename: filePath,
+        uploadedAt: new Date().toISOString(),
+        status: "pending",
       });
+      uploadManageFilesStatus(
+        managePath,
+        req.user!.id.toString(),
+        "no",
+        path.join(uploadPath, "status.yaml")
+      );
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "File uploaded successfully", filePath });
+    } catch (error: unknown) {
+      handleError(error, res);
     }
   }
 }

@@ -3,7 +3,11 @@ import { StatusCodes } from "http-status-codes";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
 import { AppError } from "@/types/error";
-import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
+import {
+  GetRestaurantResponseDTO,
+  UpdateRestaurantProfileRequestDTO,
+} from "@/types/dto/restaurant";
+import { restaurantUpdateProfileSchema } from "@/validators/profile.schema";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
@@ -12,53 +16,67 @@ export default class RestaurantService {
     this.restaurantRepository = new RestaurantRepository();
   }
 
-  async getRestaurantsByStatus(
-    status: VerificationStatus | undefined,
-    limit: number,
-    offset: number
-  ) {
-    if (status && !Object.values(VerificationStatus).includes(status)) {
-      throw new AppError("Invalid status value", StatusCodes.BAD_REQUEST);
-    }
-
-    const whereClause = status ? { verification_status: status } : {};
-
-    const restaurants = await this.restaurantRepository.findRestaurantsByStatus(
-      whereClause,
-      limit,
-      offset
-    );
-
-    return restaurants;
+  async getRestaurants(): Promise<GetRestaurantResponseDTO[]> {
+    return this.restaurantRepository.getRestaurants();
   }
 
-  async updateRestaurantAvailability(userId: number, is_available: boolean) {
-    const userRestaurant =
-      await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
+  async getRestaurantProfileById(
+    id: number
+  ): Promise<GetRestaurantResponseDTO | null> {
+    const data = await this.restaurantRepository.getRestaurantProfileById(id);
+    if (!data) {
+      throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
+    }
+    return data;
+  }
 
-    const updatedRestaurant =
-      await this.restaurantRepository.updateRestaurantAvailability(
-        userRestaurant.id,
+  async getRestaurantFavoriteByUserId(
+    userId: number
+  ): Promise<GetRestaurantResponseDTO[]> {
+    const data =
+      await this.restaurantRepository.getFavoriteRestaurantByUserId(userId);
+    if (!data) {
+      throw new AppError(
+        "Favorite restaurants not found",
+        StatusCodes.NOT_FOUND
+      );
+    }
+    return data;
+  }
+
+  async getRestaurantsByStatus(
+    status: VerificationStatus
+  ): Promise<GetRestaurantResponseDTO[]> {
+    const data = await this.restaurantRepository.getRestaurantsByStatus(status);
+    return data;
+  }
+
+  async updateRestaurnatProfileById(
+    restaurantId: number,
+    body: UpdateRestaurantProfileRequestDTO
+  ): Promise<GetRestaurantResponseDTO> {
+    const dto = restaurantUpdateProfileSchema.parse(body);
+    const data = await this.restaurantRepository.updateRestaurnatProfileById(
+      restaurantId,
+      dto
+    );
+    if (!data) {
+      throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
+    }
+
+    return data;
+  }
+
+  async updateRestaurantAvailabilityById(
+    restaurantId: number,
+    is_available: boolean
+  ): Promise<GetRestaurantResponseDTO> {
+    const updatedProfile =
+      await this.restaurantRepository.updateRestaurantAvailabilityById(
+        restaurantId,
         is_available
       );
 
-    return updatedRestaurant;
-  }
-  async getDishesByRestaurantId(restaurantId: number) {
-    if(!restaurantId || isNaN(restaurantId)) {
-      throw new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST);
-    }
-    const dishes = await this.restaurantRepository.findDishesByRestaurantId(restaurantId);
-    return dishes;
-  }
-  async getRestaurantById(restaurantId: number) {
-    if(!restaurantId || isNaN(restaurantId)) {
-      throw new AppError("Invalid restaurant ID", StatusCodes.BAD_REQUEST);
-    }
-    const restaurant = await this.restaurantRepository.findRestaurantById(restaurantId);
-    if(!restaurant) {
-      throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
-    }
-    return restaurant;
+    return updatedProfile;
   }
 }

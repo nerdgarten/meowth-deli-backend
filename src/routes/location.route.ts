@@ -1,17 +1,19 @@
 import { Router } from "express";
 
 import { LocationController } from "@/controllers/location.controller";
+import { authMiddleware } from "@/middlewares/auth.middleware";
 
 import { BaseRouter } from "./baseRouter";
 
 export class LocationRouter extends BaseRouter {
-  private readonly controller: LocationController;
+  private locationController: LocationController;
 
   constructor() {
     super({
       prefix: "/location",
+      middleware: [authMiddleware],
     });
-    this.controller = new LocationController();
+    this.locationController = new LocationController();
     this.initializeRoutes();
   }
 
@@ -33,46 +35,22 @@ export class LocationRouter extends BaseRouter {
      *         description: Default location set
      */
     this.router.post(
-      "/:id/setDefault",
-      this.controller.setDefault.bind(this.controller)
+      "/customer",
+      this.locationController.createCustomerLocation.bind(
+        this.locationController
+      )
     );
-    /**
-     * @swagger
-     * /location:
-     *   post:
-     *     summary: Create location
-     *     tags: [Location]
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               address:
-     *                 type: string
-     *               latitude:
-     *                 type: number
-     *               longitude:
-     *                 type: number
-     *     responses:
-     *       201:
-     *         description: Location created
-     */
-    this.router.post("/", this.controller.createLocation.bind(this.controller));
-    /**
-     * @swagger
-     * /location/customer:
-     *   get:
-     *     summary: Get customer locations
-     *     tags: [Location]
-     *     responses:
-     *       200:
-     *         description: List of locations
-     */
     this.router.get(
       "/customer",
-      this.controller.getLocations.bind(this.controller)
+      this.locationController.getLocationsByCustomerId.bind(
+        this.locationController
+      )
+    );
+    this.router.get(
+      "/customer/default",
+      this.locationController.getDefaultLocationByCustomerId.bind(
+        this.locationController
+      )
     );
     /**
      * @swagger
@@ -104,8 +82,36 @@ export class LocationRouter extends BaseRouter {
      *         description: Location updated
      */
     this.router.patch(
+      "/customer/default",
+      this.locationController.updateDefaultLocationByCustomerId.bind(
+        this.locationController
+      )
+    );
+    this.router.get(
+      "/restaurant",
+      this.locationController.getRestaurantLocationByRestaurantId.bind(
+        this.locationController
+      )
+    );
+    this.router.post(
+      "/restaurant",
+      this.locationController.createRestaurantLocation.bind(
+        this.locationController
+      )
+    );
+    this.router.get(
+      "/driver",
+      this.locationController.getDriverLocationByDriverId.bind(
+        this.locationController
+      )
+    );
+    this.router.post(
+      "/driver",
+      this.locationController.createDriverLocation.bind(this.locationController)
+    );
+    this.router.put(
       "/:id",
-      this.controller.updateLocation.bind(this.controller)
+      this.locationController.updateLocationById.bind(this.locationController)
     );
   }
 

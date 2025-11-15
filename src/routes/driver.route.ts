@@ -1,14 +1,23 @@
 import { DriverController } from "@/controllers/driver.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { Role } from "@/types/role";
 
 import { BaseRouter } from "./baseRouter";
-
+import {
+  profilePictureConfig,
+  certificateFileConfig,
+} from "@/utils/fileConfig";
+import { fileMiddleware } from "@/middlewares/file.middleware";
+import { roleMiddleware } from "@/middlewares/role.middleware";
 
 export class DriverRouter extends BaseRouter {
   private readonly driverController: DriverController;
 
   constructor() {
-    super({ prefix: "/driver", middleware: [authMiddleware] });
+    super({
+      prefix: "/driver",
+      middleware: [authMiddleware],
+    });
 
     this.driverController = new DriverController();
     this.setUpRoutes();
@@ -33,31 +42,23 @@ export class DriverRouter extends BaseRouter {
      *         description: List of orders
      */
     this.router.get(
-      "/orders",
-      this.driverController.getDriverOrdersByStatus.bind(this.driverController),
+      "/profile",
+      this.driverController.getDriverProfileById.bind(this.driverController)
     );
-
-    /**
-     * @swagger
-     * /driver/orders/{id}:
-     *   get:
-     *     summary: Get driver order by ID
-     *     tags: [Driver]
-     *     security:
-     *       - cookieAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: Order details
-     */
-    this.router.get(
-      "/orders/:id",
-      this.driverController.getDriverOrderById.bind(this.driverController),
+    this.router.patch(
+      "/profile",
+      fileMiddleware(profilePictureConfig),
+      this.driverController.updateDriverProfileById.bind(this.driverController)
+    );
+    this.router.patch(
+      "/availability",
+      this.driverController.updateDriverAvailability.bind(this.driverController)
+    );
+    this.router.post(
+      "/upload",
+      roleMiddleware(Role.driver),
+      fileMiddleware(certificateFileConfig),
+      this.driverController.uploadCertificateFile.bind(this.driverController)
     );
   }
 }

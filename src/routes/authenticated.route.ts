@@ -1,5 +1,6 @@
 import { AuthenticatedController } from "@/controllers/authenticated.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { roleMiddleware } from "@/middlewares/role.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
 
 export class AuthenticateRouter extends BaseRouter {
@@ -7,7 +8,7 @@ export class AuthenticateRouter extends BaseRouter {
 
   constructor() {
     super({
-      prefix: "/authenticated",
+      prefix: "/authenticate",
       middleware: [authMiddleware],
     });
 
@@ -18,7 +19,7 @@ export class AuthenticateRouter extends BaseRouter {
   private setUpRoutes() {
     /**
      * @swagger
-     * /authenticated/authenticatedAs:
+     * /authenticate:
      *   get:
      *     summary: Get authenticated user info
      *     tags: [Authenticated]
@@ -29,7 +30,7 @@ export class AuthenticateRouter extends BaseRouter {
      *         description: User info
      */
     this.router.get(
-      "/authenticatedAs",
+      "/",
       this.authenticatedController.authenticatedAs.bind(
         this.authenticatedController
       )
@@ -37,7 +38,7 @@ export class AuthenticateRouter extends BaseRouter {
 
     /**
      * @swagger
-     * /authenticated/logout:
+     * /authenticate/logout:
      *   post:
      *     summary: Logout user
      *     tags: [Authenticated]

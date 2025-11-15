@@ -1,34 +1,52 @@
+import { Prisma } from "@/generated/prisma/browser";
+import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
-import { RestaurantWhereClause } from "@/types/restaurant/restaurant";
 
 export default class RestaurantRepository {
-  async findRestaurantsByStatus(
-    whereClause: RestaurantWhereClause,
-    limit: number,
-    offset: number
-  ) {
+  async getRestaurants() {
     return prisma.restaurant.findMany({
-      where: whereClause,
-      take: limit,
-      skip: offset,
+      orderBy: { id: "desc" },
     });
   }
 
-  async findRestaurantById(id: number) {
+  async getRestaurantProfileById(id: number) {
     return prisma.restaurant.findUnique({
       where: { id },
     });
   }
 
-  async updateRestaurantAvailability(id: number, is_available: boolean) {
+  async getFavoriteRestaurantByUserId(userId: number) {
+    return prisma.restaurant.findMany({
+      where: {
+        favorites: {
+          some: {
+            customer_id: userId,
+          },
+        },
+      },
+    });
+  }
+
+  async getRestaurantsByStatus(status: VerificationStatus) {
+    return prisma.restaurant.findMany({
+      where: { verification_status: status },
+    });
+  }
+
+  async updateRestaurnatProfileById(
+    id: number,
+    data: Prisma.RestaurantUpdateInput
+  ) {
+    return prisma.restaurant.update({
+      where: { id },
+      data: data,
+    });
+  }
+
+  async updateRestaurantAvailabilityById(id: number, is_available: boolean) {
     return prisma.restaurant.update({
       where: { id },
       data: { is_available },
-    });
-  }
-  async findDishesByRestaurantId(restaurantId: number) {
-    return prisma.dish.findMany({
-      where: { restaurant_id: restaurantId },
     });
   }
 }

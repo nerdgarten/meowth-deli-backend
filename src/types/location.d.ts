@@ -1,7 +1,8 @@
 export interface ILocation {
   id?: number;
-  customer_id: number;
-  address: string;
+  latitude: number;
+  longitude: number;
+  address?: string | null;
   is_default?: boolean;
 }
 
