@@ -4,6 +4,8 @@ import { StatusCodes } from "http-status-codes";
 import CustomerService from "@/services/customer.service";
 import LocationService from "@/services/location.service";
 import { handleError } from "@/utils/handleError";
+import { AppError } from "@/types/error";
+import { resultingFilePath } from "@/utils/fileConfig";
 
 export class CustomerController {
   private customerService: CustomerService;
@@ -30,7 +32,7 @@ export class CustomerController {
       let filePath: string | undefined = undefined;
 
       if (req.file) {
-        filePath = `${process.env.BASE_UPLOAD_URL}/${req.uploadFolder}/${req.user!.id}${req.file.filename}`;
+        filePath = resultingFilePath(req);
       }
       const userId = req.user!.id;
       const data = await this.customerService.updateCustomerProfileById(

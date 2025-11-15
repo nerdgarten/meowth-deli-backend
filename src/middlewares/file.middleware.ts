@@ -24,7 +24,11 @@ export function fileMiddleware(config: UploadConfig) {
       if (!req.user || !req.user.id) {
         return callback(new Error("User ID is missing"), "");
       }
-      const userFolder = path.join(uploadPath, String(req.user.id));
+      const userFolder = path.join(
+        uploadPath,
+        req.user.role,
+        String(req.user.id)
+      );
       if (!fs.existsSync(userFolder)) {
         fs.mkdirSync(userFolder, { recursive: true });
       }

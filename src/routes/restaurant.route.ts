@@ -2,7 +2,12 @@ import { RestaurantController } from "@/controllers/restaurant.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
 import { fileMiddleware } from "@/middlewares/file.middleware";
-import { restaurantBannerConfig } from "@/utils/fileConfig";
+import {
+  restaurantBannerConfig,
+  certificateFileConfig,
+} from "@/utils/fileConfig";
+import { roleMiddleware } from "@/middlewares/role.middleware";
+import { Role } from "@/generated/prisma/browser";
 
 export class RestaurantRouter extends BaseRouter {
   private restaurantController: RestaurantController;
@@ -35,6 +40,14 @@ export class RestaurantRouter extends BaseRouter {
       "/availability",
       authMiddleware,
       this.restaurantController.updateRestaurantAvailability.bind(
+        this.restaurantController
+      )
+    );
+    this.router.post(
+      "/upload",
+      roleMiddleware(Role.restaurant),
+      fileMiddleware(certificateFileConfig),
+      this.restaurantController.uploadCertificateFile.bind(
         this.restaurantController
       )
     );

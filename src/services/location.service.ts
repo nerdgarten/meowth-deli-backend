@@ -11,16 +11,19 @@ import {
 import { AppError } from "@/types/error";
 import { locationBodySchema } from "@/validators/location.schema";
 import RestaurantRepository from "@/repositories/restaurant.repository";
+import DriverRepository from "@/repositories/driver.repository";
 
 export default class LocationService {
   private locationRepository: LocationRepository;
   private customerRepository: CustomerRepository;
   private restaurantRepository: RestaurantRepository;
+  private driverRepository: DriverRepository;
 
   constructor() {
     this.locationRepository = new LocationRepository();
     this.customerRepository = new CustomerRepository();
     this.restaurantRepository = new RestaurantRepository();
+    this.driverRepository = new DriverRepository();
   }
 
   async createCustomerLocation(
@@ -201,6 +204,10 @@ export default class LocationService {
     body: CreateLocationRequestDTO
   ): Promise<GetLocationResponseDTO> {
     const dto = locationBodySchema.parse(body);
+    const driver = await this.driverRepository.getDriverProfileById(driverId);
+    if (!driver) {
+      throw new AppError("Driver not found", StatusCodes.NOT_FOUND);
+    }
     const data = await this.locationRepository.createDriverLocation({
       driver: {
         connect: {

@@ -3,8 +3,12 @@ import { authMiddleware } from "@/middlewares/auth.middleware";
 import { Role } from "@/types/role";
 
 import { BaseRouter } from "./baseRouter";
-import { profilePictureConfig } from "@/utils/fileConfig";
+import {
+  profilePictureConfig,
+  certificateFileConfig,
+} from "@/utils/fileConfig";
 import { fileMiddleware } from "@/middlewares/file.middleware";
+import { roleMiddleware } from "@/middlewares/role.middleware";
 
 export class DriverRouter extends BaseRouter {
   private driverController: DriverController;
@@ -33,13 +37,11 @@ export class DriverRouter extends BaseRouter {
       "/availability",
       this.driverController.updateDriverAvailability.bind(this.driverController)
     );
-    // this.router.get(
-    //   "/orders",
-    //   this.driverController.getDriverOrdersByStatus.bind(this.driverController)
-    // );
-    // this.router.get(
-    //   "/orders/:id",
-    //   this.driverController.getDriverOrderById.bind(this.driverController)
-    // );
+    this.router.post(
+      "/upload",
+      roleMiddleware(Role.driver),
+      fileMiddleware(certificateFileConfig),
+      this.driverController.uploadCertificateFile.bind(this.driverController)
+    );
   }
 }

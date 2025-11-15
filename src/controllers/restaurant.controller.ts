@@ -1,9 +1,20 @@
+import crypto from "crypto";
+
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantService from "@/services/restaurant.service";
 import { handleError } from "@/utils/handleError";
+import {
+  uploadManageFilesStatus,
+  updateFileStatus,
+  resultingFilePath,
+  resultingUploadPath,
+  resultingManagePath,
+} from "@/utils/fileConfig";
+import path from "path";
+import { AppError } from "@/types/error";
+import { cwd } from "process";
 
 export class RestaurantController {
   private restaurantService: RestaurantService;
@@ -27,9 +38,8 @@ export class RestaurantController {
   async updateRestaurantProfile(req: Request, res: Response) {
     try {
       let filePath: string | undefined = undefined;
-
       if (req.file) {
-        filePath = `${process.env.BASE_UPLOAD_URL}/${req.uploadFolder}/${req.user!.id}${req.file.filename}`;
+        filePath = resultingFilePath(req);
       }
       const userId = req.user!.id;
       const data = await this.restaurantService.updateRestaurnatProfileById(
@@ -65,6 +75,34 @@ export class RestaurantController {
         );
 
       res.status(StatusCodes.OK).json(updatedRestaurant);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async uploadCertificateFile(req: Request, res: Response) {
+    try {
+      if (!req.file)
+        throw new AppError("No file uploaded", StatusCodes.BAD_REQUEST);
+      const filePath = resultingFilePath(req);
+      const managePath = resultingManagePath(req);
+      const uploadPath = resultingUploadPath(req);
+
+      updateFileStatus(uploadPath, {
+        id: crypto.randomBytes(8).toString("hex"), // generates a random 32-character hex string
+        filename: req.file.filename,
+        uploadedAt: new Date().toISOString(),
+        status: "pending",
+      });
+      uploadManageFilesStatus(
+        managePath,
+        req.user!.id.toString(),
+        "no",
+        path.join(uploadPath, "status.yaml")
+      );
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "File uploaded successfully", filePath });
     } catch (error: unknown) {
       handleError(error, res);
     }

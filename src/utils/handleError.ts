@@ -3,7 +3,11 @@ import { StatusCodes } from "http-status-codes";
 
 import { AppError } from "@/types/error";
 
-export function handleError(error: unknown, res: Response) {
+export function handleError(
+  error: unknown,
+  res: Response,
+  message: string = "An unexpected error occurred"
+) {
   console.error(error); // Log the full error for internal tracking
 
   if (error instanceof AppError) {
@@ -12,7 +16,7 @@ export function handleError(error: unknown, res: Response) {
     });
   } else {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "An unexpected error occurred",
+      message: message,
     });
   }
 }
