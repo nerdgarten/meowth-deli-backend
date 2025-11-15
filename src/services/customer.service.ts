@@ -1,8 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 
 import { Allergy, OrderStatus, VerificationStatus, type Order } from "@/generated/prisma/client";
-import { prisma  } from "@/libs/prisma";
-
+import { prisma } from "@/libs/prisma";
 import CustomerRepository from "@/repositories/customer.repository";
 import { AppError } from "@/types/error";
 import {
@@ -11,13 +10,10 @@ import {
   OrderStatusInfo,
   OrderDishWithRestaurant
 } from "@/types/order";
-
 import {
   ICustomer,
   ICreateOrderRequest,
   IOrderDishRepository,
-  IDriver,
-  IRestaurant,
 } from "@/types/user";
 
 export default class CustomerService {
@@ -113,7 +109,6 @@ export default class CustomerService {
       ...order,
       itemCount,
       subtotal,
-      // Group dishes by restaurant for better display
       dishesByRestaurant: this.groupDishesByRestaurant(order.orderDishes),
     };
   }

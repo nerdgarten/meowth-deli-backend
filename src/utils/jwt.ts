@@ -6,7 +6,7 @@ import { Role } from "@/types/role";
 export function signJwt(id: number, email: string, role: Role): string {
   const payload = { id, email, role };
 
-  const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+  const token = jwt.sign(payload, process.env.JWT_SECRET!, {
     expiresIn: "48h",
   });
   return token;
@@ -15,8 +15,8 @@ export function signJwt(id: number, email: string, role: Role): string {
 export function verifyJwt(token: string): IJwtData {
   const decoded = jwt.verify(
     token,
-    process.env.JWT_SECRET as string
-  ) as unknown;
+    process.env.JWT_SECRET!
+  ) as IJwtData;
 
-  return decoded as IJwtData;
+  return decoded;
 }

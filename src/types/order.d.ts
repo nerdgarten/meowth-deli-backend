@@ -1,4 +1,4 @@
-import { OrderStatus } from "@/generated/prisma/enums";
+import { Allergy, OrderStatus } from "@/generated/prisma/enums";
 
 export interface OrderStatusInfo {
   orderId: number;
@@ -43,7 +43,7 @@ export interface OrderDishWithRestaurant {
     name: string;
     detail: string | null; 
     price: number;
-    allergy: string | null;  
+    allergy: Allergy[];
     is_out_of_stock: boolean; 
     restaurant: {
       id: number;

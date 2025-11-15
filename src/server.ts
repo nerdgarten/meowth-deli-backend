@@ -1,5 +1,5 @@
-import "dotenv/config";
 import path from "path";
+import 'dotenv/config';
 
 import * as moduleAlias from "module-alias";
 if (process.env.NODE_ENV !== "development") {
