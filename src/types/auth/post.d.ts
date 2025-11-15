@@ -1,10 +1,3 @@
-import type {
-  IBaseUser,
-  ICustomer,
-  IDriver,
-  IRestaurant,
-} from "@/types/users/user";
-
 export type BaseSignUpBody = {
   email: string;
   password: string;

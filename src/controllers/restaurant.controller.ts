@@ -90,7 +90,7 @@ export class RestaurantController {
 
       updateFileStatus(uploadPath, {
         id: crypto.randomBytes(8).toString("hex"), // generates a random 32-character hex string
-        filename: req.file.filename,
+        filename: filePath,
         uploadedAt: new Date().toISOString(),
         status: "pending",
       });
