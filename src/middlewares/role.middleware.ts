@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+
 import { Role } from "@/types/role";
 
 export function roleMiddleware(...allowedRoles: Role[]) {

@@ -1,13 +1,19 @@
+import { StatusCodes } from "http-status-codes";
+
 import { Prisma } from "@/generated/prisma/client";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
 import { AppError } from "@/types/error";
-import { StatusCodes } from "http-status-codes";
 
 export default class RestaurantRepository {
   async getRestaurants() {
     try {
-      return prisma.restaurant.findMany({ orderBy: { id: "desc" } });
+      return prisma.restaurant.findMany({
+        include: {
+          location: true,
+        },
+        orderBy: { id: "desc" },
+      });
     } catch (err: unknown) {
       console.error("RestaurantRepository.getRestaurants error", err);
       throw new AppError(
@@ -19,7 +25,12 @@ export default class RestaurantRepository {
 
   async getRestaurantProfileById(id: number) {
     try {
-      return prisma.restaurant.findUnique({ where: { id } });
+      return prisma.restaurant.findUnique({
+        include: {
+          location: true,
+        },
+        where: { id },
+      });
     } catch (err: unknown) {
       console.error("RestaurantRepository.getRestaurantProfileById error", err);
       throw new AppError(
@@ -38,6 +49,9 @@ export default class RestaurantRepository {
           },
         },
       },
+      include: {
+        location: true,
+      },
     });
   }
 
@@ -45,6 +59,9 @@ export default class RestaurantRepository {
     try {
       return prisma.restaurant.findMany({
         where: { verification_status: status },
+        include: {
+          location: true,
+        },
       });
     } catch (err: unknown) {
       console.error("RestaurantRepository.getRestaurantsByStatus error", err);
@@ -60,7 +77,13 @@ export default class RestaurantRepository {
     data: Prisma.RestaurantUpdateInput
   ) {
     try {
-      return prisma.restaurant.update({ where: { id }, data: data });
+      return prisma.restaurant.update({
+        where: { id },
+        data: data,
+        include: {
+          location: true,
+        },
+      });
     } catch (err: unknown) {
       console.error(
         "RestaurantRepository.updateRestaurnatProfileById error",
@@ -77,6 +100,31 @@ export default class RestaurantRepository {
     return prisma.restaurant.update({
       where: { id },
       data: { is_available },
+      include: {
+        location: true,
+      },
     });
+  }
+
+  async updateFavoriteRestaurantByUserId(
+    userId: number,
+    restaurantId: number,
+    isFavorite: boolean
+  ) {
+    if (isFavorite) {
+      await prisma.favoriteRestaurant.create({
+        data: {
+          customer_id: userId,
+          restaurant_id: restaurantId,
+        },
+      });
+    } else {
+      await prisma.favoriteRestaurant.deleteMany({
+        where: {
+          customer_id: userId,
+          restaurant_id: restaurantId,
+        },
+      });
+    }
   }
 }

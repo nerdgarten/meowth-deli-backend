@@ -4,13 +4,13 @@ import { AdminRouter } from "@/routes/admin.route";
 import { AuthRouter } from "@/routes/auth.route";
 import { AuthenticateRouter } from "@/routes/authenticated.route";
 import { CustomerRouter } from "@/routes/customer.route";
-import { RestaurantRouter } from "@/routes/restaurant.route";
+import { DishRouter } from "@/routes/dish.route";
 import { DriverRouter } from "@/routes/driver.route";
 import { LocationRouter } from "@/routes/location.route";
-import { DishRouter } from "@/routes/dish.route";
+import { MapRouter } from "@/routes/map.route";
 import { OrderRouter } from "@/routes/order.route";
 // import { ReviewRouter } from "@/routes/review.route";
-import { MapRouter } from "@/routes/map.route";
+import { RestaurantRouter } from "@/routes/restaurant.route";
 import { TestRouter } from "@/routes/test.route";
 
 export class RouterManager {

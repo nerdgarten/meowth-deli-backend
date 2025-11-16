@@ -1,18 +1,18 @@
+import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+
+import { OrderStatus, Prisma } from "@/generated/prisma/client";
 import CustomerRepository from "@/repositories/customer.repository";
 import DriverRepository from "@/repositories/driver.repository";
 import LocationRepository from "@/repositories/location.repository";
 import OrderRespository from "@/repositories/order.respository";
 import RestaurantRepository from "@/repositories/restaurant.repository";
-
 import {
   CreateOrderRequestDTO,
   GetOrderResponseDTO,
   CreateOrderResponseDTO,
 } from "@/types/dto/order";
-import { CreateOrderRequestSchema } from "@/validators/order.schema";
-import { OrderStatus, Prisma } from "@/generated/prisma/client";
 import { AppError } from "@/types/error";
-import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
+import { CreateOrderRequestSchema } from "@/validators/order.schema";
 
 type RepositoryOrder = Prisma.OrderGetPayload<{
   include: {
@@ -22,7 +22,11 @@ type RepositoryOrder = Prisma.OrderGetPayload<{
       };
     };
     customer: true;
-    restaurant: true;
+    restaurant: {
+      include: {
+        location: true;
+      };
+    };
     driver: true;
     location: true;
   };
@@ -187,6 +191,7 @@ export default class OrderService {
         tel: order.restaurant.tel,
         detail: order.restaurant.detail,
         banner: order.restaurant.banner,
+        location: order.restaurant.location,
       },
       driver: order.driver
         ? {

@@ -1,13 +1,13 @@
 import { RestaurantController } from "@/controllers/restaurant.controller";
+import { Role } from "@/generated/prisma/browser";
 import { authMiddleware } from "@/middlewares/auth.middleware";
-import { BaseRouter } from "@/routes/baseRouter";
 import { fileMiddleware } from "@/middlewares/file.middleware";
+import { roleMiddleware } from "@/middlewares/role.middleware";
+import { BaseRouter } from "@/routes/baseRouter";
 import {
   restaurantBannerConfig,
   certificateFileConfig,
 } from "@/utils/fileConfig";
-import { roleMiddleware } from "@/middlewares/role.middleware";
-import { Role } from "@/generated/prisma/browser";
 
 export class RestaurantRouter extends BaseRouter {
   private restaurantController: RestaurantController;
@@ -48,12 +48,6 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
-    this.router.get(
-      "/:restaurantId",
-      this.restaurantController.getRestaurantProfileById.bind(
-        this.restaurantController
-      )
-    );
     this.router.patch(
       "/profile",
       authMiddleware,
@@ -62,7 +56,6 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
-
     /**
      * @swagger
      * /restaurant/availability:
@@ -97,6 +90,26 @@ export class RestaurantRouter extends BaseRouter {
       roleMiddleware(Role.restaurant),
       fileMiddleware(certificateFileConfig),
       this.restaurantController.uploadCertificateFile.bind(
+        this.restaurantController
+      )
+    );
+    this.router.get(
+      "/favorite",
+      authMiddleware,
+      this.restaurantController.getFavoriteRestaurantsByUserId.bind(
+        this.restaurantController
+      )
+    );
+    this.router.post(
+      "/favorite",
+      authMiddleware,
+      this.restaurantController.updateFavoriteRestaurantByUserId.bind(
+        this.restaurantController
+      )
+    );
+    this.router.get(
+      "/:restaurantId",
+      this.restaurantController.getRestaurantProfileById.bind(
         this.restaurantController
       )
     );

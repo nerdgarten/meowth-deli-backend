@@ -2,27 +2,30 @@ import { StatusCodes } from "http-status-codes";
 
 import { VerificationStatus } from "@/generated/prisma/enums";
 import RestaurantRepository from "@/repositories/restaurant.repository";
-import { AppError } from "@/types/error";
 import {
-  GetRestaurantResponseDTO,
+  IRestaurantProfile,
   UpdateRestaurantProfileRequestDTO,
 } from "@/types/dto/restaurant";
+import { AppError } from "@/types/error";
 import { restaurantUpdateProfileSchema } from "@/validators/profile.schema";
+import CustomerRepository from "@/repositories/customer.repository";
 
 export default class RestaurantService {
   private restaurantRepository: RestaurantRepository;
+  private customerRepository: CustomerRepository;
 
   constructor() {
     this.restaurantRepository = new RestaurantRepository();
+    this.customerRepository = new CustomerRepository();
   }
 
-  async getRestaurants(): Promise<GetRestaurantResponseDTO[]> {
+  async getRestaurants(): Promise<IRestaurantProfile[]> {
     return this.restaurantRepository.getRestaurants();
   }
 
   async getRestaurantProfileById(
     id: number
-  ): Promise<GetRestaurantResponseDTO | null> {
+  ): Promise<IRestaurantProfile | null> {
     const data = await this.restaurantRepository.getRestaurantProfileById(id);
     if (!data) {
       throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
@@ -30,9 +33,14 @@ export default class RestaurantService {
     return data;
   }
 
-  async getRestaurantFavoriteByUserId(
+  async getFavoriteRestaurantsByUserId(
     userId: number
-  ): Promise<GetRestaurantResponseDTO[]> {
+  ): Promise<IRestaurantProfile[]> {
+    const customer =
+      await this.customerRepository.getCustomerProfileById(userId);
+    if (!customer) {
+      throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
+    }
     const data =
       await this.restaurantRepository.getFavoriteRestaurantByUserId(userId);
     if (!data) {
@@ -46,7 +54,7 @@ export default class RestaurantService {
 
   async getRestaurantsByStatus(
     status: VerificationStatus
-  ): Promise<GetRestaurantResponseDTO[]> {
+  ): Promise<IRestaurantProfile[]> {
     const data = await this.restaurantRepository.getRestaurantsByStatus(status);
     return data;
   }
@@ -54,7 +62,7 @@ export default class RestaurantService {
   async updateRestaurnatProfileById(
     restaurantId: number,
     body: UpdateRestaurantProfileRequestDTO
-  ): Promise<GetRestaurantResponseDTO> {
+  ): Promise<IRestaurantProfile> {
     const dto = restaurantUpdateProfileSchema.parse(body);
     const data = await this.restaurantRepository.updateRestaurnatProfileById(
       restaurantId,
@@ -70,7 +78,7 @@ export default class RestaurantService {
   async updateRestaurantAvailabilityById(
     restaurantId: number,
     is_available: boolean
-  ): Promise<GetRestaurantResponseDTO> {
+  ): Promise<IRestaurantProfile> {
     const updatedProfile =
       await this.restaurantRepository.updateRestaurantAvailabilityById(
         restaurantId,
@@ -78,5 +86,29 @@ export default class RestaurantService {
       );
 
     return updatedProfile;
+  }
+
+  async updateFavoriteRestaurantByUserId(
+    userId: number,
+    favoriteRestaurantId: number,
+    isFavorite: boolean
+  ): Promise<void> {
+    const customer =
+      await this.customerRepository.getCustomerProfileById(userId);
+    if (!customer) {
+      throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
+    }
+    const restaurant =
+      await this.restaurantRepository.getRestaurantProfileById(
+        favoriteRestaurantId
+      );
+    if (!restaurant) {
+      throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
+    }
+    await this.restaurantRepository.updateFavoriteRestaurantByUserId(
+      userId,
+      favoriteRestaurantId,
+      isFavorite
+    );
   }
 }

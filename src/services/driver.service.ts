@@ -2,12 +2,12 @@ import { StatusCodes } from "http-status-codes";
 
 import { VerificationStatus } from "@/generated/prisma/enums";
 import DriverRepository from "@/repositories/driver.repository";
-import { AppError } from "@/types/error";
-import { driverUpdateProfileSchema } from "@/validators/profile.schema";
 import {
   GetDriverResponseDTO,
   UpdateDriverProfileRequestDTO,
 } from "@/types/dto/driver";
+import { AppError } from "@/types/error";
+import { driverUpdateProfileSchema } from "@/validators/profile.schema";
 
 export class DriverService {
   private driverRepository: DriverRepository;

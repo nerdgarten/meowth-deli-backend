@@ -3,8 +3,8 @@ import { StatusCodes } from "http-status-codes";
 
 import DishService from "@/services/dish.service";
 import { AppError } from "@/types/error";
-import { handleError } from "@/utils/handleError";
 import { resultingFilePath } from "@/utils/fileConfig";
+import { handleError } from "@/utils/handleError";
 
 export class DishController {
   private dishService: DishService;

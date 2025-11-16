@@ -2,13 +2,13 @@ import { StatusCodes } from "http-status-codes";
 
 import DishRepository from "@/repositories/dish.repository";
 import { IDish } from "@/types/dish/dish";
-import { AppError } from "@/types/error";
 import {
   CreateDishRequestDTO,
   CreateDishResponseDTO,
   GetDishResponseDTO,
   UpdateDishRequestDTO,
 } from "@/types/dto/dish";
+import { AppError } from "@/types/error";
 import { DishBodySchema, DishUpdateSchema } from "@/validators/dish.schema";
 
 export default class DishService {

@@ -3,17 +3,20 @@ import { StatusCodes } from "http-status-codes";
 
 import CustomerService from "@/services/customer.service";
 import LocationService from "@/services/location.service";
-import { handleError } from "@/utils/handleError";
 import { AppError } from "@/types/error";
 import { resultingFilePath } from "@/utils/fileConfig";
+import { handleError } from "@/utils/handleError";
+import RestaurantService from "@/services/restaurant.service";
 
 export class CustomerController {
   private customerService: CustomerService;
   private locationService: LocationService;
+  private restaurantService: RestaurantService;
 
   constructor() {
     this.customerService = new CustomerService();
     this.locationService = new LocationService();
+    this.restaurantService = new RestaurantService();
   }
 
   async getCustomerProfile(req: Request, res: Response) {

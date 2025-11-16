@@ -1,6 +1,7 @@
 import OrderService from "@/services/order.service";
-import type { Request, Response } from "express";
 import { handleError } from "@/utils/handleError";
+
+import type { Request, Response } from "express";
 
 export class OrderController {
   private orderService: OrderService;

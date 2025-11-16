@@ -1,9 +1,11 @@
+import { get } from "node:http";
+
+import { StatusCodes } from "http-status-codes";
+
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
 import { AppError } from "@/types/error";
 import { OrderCreateBody, OrderStatus, OrderDishBody } from "@/types/order";
-import { StatusCodes } from "http-status-codes";
-import { get } from "node:http";
 
 export default class OrderRespository {
   async getOrderById(orderId: number) {
@@ -16,7 +18,11 @@ export default class OrderRespository {
           },
         },
         customer: true,
-        restaurant: true,
+        restaurant: {
+          include: {
+            location: true,
+          },
+        },
         driver: true,
         location: true,
       },
@@ -33,7 +39,11 @@ export default class OrderRespository {
           },
         },
         customer: true,
-        restaurant: true,
+        restaurant: {
+          include: {
+            location: true,
+          },
+        },
         driver: true,
         location: true,
       },
@@ -51,7 +61,11 @@ export default class OrderRespository {
           },
         },
         customer: true,
-        restaurant: true,
+        restaurant: {
+          include: {
+            location: true,
+          },
+        },
         driver: true,
         location: true,
       },
@@ -69,7 +83,11 @@ export default class OrderRespository {
           },
         },
         customer: true,
-        restaurant: true,
+        restaurant: {
+          include: {
+            location: true,
+          },
+        },
         driver: true,
         location: true,
       },
