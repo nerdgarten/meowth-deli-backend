@@ -38,7 +38,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: "http://localhost:3030",
+        url: process.env.BASE_URL || "http://localhost:3030",
         description: "Development server",
       },
     ],

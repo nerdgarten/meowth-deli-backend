@@ -50,4 +50,20 @@ export default class UserRepository {
       },
     });
   }
+
+  async getUsersWithProfiles(role?: string, limit?: number, offset?: number) {
+    const whereClause: any = { is_deleted: false };
+    if (role) whereClause.role = role as any;
+    const take = typeof limit === "number" && limit > 0 ? limit : undefined;
+    const skip = typeof offset === "number" && offset >= 0 ? offset : undefined;
+    const data = await prisma.user.findMany({
+      where: whereClause,
+      include: { customer: true, driver: true, restaurant: true },
+      orderBy: { id: "asc" },
+      take,
+      skip,
+    });
+    const total = await prisma.user.count({ where: whereClause });
+    return { data, total };
+  }
 }
