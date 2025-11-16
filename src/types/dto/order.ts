@@ -16,14 +16,7 @@ export type UpdateOrderRequestDTO = Omit<
   "id" | "created_at" | "updated_at"
 >;
 
-export type GetOrderResponseDTO = Omit<
-  Order,
-  | "updated_at"
-  | "customer_id"
-  | "restaurant_id"
-  | "driver_id"
-  | "delivery_location_id"
-> & {
+export type GetOrderResponseDTO = Omit<Order, "updated_at"> & {
   customer: ICustomerProfile;
   restaurant: IRestaurantProfile;
   driver: IDriverProfile | null;

@@ -172,6 +172,10 @@ export default class OrderService {
   ): Omit<GetOrderResponseDTO, "total_amount"> {
     return {
       id: order.id,
+      customer_id: order.customer_id,
+      restaurant_id: order.restaurant_id,
+      driver_id: order.driver_id,
+      delivery_location_id: order.location.id,
       customer: {
         firstname: order.customer.firstname,
         lastname: order.customer.lastname,
