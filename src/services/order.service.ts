@@ -213,6 +213,7 @@ export default class OrderService {
           image: orderDish.dish.image,
         },
       })),
+      created_at: order.created_at,
     };
   }
 }

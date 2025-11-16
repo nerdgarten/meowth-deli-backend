@@ -18,7 +18,6 @@ export type UpdateOrderRequestDTO = Omit<
 
 export type GetOrderResponseDTO = Omit<
   Order,
-  | "created_at"
   | "updated_at"
   | "customer_id"
   | "restaurant_id"
