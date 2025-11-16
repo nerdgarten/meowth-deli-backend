@@ -39,20 +39,18 @@ export class RestaurantRouter extends BaseRouter {
      */
     this.router.get(
       "/",
-      authMiddleware,
       this.restaurantController.getRestaurants.bind(this.restaurantController)
-    );
-    this.router.get(
-      "/profile/:restaurantId",
-      authMiddleware,
-      this.restaurantController.getRestaurantProfileById.bind(
-        this.restaurantController
-      )
     );
     this.router.get(
       "/profile",
       authMiddleware,
       this.restaurantController.getRestaurantProfile.bind(
+        this.restaurantController
+      )
+    );
+    this.router.get(
+      "/:restaurantId",
+      this.restaurantController.getRestaurantProfileById.bind(
         this.restaurantController
       )
     );

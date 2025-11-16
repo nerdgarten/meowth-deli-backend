@@ -365,7 +365,6 @@ for customer in customers:
                 }
             )
         driver_fee = round(subtotal * random.uniform(0.08, 0.15), 2)
-        total_amount = round(subtotal + driver_fee, 2)
         status = random.choice(ORDER_STATUSES)
 
         order = {
@@ -376,7 +375,6 @@ for customer in customers:
             "delivery_location_id": location_choice["location_id"],
             "status": status,
             "remark": fake.sentence(nb_words=8) if random.random() < 0.25 else None,
-            "total_amount": total_amount,
             "driver_fee": driver_fee,
             "created_at": order_ts,
             "updated_at": order_ts,
