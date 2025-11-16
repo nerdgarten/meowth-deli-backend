@@ -3,7 +3,13 @@ import { StatusCodes } from "http-status-codes";
 import DishRepository from "@/repositories/dish.repository";
 import { IDish } from "@/types/dish/dish";
 import { AppError } from "@/types/error";
-import { restaurantOwnershipValidator } from "@/utils/restaurantOwnershipValidator";
+import {
+  CreateDishRequestDTO,
+  CreateDishResponseDTO,
+  GetDishResponseDTO,
+  UpdateDishRequestDTO,
+} from "@/types/dto/dish";
+import { DishBodySchema, DishUpdateSchema } from "@/validators/dish.schema";
 
 export default class DishService {
   private dishRepository: DishRepository;
@@ -12,77 +18,47 @@ export default class DishService {
     this.dishRepository = new DishRepository();
   }
 
-  async searchDishes(keyword: string, limit: number, offset: number) {
-    if (!keyword || keyword.trim() === "") {
-      throw new AppError("Keyword cannot be empty", StatusCodes.BAD_REQUEST);
+  async validateRestaurantOwnership(dishId: number, restaurantId: number) {
+    if (!(await this.dishRepository.getDishById(dishId))) {
+      throw new AppError("Dish not found", StatusCodes.NOT_FOUND);
     }
-
-    const whereClause = {
-      OR: [
-        {
-          name: {
-            contains: keyword,
-            mode: "insensitive" as const,
-          },
-        },
-        {
-          detail: {
-            contains: keyword,
-            mode: "insensitive" as const,
-          },
-        },
-      ],
-    };
-
-    const dishes = await this.dishRepository.findDishesByKeyword(
-      whereClause,
-      limit,
-      offset
-    );
-
-    return dishes;
-  }
-
-  private async validateRestaurantOwnership(dishId: number, userId: number) {
-    return await restaurantOwnershipValidator.validateDishOwnership(
-      dishId,
-      userId
-    );
-  }
-
-  async createDish(userId: number, data: IDish) {
-    if (!data.name || data.name.trim() === "") {
-      throw new AppError("Dish name cannot be empty", StatusCodes.BAD_REQUEST);
-    }
-    if (data.price <= 0) {
+    if (!(await this.dishRepository.isDishOwnerByUser(dishId, restaurantId))) {
       throw new AppError(
-        "Price must be greater than zero",
-        StatusCodes.BAD_REQUEST
+        "You do not have permission to modify this dish",
+        StatusCodes.FORBIDDEN
       );
     }
+  }
 
-    const userRestaurant =
-      await restaurantOwnershipValidator.validateUserIsRestaurantOwner(userId);
-
-    data.restaurant_id = userRestaurant.id;
-
-    const newDish = await this.dishRepository.createDish({
+  async createDish(data: CreateDishRequestDTO): Promise<CreateDishResponseDTO> {
+    const dto = DishBodySchema.parse({
       ...data,
+      allergy: Array.isArray(data.allergy)
+        ? data.allergy
+        : JSON.parse(data.allergy as unknown as string),
+      price: Number(data.price),
+    });
+    const newDish = await this.dishRepository.createDish({
+      restaurant: {
+        connect: { id: dto.restaurant_id },
+      },
+      name: dto.name,
+      detail: dto.detail,
+      price: dto.price,
+      is_out_of_stock: dto.is_out_of_stock,
+      image: dto.image,
+      allergy: dto.allergy,
     });
     return newDish;
   }
 
-  async getAllDishes(limit?: number, offset?: number) {
-    const dishes = await this.dishRepository.findAllDishes(limit, offset);
+  async getAllDishes() {
+    const dishes = await this.dishRepository.getAllDishes();
     return dishes;
   }
 
   async getDishById(id: number) {
-    if (!id || id <= 0) {
-      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
-    }
-
-    const dish = await this.dishRepository.findDishById(id);
+    const dish = await this.dishRepository.getDishById(id);
     if (!dish) {
       throw new AppError("Dish not found", StatusCodes.NOT_FOUND);
     }
@@ -90,33 +66,33 @@ export default class DishService {
     return dish;
   }
 
-  async updateDish(id: number, data: Partial<IDish>, userId: number) {
-    if (!id || id <= 0) {
-      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
-    }
+  async getDishesByRestaurantId(restaurantId: number) {
+    const dishes =
+      await this.dishRepository.getDishesByRestaurantId(restaurantId);
+    return dishes;
+  }
 
-    await this.validateRestaurantOwnership(id, userId);
+  async updateDish(
+    id: number,
+    restaurantId: number,
+    data: UpdateDishRequestDTO
+  ): Promise<GetDishResponseDTO> {
+    await this.validateRestaurantOwnership(id, restaurantId);
 
-    if (data.name !== undefined && (!data.name || data.name.trim() === "")) {
-      throw new AppError("Dish name cannot be empty", StatusCodes.BAD_REQUEST);
-    }
-    if (data.price !== undefined && data.price <= 0) {
-      throw new AppError(
-        "Price must be greater than zero",
-        StatusCodes.BAD_REQUEST
-      );
-    }
+    const dto = DishUpdateSchema.parse({
+      ...data,
+      allergy: Array.isArray(data.allergy)
+        ? data.allergy
+        : JSON.parse(data.allergy ?? "[]"),
+      price: Number(data.price),
+    });
 
-    const updatedDish = await this.dishRepository.updateDish(id, data);
+    const updatedDish = await this.dishRepository.updateDish(dto, id);
     return updatedDish;
   }
 
-  async deleteDish(id: number, userId: number) {
-    if (!id || id <= 0) {
-      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
-    }
-
-    await this.validateRestaurantOwnership(id, userId);
+  async deleteDish(id: number, restaurantId: number) {
+    await this.validateRestaurantOwnership(id, restaurantId);
 
     await this.dishRepository.deleteDish(id);
     return { message: "Dish deleted successfully" };
@@ -124,14 +100,10 @@ export default class DishService {
 
   async updateDishStockStatus(
     dishId: number,
-    userId: number,
+    restaurantId: number,
     is_out_of_stock: boolean
-  ) {
-    if (!dishId || dishId <= 0) {
-      throw new AppError("Invalid dish ID", StatusCodes.BAD_REQUEST);
-    }
-
-    await this.validateRestaurantOwnership(dishId, userId);
+  ): Promise<GetDishResponseDTO> {
+    await this.validateRestaurantOwnership(dishId, restaurantId);
 
     const updatedDish = await this.dishRepository.updateDishStockStatus(
       dishId,

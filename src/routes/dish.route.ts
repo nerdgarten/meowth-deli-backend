@@ -1,6 +1,8 @@
 import { DishController } from "@/controllers/dish.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { fileMiddleware } from "@/middlewares/file.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
+import { dishPictureConfig } from "@/utils/fileConfig";
 
 export class DishRouter extends BaseRouter {
   private dishController: DishController;
@@ -29,20 +31,6 @@ export class DishRouter extends BaseRouter {
      *         description: List of dishes
      */
     this.router.get(
-      "/search",
-      this.dishController.searchDishes.bind(this.dishController)
-    );
-    /**
-     * @swagger
-     * /dish:
-     *   get:
-     *     summary: Get all dishes
-     *     tags: [Dish]
-     *     responses:
-     *       200:
-     *         description: List of dishes
-     */
-    this.router.get(
       "/",
       this.dishController.getAllDishes.bind(this.dishController)
     );
@@ -62,6 +50,10 @@ export class DishRouter extends BaseRouter {
      *       200:
      *         description: Dish details
      */
+    this.router.get(
+      "/restaurant/:id",
+      this.dishController.getDishesByRestaurantId.bind(this.dishController)
+    );
     this.router.get(
       "/:id",
       this.dishController.getDishById.bind(this.dishController)
@@ -98,6 +90,7 @@ export class DishRouter extends BaseRouter {
     this.router.post(
       "/",
       authMiddleware,
+      fileMiddleware(dishPictureConfig),
       this.dishController.createDish.bind(this.dishController)
     );
     /**
@@ -136,6 +129,7 @@ export class DishRouter extends BaseRouter {
     this.router.patch(
       "/:id",
       authMiddleware,
+      fileMiddleware(dishPictureConfig),
       this.dishController.updateDish.bind(this.dishController)
     );
     /**

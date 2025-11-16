@@ -5,12 +5,14 @@ dist
 
 /src/generated/prisma
 /prisma/generated
+/prisma/data
 /coverage
 
 .idea
+.vscode
+data
 
-upload/driver/*
-upload/restaurant/*
-!upload/example.jpg
+uploads
+mock-data
 
 .DS_Store

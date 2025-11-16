@@ -13,7 +13,7 @@ declare module "express" {
 export function authMiddleware(
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ): void {
   const cookies = req.cookies;
 

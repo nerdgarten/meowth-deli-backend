@@ -1,12 +1,21 @@
 import { RestaurantController } from "@/controllers/restaurant.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
+import { fileMiddleware } from "@/middlewares/file.middleware";
+import {
+  restaurantBannerConfig,
+  certificateFileConfig,
+} from "@/utils/fileConfig";
+import { roleMiddleware } from "@/middlewares/role.middleware";
+import { Role } from "@/generated/prisma/browser";
 
 export class RestaurantRouter extends BaseRouter {
   private restaurantController: RestaurantController;
 
   constructor() {
-    super({ prefix: "/restaurant" });
+    super({
+      prefix: "/restaurant",
+    });
 
     this.restaurantController = new RestaurantController();
     this.setUpRoutes();
@@ -30,11 +39,30 @@ export class RestaurantRouter extends BaseRouter {
      */
     this.router.get(
       "/",
-      this.restaurantController.getRestaurantsByStatus.bind(
+      this.restaurantController.getRestaurants.bind(this.restaurantController)
+    );
+    this.router.get(
+      "/profile",
+      authMiddleware,
+      this.restaurantController.getRestaurantProfile.bind(
         this.restaurantController
       )
     );
-    
+    this.router.get(
+      "/:restaurantId",
+      this.restaurantController.getRestaurantProfileById.bind(
+        this.restaurantController
+      )
+    );
+    this.router.patch(
+      "/profile",
+      authMiddleware,
+      fileMiddleware(restaurantBannerConfig),
+      this.restaurantController.updateRestaurantProfile.bind(
+        this.restaurantController
+      )
+    );
+
     /**
      * @swagger
      * /restaurant/availability:
@@ -63,47 +91,12 @@ export class RestaurantRouter extends BaseRouter {
         this.restaurantController
       )
     );
-    /**
-     * @swagger
-     * /restaurant/{id}/dish:
-     *   get:
-     *     summary: Get dishes by restaurant ID
-     *     tags: [Restaurant]
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: List of dishes
-     */
-    this.router.get(
-      "/:id/dish",
-      this.restaurantController.getDishesByRestaurantId.bind(
-        this.restaurantController
-      )
-    );
-    /**
-     * @swagger
-     * /restaurant/{id}:
-     *   get:
-     *     summary: Get restaurant by ID
-     *     tags: [Restaurant]
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: Restaurant details
-     */
-    this.router.get(
-      "/:id",
-      this.restaurantController.getRestaurantById.bind(
+    this.router.post(
+      "/upload",
+      authMiddleware,
+      roleMiddleware(Role.restaurant),
+      fileMiddleware(certificateFileConfig),
+      this.restaurantController.uploadCertificateFile.bind(
         this.restaurantController
       )
     );

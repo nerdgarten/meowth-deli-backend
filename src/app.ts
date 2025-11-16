@@ -1,4 +1,6 @@
-import { apiReference } from '@scalar/express-api-reference';
+import { apiReference } from "@scalar/express-api-reference";
+import path from "path";
+
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";
@@ -28,29 +30,29 @@ const corsOptions: CorsOptions = {
 
 const swaggerOptions = {
   definition: {
-    openapi: '3.0.0',
+    openapi: "3.0.0",
     info: {
-      title: 'Meowth Deli API',
-      version: '1.0.0',
-      description: 'API documentation for Meowth Deli Backend',
+      title: "Meowth Deli API",
+      version: "1.0.0",
+      description: "API documentation for Meowth Deli Backend",
     },
     servers: [
       {
-        url: 'http://localhost:3030',
-        description: 'Development server',
+        url: "http://localhost:3030",
+        description: "Development server",
       },
     ],
     components: {
       securitySchemes: {
         cookieAuth: {
-          type: 'apiKey',
-          in: 'cookie',
-          name: 'token',
+          type: "apiKey",
+          in: "cookie",
+          name: "token",
         },
       },
     },
   },
-  apis: ['./src/routes/*.ts'], // Add paths to files with JSDoc comments if needed
+  apis: ["./src/routes/*.ts"], // Add paths to files with JSDoc comments if needed
 };
 
 const specs = swaggerJsdoc(swaggerOptions);
@@ -66,16 +68,19 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-app.get('/openapi.json', (req, res) => {
-  res.setHeader('Content-Type', 'application/json');
+app.get("/openapi.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
   res.send(specs);
 });
 
-app.use('/api-docs', apiReference({
-  spec: {
-    url: '/openapi.json',
-  },
-}));
+app.use(
+  "/api-docs",
+  apiReference({
+    spec: {
+      url: "/openapi.json",
+    },
+  })
+);
 
 const routerManager = new RouterManager();
 
@@ -87,5 +92,6 @@ app.get("/healthz", (req, res) => {
     uptime: process.uptime(),
   });
 });
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 export default app;

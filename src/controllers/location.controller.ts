@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import LocationService from "@/services/location.service";
-import { AppError } from "@/types/error";
-
+import { handleError } from "@/utils/handleError";
 export class LocationController {
   private locationService: LocationService;
 
@@ -11,121 +10,119 @@ export class LocationController {
     this.locationService = new LocationService();
   }
 
-  async createLocation(req: Request, res: Response) {
+  async createCustomerLocation(req: Request, res: Response) {
     try {
-      const location = await this.locationService.createLocation(req.body);
-
-      res.status(StatusCodes.CREATED).json(location);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during location creation:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
-    }
-  }
-
-  async setDefault(req: Request, res: Response) {
-    try {
-      const locationId = Number(req.params.id);
-      if (Number.isNaN(locationId)) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Invalid location id" });
-
-        return;
-      }
-
-      const customerId = req.user?.id;
-      if (!customerId) {
-        res.status(StatusCodes.UNAUTHORIZED).json({
-          message: "Unauthorized",
-        });
-
-        return;
-      }
-
-      const location = await this.locationService.setDefault(
-        customerId,
-        locationId
+      const userId = req.user!.id;
+      const locationData = req.body;
+      const createdLocation = await this.locationService.createCustomerLocation(
+        userId,
+        locationData
       );
-
-      res.status(StatusCodes.OK).json(location);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during setting default location:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      res.status(StatusCodes.CREATED).json(createdLocation);
+    } catch (error) {
+      handleError(error, res);
     }
   }
 
-  async getLocations(req: Request, res: Response) {
+  async getLocationsByCustomerId(req: Request, res: Response) {
     try {
-      const customerId = Number(req.user!.id);
-      if (Number.isNaN(customerId)) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Invalid customer id" });
-
-        return;
-      }
-
-      const locations = await this.locationService.getLocations(customerId);
-
+      const userId = req.user!.id;
+      const locations =
+        await this.locationService.getLocationsByCustomerId(userId);
       res.status(StatusCodes.OK).json(locations);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during fetching locations:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+    } catch (error) {
+      handleError(error, res);
     }
   }
 
-  async updateLocation(req: Request, res: Response) {
+  async getDefaultLocationByCustomerId(req: Request, res: Response) {
     try {
-      const locationId = Number(req.params.id);
-      if (Number.isNaN(locationId)) {
-        res
-          .status(StatusCodes.BAD_REQUEST)
-          .json({ message: "Invalid location id" });
+      const userId = req.user!.id;
+      const location =
+        await this.locationService.getDefaultLocationByCustomerId(userId);
+      res.status(StatusCodes.OK).json(location);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
 
-        return;
-      }
-
-      const updatedLocation = await this.locationService.updateLocation(
-        locationId,
-        req.body
-      );
-
+  async updateDefaultLocationByCustomerId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { location_id } = req.body;
+      const updatedLocation =
+        await this.locationService.updateDefaultLocationByCustomerId(
+          userId,
+          location_id
+        );
       res.status(StatusCodes.OK).json(updatedLocation);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
 
-        return;
-      }
-      console.error("Unexpected error during location update:", error);
+  async createRestaurantLocation(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const locationData = req.body;
+      const createdLocation =
+        await this.locationService.createRestaurantLocation(
+          userId,
+          locationData
+        );
+      res.status(StatusCodes.CREATED).json(createdLocation);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
 
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+  async getRestaurantLocationByRestaurantId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const location =
+        await this.locationService.getRestaurantLocationByRestaurantId(userId);
+      res.status(StatusCodes.OK).json(location);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
+
+  async createDriverLocation(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const locationData = req.body;
+      const createdLocation = await this.locationService.createDriverLocation(
+        userId,
+        locationData
+      );
+      res.status(StatusCodes.CREATED).json(createdLocation);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
+
+  async getDriverLocationByDriverId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const location =
+        await this.locationService.getDriverLocationByDriverId(userId);
+      res.status(StatusCodes.OK).json(location);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
+
+  async updateLocationById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const locationData = req.body;
+      const updatedLocation = await this.locationService.updateLocationById(
+        Number(id),
+        locationData
+      );
+      res.status(StatusCodes.OK).json(updatedLocation);
+    } catch (error) {
+      handleError(error, res);
     }
   }
 }

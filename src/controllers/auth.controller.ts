@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-import AuthService from "@/services/auth.service";
-import { ResetPasswordBody } from "@/types/auth/post";
-import { AppError } from "@/types/error";
+import UserService from "@/services/user.service";
+import { ResetPasswordRequestDTO } from "@/types/dto/user";
+import { handleError } from "@/utils/handleError";
 
 export class AuthController {
-  private authService: AuthService;
+  private userService: UserService;
 
   constructor() {
-    this.authService = new AuthService();
+    this.userService = new UserService();
   }
 
   async signIn(req: Request, res: Response) {
     try {
-      const token = await this.authService.signIn(req.body);
+      const token = await this.userService.signIn(req.body);
 
       res.cookie("token", token, {
         maxAge: 2 * 24 * 60 * 60 * 1000,
@@ -25,136 +25,61 @@ export class AuthController {
       });
       res.status(StatusCodes.OK).json({ token });
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during signin:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
 
   async signUpCustomer(req: Request, res: Response) {
     try {
-      const user = await this.authService.createCustomerUser(req.body);
+      const user = await this.userService.createCustomerUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during signup:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
 
   async signUpDriver(req: Request, res: Response) {
     try {
-      const user = await this.authService.createDriverUser(req.body);
+      const user = await this.userService.createDriverUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during signup:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
 
   async signUpRestaurant(req: Request, res: Response) {
     try {
-      const user = await this.authService.createRestaurantUser(req.body);
+      const user = await this.userService.createRestaurantUser(req.body);
 
       res.status(StatusCodes.CREATED).json(user);
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during signup:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
 
-  async verifyAdminStatus(req: Request, res: Response) {
-    try {
-      const token = req.cookies?.token as string | undefined;
-      const result = await this.authService.verifyAdminStatus(token);
-
-      res.status(StatusCodes.OK).json(result);
-    } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during verify admin status:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
-    }
-  }
   async requestResetPassword(req: Request, res: Response) {
     try {
-      await this.authService.requestResetPassword(req.body.email);
+      await this.userService.requestResetPassword(req.body.email);
       res
         .status(StatusCodes.OK)
         .json({ message: "Password reset email sent successfully" });
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during request Reset Password:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
   async resetPassword(req: Request, res: Response) {
     try {
-      await this.authService.resetPassword(
-        {
-          token: req.params.token,
-          password: req.body.password
-        } as ResetPasswordBody
-      );
+      await this.userService.resetPassword({
+        token: req.params.token,
+        password: req.body.password,
+      } as ResetPasswordRequestDTO);
       res
         .status(StatusCodes.OK)
         .json({ message: "Password has been reset successfully" });
     } catch (error: unknown) {
-      if (error instanceof AppError) {
-        res.status(error.statusCode).json({ message: error.message });
-
-        return;
-      }
-      console.error("Unexpected error during request Reset Password:", error);
-
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-        message: "Internal server error",
-      });
+      handleError(error, res);
     }
   }
 }
