@@ -1,6 +1,6 @@
-import { apiReference } from "@scalar/express-api-reference";
 import path from "path";
 
+import { apiReference } from "@scalar/express-api-reference";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import cors, { CorsOptions } from "cors";

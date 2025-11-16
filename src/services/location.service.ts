@@ -1,7 +1,9 @@
 import { StatusCodes } from "http-status-codes";
 
 import CustomerRepository from "@/repositories/customer.repository";
+import DriverRepository from "@/repositories/driver.repository";
 import LocationRepository from "@/repositories/location.repository";
+import RestaurantRepository from "@/repositories/restaurant.repository";
 import {
   CreateLocationRequestDTO,
   CreateCustomerLocationResponseDTO,
@@ -10,8 +12,6 @@ import {
 } from "@/types/dto/location";
 import { AppError } from "@/types/error";
 import { locationBodySchema } from "@/validators/location.schema";
-import RestaurantRepository from "@/repositories/restaurant.repository";
-import DriverRepository from "@/repositories/driver.repository";
 
 export default class LocationService {
   private locationRepository: LocationRepository;

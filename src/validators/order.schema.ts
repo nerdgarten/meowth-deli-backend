@@ -1,5 +1,6 @@
-import { OrderStatus } from "@/generated/prisma/enums";
 import { z } from "zod";
+
+import { OrderStatus } from "@/generated/prisma/enums";
 
 export const OrderDishSchema = z.object({
   dish_id: z.number().positive("Dish ID must be positive"),

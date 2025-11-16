@@ -1,12 +1,12 @@
+import crypto from "crypto";
+import path from "path";
+import { cwd } from "process";
+
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import { DriverService } from "@/services/driver.service";
-import { handleError } from "@/utils/handleError";
-import path from "path";
 import { AppError } from "@/types/error";
-import crypto from "crypto";
-import { cwd } from "process";
 import {
   uploadManageFilesStatus,
   updateFileStatus,
@@ -14,6 +14,7 @@ import {
   resultingUploadPath,
   resultingManagePath,
 } from "@/utils/fileConfig";
+import { handleError } from "@/utils/handleError";
 
 export class DriverController {
   private driverService: DriverService;

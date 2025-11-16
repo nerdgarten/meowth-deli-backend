@@ -1,13 +1,13 @@
 import { OrderController } from "@/controllers/order.controller";
+import { Role } from "@/generated/prisma/browser";
 import { authMiddleware } from "@/middlewares/auth.middleware";
-import { BaseRouter } from "@/routes/baseRouter";
 import { fileMiddleware } from "@/middlewares/file.middleware";
+import { roleMiddleware } from "@/middlewares/role.middleware";
+import { BaseRouter } from "@/routes/baseRouter";
 import {
   restaurantBannerConfig,
   certificateFileConfig,
 } from "@/utils/fileConfig";
-import { roleMiddleware } from "@/middlewares/role.middleware";
-import { Role } from "@/generated/prisma/browser";
 
 export class OrderRouter extends BaseRouter {
   private orderController: OrderController;

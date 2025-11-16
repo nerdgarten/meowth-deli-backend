@@ -1,8 +1,8 @@
 import { Dish, Order, OrderDish } from "@/generated/prisma/client";
 import { ICustomerProfile } from "@/types/dto/customer";
-import { IRestaurantProfile } from "@/types/dto/restaurant";
 import { IDriverProfile } from "@/types/dto/driver";
 import { GetLocationResponseDTO } from "@/types/dto/location";
+import { IRestaurantProfile } from "@/types/dto/restaurant";
 
 export type CreateOrderRequestDTO = Omit<
   Order,

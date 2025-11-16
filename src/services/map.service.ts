@@ -28,7 +28,7 @@ export class MapService {
   async getMapSVG(request: IMapSVGRequest): Promise<IMapSVGResponse> {
     try {
       const response = await this.mapClient.post<IMapSVGResponse>(
-        "/map-svg",
+        "/static-map",
         request
       );
       return response.data;

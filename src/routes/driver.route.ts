@@ -1,14 +1,14 @@
 import { DriverController } from "@/controllers/driver.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
+import { fileMiddleware } from "@/middlewares/file.middleware";
+import { roleMiddleware } from "@/middlewares/role.middleware";
 import { Role } from "@/types/role";
-
-import { BaseRouter } from "./baseRouter";
 import {
   profilePictureConfig,
   certificateFileConfig,
 } from "@/utils/fileConfig";
-import { fileMiddleware } from "@/middlewares/file.middleware";
-import { roleMiddleware } from "@/middlewares/role.middleware";
+
+import { BaseRouter } from "./baseRouter";
 
 export class DriverRouter extends BaseRouter {
   private driverController: DriverController;

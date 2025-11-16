@@ -1,5 +1,6 @@
-import { Allergy } from "@/generated/prisma/enums";
 import { z } from "zod";
+
+import { Allergy } from "@/generated/prisma/enums";
 
 export const DishUpdateSchema = z.object({
   name: z.string().min(1, "Dish name cannot be empty").optional(),

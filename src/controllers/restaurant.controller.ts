@@ -1,10 +1,12 @@
 import crypto from "crypto";
+import path from "path";
+import { cwd } from "process";
 
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import RestaurantService from "@/services/restaurant.service";
-import { handleError } from "@/utils/handleError";
+import { AppError } from "@/types/error";
 import {
   uploadManageFilesStatus,
   updateFileStatus,
@@ -12,9 +14,7 @@ import {
   resultingUploadPath,
   resultingManagePath,
 } from "@/utils/fileConfig";
-import path from "path";
-import { AppError } from "@/types/error";
-import { cwd } from "process";
+import { handleError } from "@/utils/handleError";
 
 export class RestaurantController {
   private restaurantService: RestaurantService;
@@ -125,6 +125,34 @@ export class RestaurantController {
         .status(StatusCodes.OK)
         .json({ message: "File uploaded successfully", filePath });
     } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async getFavoriteRestaurantsByUserId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const favoriteRestaurants =
+        await this.restaurantService.getFavoriteRestaurantsByUserId(userId);
+      res.status(StatusCodes.OK).json(favoriteRestaurants);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
+
+  async updateFavoriteRestaurantByUserId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { restaurantId, isFavorite } = req.body;
+      await this.restaurantService.updateFavoriteRestaurantByUserId(
+        userId,
+        restaurantId,
+        isFavorite
+      );
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "Favorite updated successfully" });
+    } catch (error) {
       handleError(error, res);
     }
   }
