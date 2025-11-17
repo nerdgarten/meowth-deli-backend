@@ -1,3 +1,4 @@
+import axios from "axios";
 import { StatusCodes } from "http-status-codes";
 
 import {
@@ -75,5 +76,94 @@ export default class CustomerService {
       throw new AppError("Profile not found", StatusCodes.NOT_FOUND);
     }
     return data.allergy;
+  }
+
+  async processMockPayment(
+    userId: number,
+    orderId: number,
+    amount: number,
+    paymentMethod: string
+  ) {
+    // Map payment method to PaymentType
+    let paymentType: string;
+    switch (paymentMethod) {
+      case "cash":
+        paymentType = "cash";
+        break;
+      case "mobilebanking":
+        paymentType = "mobilebanking";
+        break;
+      case "creditcard":
+        paymentType = "creditcard";
+        break;
+      case "meowth-wallet":
+        paymentType = "meowth-wallet";
+        break;
+      default:
+        throw new AppError("Invalid payment method", StatusCodes.BAD_REQUEST);
+    }
+
+    // Call mock payment service
+    try {
+      const response = await axios.post(
+        `${process.env.MOCK_PAYMENT_SERVICE_URL}/process-payment`,
+        {
+          type: paymentType,
+          amount: amount,
+          order_id: orderId.toString(),
+        }
+      );
+
+      if (response.data.success) {
+        // Update order status to paid
+        const orderRepository = (
+          await import("@/repositories/order.respository")
+        ).default;
+        const orderRepo = new orderRepository();
+        await orderRepo.updateOrderStatus(orderId, "success");
+
+        return {
+          success: true,
+          transactionId: response.data.transaction_id,
+          message: response.data.message,
+          orderId: orderId,
+          newOrderStatus: "success",
+          timestamp: new Date(),
+        };
+      } else {
+        throw new AppError(
+          response.data.message || "Payment failed",
+          StatusCodes.BAD_REQUEST
+        );
+      }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response?.data?.message) {
+        throw new AppError(
+          error.response.data.message,
+          StatusCodes.BAD_REQUEST
+        );
+      }
+      throw new AppError(
+        "Payment service unavailable",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
+  }
+
+  async getWalletBalance(userId: number) {
+    // Call mock payment service to get wallet balance
+    try {
+      const response = await axios.get(
+        `${process.env.MOCK_PAYMENT_SERVICE_URL}/accounts/meowth-wallet`
+      );
+
+      return response.data.balance;
+    } catch (error) {
+      console.error("Error fetching wallet balance:", error);
+      throw new AppError(
+        "Payment service unavailable",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }

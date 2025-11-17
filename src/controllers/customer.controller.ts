@@ -75,4 +75,33 @@ export class CustomerController {
       handleError(error, res);
     }
   }
+
+  async processMockPayment(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { orderId, amount, paymentMethod } = req.body;
+      const result = await this.customerService.processMockPayment(
+        userId,
+        orderId,
+        amount,
+        paymentMethod
+      );
+      res.status(StatusCodes.OK).json({
+        success: result.success,
+        data: result,
+      });
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
+
+  async getWalletBalance(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const balance = await this.customerService.getWalletBalance(userId);
+      res.status(StatusCodes.OK).json({ balance });
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
 }
