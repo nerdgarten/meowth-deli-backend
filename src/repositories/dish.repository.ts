@@ -93,4 +93,14 @@ export default class DishRepository {
       });
     }
   }
+
+  async isFavoriteDishByUserId(userId: number, dishId: number) {
+    const favorite = await prisma.favoriteDish.findFirst({
+      where: {
+        customer_id: userId,
+        dish_id: dishId,
+      },
+    });
+    return !!favorite;
+  }
 }

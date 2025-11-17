@@ -71,6 +71,8 @@ export class DishController {
     try {
       const userId = req.user!.id;
       const { restaurantId } = req.params;
+      console.log("restaurantId", restaurantId);
+      console.log("userId", userId);
 
       if (!userId)
         throw new AppError("User not authenticated", StatusCodes.UNAUTHORIZED);
@@ -184,6 +186,25 @@ export class DishController {
       res
         .status(StatusCodes.OK)
         .json({ message: "Favorite dish status updated successfully" });
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async checkFavoriteDish(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { dishId } = req.params;
+
+      if (!userId)
+        throw new AppError("User not authenticated", StatusCodes.UNAUTHORIZED);
+
+      const isFavorite = await this.dishService.checkFavoriteDish(
+        userId,
+        Number(dishId)
+      );
+
+      res.status(StatusCodes.OK).json({ isFavorite });
     } catch (error: unknown) {
       handleError(error, res);
     }
