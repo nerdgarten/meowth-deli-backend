@@ -3,6 +3,8 @@ import { Router } from "express";
 import ReviewController from "@/controllers/review.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
+import { fileMiddleware } from "@/middlewares/file.middleware";
+import { reviewConfig } from "@/utils/fileConfig";
 
 export class ReviewRouter extends BaseRouter {
   private controller: ReviewController;
@@ -10,10 +12,10 @@ export class ReviewRouter extends BaseRouter {
   constructor() {
     super({ prefix: "/review", middleware: [authMiddleware] });
     this.controller = new ReviewController();
-    this.initializeRoutes();
+    this.setUpRoutes();
   }
 
-  private initializeRoutes(): void {
+  private setUpRoutes(): void {
     // Driver Reviews
     /**
      * @swagger
@@ -45,7 +47,8 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review created
      */
     this.router.post(
-      "/driver/:driverId",
+      "/driver",
+      fileMiddleware(reviewConfig),
       this.controller.createDriverReview.bind(this.controller)
     );
     /**
@@ -68,7 +71,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.get(
       "/driver/:driverId",
-      this.controller.listDriverReviews.bind(this.controller)
+      this.controller.getDriverReviewsById.bind(this.controller)
     );
     /**
      * @swagger
@@ -94,8 +97,8 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review details
      */
     this.router.get(
-      "/driver/:driverId/:reviewId",
-      this.controller.getDriverReview.bind(this.controller)
+      "/driver/:reviewId",
+      this.controller.getDriverReviewByReviewId.bind(this.controller)
     );
 
     // Restaurant Reviews
@@ -129,7 +132,8 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review created
      */
     this.router.post(
-      "/restaurant/:restaurantId",
+      "/restaurant",
+      fileMiddleware(reviewConfig),
       this.controller.createRestaurantReview.bind(this.controller)
     );
     /**
@@ -152,7 +156,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.get(
       "/restaurant/:restaurantId",
-      this.controller.listRestaurantReviews.bind(this.controller)
+      this.controller.getRestaurantReviewsById.bind(this.controller)
     );
     /**
      * @swagger
@@ -178,76 +182,8 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review details
      */
     this.router.get(
-      "/restaurant/:restaurantId/:reviewId",
-      this.controller.getRestaurantReview.bind(this.controller)
+      "/restaurant/:reviewId",
+      this.controller.getRestaurantReviewByReviewId.bind(this.controller)
     );
-
-    // Order Reviews
-    /**
-     * @swagger
-     * /review/order/{orderId}:
-     *   post:
-     *     summary: Create order reviews
-     *     tags: [Review]
-     *     security:
-     *       - cookieAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: orderId
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               reviews:
-     *                 type: array
-     *                 items:
-     *                   type: object
-     *                   properties:
-     *                     dish_id:
-     *                       type: integer
-     *                     rating:
-     *                       type: integer
-     *                     comment:
-     *                       type: string
-     *     responses:
-     *       201:
-     *         description: Reviews created
-     */
-    this.router.post(
-      "/order/:orderId",
-      this.controller.createOrderReviews.bind(this.controller)
-    );
-    /**
-     * @swagger
-     * /review/order/{orderId}:
-     *   get:
-     *     summary: Get order reviews
-     *     tags: [Review]
-     *     security:
-     *       - cookieAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: orderId
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: List of reviews
-     */
-    this.router.get(
-      "/order/:orderId",
-      this.controller.getOrderReviews.bind(this.controller)
-    );
-  }
-
-  public getRouter(): Router {
-    return this.router;
   }
 }

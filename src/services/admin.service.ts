@@ -82,7 +82,7 @@ export default class AdminService {
       else throw new AppError("Invalid status filter", StatusCodes.BAD_REQUEST);
       return await this.restaurantRepository.getRestaurantsByStatus(vs);
     }
-    return await this.restaurantRepository.getRestaurants();
+    return await this.restaurantRepository.getRestaurants(false);
   }
 
   async verifyRestaurant(id: number, status: VerificationStatus) {
@@ -115,7 +115,7 @@ export default class AdminService {
       else throw new AppError("Invalid status filter", StatusCodes.BAD_REQUEST);
       return await this.driverRepository.getDriverByStatus(vs);
     }
-    return await this.driverRepository.getDrivers();
+    return await this.driverRepository.getDrivers(false);
   }
 
   async listUsers(paging: FilePaginationQuery, role?: string) {

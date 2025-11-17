@@ -5,16 +5,16 @@ import { AppError } from "@/types/error";
 import { StatusCodes } from "http-status-codes";
 
 export default class DriverRepository {
-  async getDrivers() {
-    try {
-      return prisma.driver.findMany({ orderBy: { id: "desc" } });
-    } catch (err: unknown) {
-      console.error("DriverRepository.getDrivers error", err);
-      throw new AppError(
-        "Failed to fetch drivers",
-        StatusCodes.INTERNAL_SERVER_ERROR
-      );
-    }
+  async getDrivers(onlyActive = true) {
+    return prisma.driver.findMany({
+      where: {
+        is_available: onlyActive ? true : undefined,
+        user: {
+          is_deleted: false,
+        },
+      },
+      orderBy: { id: "desc" },
+    });
   }
 
   async getDriverProfileById(id: number) {

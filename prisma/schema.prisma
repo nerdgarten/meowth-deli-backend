@@ -70,15 +70,14 @@ model User {
   created_at               DateTime @default(now()) @db.Timestamptz
   updated_at               DateTime @updatedAt @db.Timestamptz
 
-  role              Role
-  customer          Customer?
-  driver            Driver?
-  restaurant        Restaurant?
-  paymentMethods    PaymentMethod[]
-  restaurantReviews RestaurantReview[]
-  verifyTokens      VerifyToken[]
-  resetTokens       ResetToken[]
-  reports           Report[]
+  role           Role
+  customer       Customer?
+  driver         Driver?
+  restaurant     Restaurant?
+  paymentMethods PaymentMethod[]
+  verifyTokens   VerifyToken[]
+  resetTokens    ResetToken[]
+  reports        Report[]
 }
 
 model Customer {
@@ -95,6 +94,7 @@ model Customer {
   favorites         FavoriteRestaurant[]
   favoriteDishes    FavoriteDish[]
   orders            Order[]
+  restaurantReviews RestaurantReview[]
   driverReviews     DriverReview[]
   allergy           Allergy[]
   customerLocations CustomerLocation[]
@@ -288,14 +288,12 @@ model Order {
   created_at           DateTime    @default(now()) @db.Timestamptz
   updated_at           DateTime    @updatedAt @db.Timestamptz
 
-  location          Location           @relation(fields: [delivery_location_id], references: [id])
-  customer          Customer           @relation(fields: [customer_id], references: [id])
-  restaurant        Restaurant         @relation(fields: [restaurant_id], references: [id])
-  driver            Driver?            @relation(fields: [driver_id], references: [id])
-  orderDishes       OrderDish[]
-  payments          Payment[]
-  restaurantReviews RestaurantReview[]
-  driverReviews     DriverReview[]
+  location    Location    @relation(fields: [delivery_location_id], references: [id])
+  customer    Customer    @relation(fields: [customer_id], references: [id])
+  restaurant  Restaurant  @relation(fields: [restaurant_id], references: [id])
+  driver      Driver?     @relation(fields: [driver_id], references: [id])
+  orderDishes OrderDish[]
+  payments    Payment[]
 
   @@index([customer_id])
   @@index([driver_id])
@@ -317,40 +315,37 @@ model OrderDish {
 
 model RestaurantReview {
   id            Int      @id @default(autoincrement())
-  user_id       Int
+  customer_id   Int
   restaurant_id Int
-  order_id      Int
   rate          Float
+  title         String
   review_text   String?
-  images        String[]
+  image         String?
   created_at    DateTime @default(now()) @db.Timestamptz
   updated_at    DateTime @updatedAt @db.Timestamptz
 
-  user       User       @relation(fields: [user_id], references: [id])
+  customer   Customer   @relation(fields: [customer_id], references: [id])
   restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
-  order      Order      @relation(fields: [order_id], references: [id])
+  userId     Int?
 
   @@index([restaurant_id])
-  @@index([order_id])
 }
 
 model DriverReview {
   id          Int      @id @default(autoincrement())
   customer_id Int
   driver_id   Int
-  order_id    Int
   rate        Float
+  title       String
   review_text String?
-  images      String[]
+  image       String?
   created_at  DateTime @default(now()) @db.Timestamptz
   updated_at  DateTime @updatedAt @db.Timestamptz
 
   customer Customer @relation(fields: [customer_id], references: [id])
   driver   Driver   @relation(fields: [driver_id], references: [id])
-  order    Order    @relation(fields: [order_id], references: [id])
 
   @@index([driver_id])
-  @@index([order_id])
 }
 
 model Report {

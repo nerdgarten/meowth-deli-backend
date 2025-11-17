@@ -52,5 +52,11 @@ export class AuthenticateRouter extends BaseRouter {
       "/logout",
       this.authenticatedController.logout.bind(this.authenticatedController)
     );
+    this.router.patch(
+      "/change-password",
+      this.authenticatedController.changePassword.bind(
+        this.authenticatedController
+      )
+    );
   }
 }

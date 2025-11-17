@@ -8,6 +8,8 @@ const DRIVER_REVIEW_INCLUDE = {
       id: true,
       firstname: true,
       lastname: true,
+      image: true,
+      tel: true,
     },
   },
   driver: {
@@ -15,189 +17,79 @@ const DRIVER_REVIEW_INCLUDE = {
       id: true,
       firstname: true,
       lastname: true,
+      image: true,
+      tel: true,
     },
   },
 };
 
 const RESTAURANT_REVIEW_INCLUDE = {
-  user: {
+  customer: {
     select: {
       id: true,
-      email: true,
+      firstname: true,
+      lastname: true,
+      image: true,
+      tel: true,
     },
   },
   restaurant: {
     select: {
       id: true,
       name: true,
+      banner: true,
+      tel: true,
     },
   },
 };
 
 export default class ReviewRepository {
-  private getClient(tx?: Prisma.TransactionClient) {
-    return tx ?? prisma;
-  }
-
-  async executeTransaction<T>(
-    callback: (tx: Prisma.TransactionClient) => Promise<T>
-  ): Promise<T> {
-    return prisma.$transaction(callback);
-  }
-
-  createDriverReview(
-    data: {
-      customer_id: number;
-      driver_id: number;
-      order_id: number;
-      rate: number;
-      review_text?: string;
-    },
-    tx?: Prisma.TransactionClient
-  ) {
-    const client = this.getClient(tx);
-    return client.driverReview.create({
-      data,
+  async getDriverReviewByReviewId(reviewId: number) {
+    return prisma.driverReview.findUnique({
+      where: { id: reviewId },
       include: DRIVER_REVIEW_INCLUDE,
     });
   }
 
-  createRestaurantReview(
-    data: {
-      user_id: number;
-      restaurant_id: number;
-      order_id: number;
-      rate: number;
-      review_text?: string;
-    },
-    tx?: Prisma.TransactionClient
-  ) {
-    const client = this.getClient(tx);
-    return client.restaurantReview.create({
-      data,
+  async getRestaurantReviewByReviewId(reviewId: number) {
+    return prisma.restaurantReview.findUnique({
+      where: { id: reviewId },
       include: RESTAURANT_REVIEW_INCLUDE,
     });
   }
 
-  findDriverReviews(driverId: number, limit: number, offset: number) {
+  async getDriverReviewsById(driverId: number) {
     return prisma.driverReview.findMany({
       where: { driver_id: driverId },
-      take: limit,
-      skip: offset,
-      orderBy: { created_at: "desc" },
       include: DRIVER_REVIEW_INCLUDE,
     });
   }
 
-  countDriverReviews(driverId: number) {
-    return prisma.driverReview.count({
-      where: { driver_id: driverId },
+  async getRestaurantReviewById(reviewId: number) {
+    return prisma.restaurantReview.findUnique({
+      where: { id: reviewId },
+      include: RESTAURANT_REVIEW_INCLUDE,
     });
   }
 
-  findDriverReviewById(driverId: number, reviewId: number) {
-    return prisma.driverReview.findFirst({
-      where: { id: reviewId, driver_id: driverId },
-      include: DRIVER_REVIEW_INCLUDE,
-    });
-  }
-
-  findDriverReviewByOrderAndCustomer(
-    orderId: number,
-    customerId: number,
-    tx?: Prisma.TransactionClient
-  ) {
-    const client = this.getClient(tx);
-    return client.driverReview.findFirst({
-      where: {
-        order_id: orderId,
-        customer_id: customerId,
-      },
-      include: DRIVER_REVIEW_INCLUDE,
-    });
-  }
-
-  findRestaurantReviews(restaurantId: number, limit: number, offset: number) {
+  async getRestaurantReviewsById(restaurantId: number) {
     return prisma.restaurantReview.findMany({
       where: { restaurant_id: restaurantId },
-      take: limit,
-      skip: offset,
-      orderBy: { created_at: "desc" },
       include: RESTAURANT_REVIEW_INCLUDE,
     });
   }
 
-  countRestaurantReviews(restaurantId: number) {
-    return prisma.restaurantReview.count({
-      where: { restaurant_id: restaurantId },
+  async createDriverReview(data: Prisma.DriverReviewCreateInput) {
+    return prisma.driverReview.create({
+      data,
+      include: DRIVER_REVIEW_INCLUDE,
     });
   }
 
-  findRestaurantReviewById(restaurantId: number, reviewId: number) {
-    return prisma.restaurantReview.findFirst({
-      where: { id: reviewId, restaurant_id: restaurantId },
+  async createRestaurantReview(data: Prisma.RestaurantReviewCreateInput) {
+    return prisma.restaurantReview.create({
+      data,
       include: RESTAURANT_REVIEW_INCLUDE,
-    });
-  }
-
-  findRestaurantReviewByOrderAndUser(
-    orderId: number,
-    userId: number,
-    tx?: Prisma.TransactionClient
-  ) {
-    const client = this.getClient(tx);
-    return client.restaurantReview.findFirst({
-      where: {
-        order_id: orderId,
-        user_id: userId,
-      },
-      include: RESTAURANT_REVIEW_INCLUDE,
-    });
-  }
-
-  findDriverById(driverId: number) {
-    return prisma.driver.findUnique({
-      where: { id: driverId },
-      select: { id: true },
-    });
-  }
-
-  findRestaurantById(restaurantId: number) {
-    return prisma.restaurant.findUnique({
-      where: { id: restaurantId },
-      select: { id: true },
-    });
-  }
-
-  findCustomerById(userId: number) {
-    return prisma.customer.findUnique({
-      where: { id: userId },
-      select: { id: true },
-    });
-  }
-
-  findOrderWithDetails(orderId: number) {
-    return prisma.order.findUnique({
-      where: { id: orderId },
-      include: {
-        orderDishes: {
-          include: {
-            dish: {
-              select: {
-                id: true,
-                restaurant_id: true,
-              },
-            },
-          },
-        },
-        driver: {
-          select: {
-            id: true,
-            firstname: true,
-            lastname: true,
-          },
-        },
-      },
     });
   }
 }

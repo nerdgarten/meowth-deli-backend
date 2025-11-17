@@ -7,10 +7,21 @@ import { parse, stringify } from "yaml";
 import { AppError } from "@/types/error";
 import { UploadConfig, FileStatus, FileManagement } from "@/types/file/file";
 
-
 import type { Request } from "express";
 
-
+export const reviewConfig: UploadConfig = {
+  folder: "review_file",
+  allowedFileTypes: ["image/jpeg", "image/png", "image/jpg"],
+  filename(req: Request, file: Express.Multer.File): string {
+    return `/image_${req.user!.id}_${Date.now()}_${Math.random()
+      .toString(16)
+      .slice(2)}${path.extname(file.originalname)}`;
+  },
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB
+  },
+  fieldName: "reviewFile",
+};
 
 export const certificateFileConfig: UploadConfig = {
   folder: "certificate_file",

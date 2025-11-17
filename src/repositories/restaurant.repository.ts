@@ -6,9 +6,18 @@ import { prisma } from "@/libs/prisma";
 import { AppError } from "@/types/error";
 
 export default class RestaurantRepository {
-  async getRestaurants() {
+  async getRestaurants(onlyActive = true) {
     try {
+      const where: Prisma.RestaurantWhereInput | undefined = onlyActive
+        ? {
+            is_available: true,
+            user: {
+              is_deleted: false,
+            },
+          }
+        : undefined;
       return prisma.restaurant.findMany({
+        where,
         include: {
           location: true,
         },

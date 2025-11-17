@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import ReviewService from "@/services/review.service";
-import { AppError } from "@/types/error";
-import { ReviewPaginationQuery } from "@/types/review/review";
+import { handleError } from "@/utils/handleError";
+import { resultingFilePath } from "@/utils/fileConfig";
 
 export default class ReviewController {
   private reviewService: ReviewService;
@@ -18,43 +18,19 @@ export default class ReviewController {
       res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
       return;
     }
+    let filePath: string | undefined = undefined;
+    if (req.file) filePath = resultingFilePath(req);
 
     try {
-      const review = await this.reviewService.createDriverReview(
-        userId,
-        req.params.driverId,
-        req.body
-      );
+      const review = await this.reviewService.createDriverReview(userId, {
+        customer_id: userId,
+        ...req.body,
+        image: filePath,
+      });
 
       res.status(StatusCodes.CREATED).json(review);
     } catch (error: unknown) {
-      this.handleError(res, error, "create driver review");
-    }
-  }
-
-  async listDriverReviews(req: Request, res: Response) {
-    try {
-      const reviews = await this.reviewService.getDriverReviews(
-        req.params.driverId,
-        req.query as ReviewPaginationQuery
-      );
-
-      res.status(StatusCodes.OK).json(reviews);
-    } catch (error: unknown) {
-      this.handleError(res, error, "list driver reviews");
-    }
-  }
-
-  async getDriverReview(req: Request, res: Response) {
-    try {
-      const review = await this.reviewService.getDriverReview(
-        req.params.driverId,
-        req.params.reviewId
-      );
-
-      res.status(StatusCodes.OK).json(review);
-    } catch (error: unknown) {
-      this.handleError(res, error, "get driver review");
+      handleError(error, res, "create driver review");
     }
   }
 
@@ -65,93 +41,67 @@ export default class ReviewController {
       return;
     }
 
+    let filePath: string | undefined = undefined;
+    if (req.file) filePath = resultingFilePath(req);
+
     try {
-      const review = await this.reviewService.createRestaurantReview(
-        userId,
-        req.params.restaurantId,
-        req.body
-      );
+      const review = await this.reviewService.createRestaurantReview(userId, {
+        customer_id: userId,
+        ...req.body,
+        image: filePath,
+      });
 
       res.status(StatusCodes.CREATED).json(review);
     } catch (error: unknown) {
-      this.handleError(res, error, "create restaurant review");
+      handleError(error, res, "create restaurant review");
     }
   }
 
-  async listRestaurantReviews(req: Request, res: Response) {
+  async getRestaurantReviewsById(req: Request, res: Response) {
     try {
-      const reviews = await this.reviewService.getRestaurantReviews(
-        req.params.restaurantId,
-        req.query as ReviewPaginationQuery
+      const reviews = await this.reviewService.getRestaurantReviewsById(
+        Number(req.params.restaurantId)
       );
 
       res.status(StatusCodes.OK).json(reviews);
     } catch (error: unknown) {
-      this.handleError(res, error, "list restaurant reviews");
+      handleError(error, res, "get restaurant reviews by id");
     }
   }
 
-  async getRestaurantReview(req: Request, res: Response) {
+  async getDriverReviewsById(req: Request, res: Response) {
     try {
-      const review = await this.reviewService.getRestaurantReview(
-        req.params.restaurantId,
-        req.params.reviewId
+      const reviews = await this.reviewService.getDriverReviewsById(
+        Number(req.params.driverId)
+      );
+
+      res.status(StatusCodes.OK).json(reviews);
+    } catch (error: unknown) {
+      handleError(error, res, "list driver reviews");
+    }
+  }
+
+  async getDriverReviewByReviewId(req: Request, res: Response) {
+    try {
+      const review = await this.reviewService.getDriverReviewByReviewId(
+        Number(req.params.reviewId)
       );
 
       res.status(StatusCodes.OK).json(review);
     } catch (error: unknown) {
-      this.handleError(res, error, "get restaurant review");
+      handleError(error, res, "get driver review");
     }
   }
 
-  async createOrderReviews(req: Request, res: Response) {
-    const userId = req.user?.id;
-    if (!userId) {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
-      return;
-    }
-
+  async getRestaurantReviewByReviewId(req: Request, res: Response) {
     try {
-      const result = await this.reviewService.createOrderReviews(
-        userId,
-        req.params.orderId,
-        req.body
+      const review = await this.reviewService.getRestaurantReviewByReviewId(
+        Number(req.params.reviewId)
       );
 
-      res.status(StatusCodes.CREATED).json(result);
+      res.status(StatusCodes.OK).json(review);
     } catch (error: unknown) {
-      this.handleError(res, error, "create order reviews");
+      handleError(error, res, "get restaurant review");
     }
-  }
-
-  async getOrderReviews(req: Request, res: Response) {
-    const userId = req.user?.id;
-    if (!userId) {
-      res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
-      return;
-    }
-
-    try {
-      const reviews = await this.reviewService.getOrderReviews(
-        userId,
-        req.params.orderId
-      );
-
-      res.status(StatusCodes.OK).json(reviews);
-    } catch (error: unknown) {
-      this.handleError(res, error, "get order reviews");
-    }
-  }
-
-  private handleError(res: Response, error: unknown, context: string) {
-    if (error instanceof AppError) {
-      res.status(error.statusCode).json({ message: error.message });
-      return;
-    }
-
-    console.error(`Unexpected error during ${context}:`, error);
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      message: "Internal server error",
-    });
   }
 }
