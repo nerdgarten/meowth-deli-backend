@@ -8,7 +8,7 @@ export class ReviewRouter extends BaseRouter {
   private controller: ReviewController;
 
   constructor() {
-    super({ prefix: "/review", middleware: [authMiddleware] });
+    super({ prefix: "/review" });
     this.controller = new ReviewController();
     this.setUpRoutes();
   }
@@ -50,6 +50,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.post(
       "/driver",
+      authMiddleware,
       fileMiddleware(reviewConfig),
       this.controller.createDriverReview.bind(this.controller)
     );
@@ -94,7 +95,7 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review details
      */
     this.router.get(
-      "/driver/:reviewId",
+      "/:reviewId/driver",
       this.controller.getDriverReviewByReviewId.bind(this.controller)
     );
 
@@ -134,6 +135,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.post(
       "/restaurant",
+      authMiddleware,
       fileMiddleware(reviewConfig),
       this.controller.createRestaurantReview.bind(this.controller)
     );
@@ -178,7 +180,7 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review details
      */
     this.router.get(
-      "/restaurant/:reviewId",
+      "/:reviewId/restaurant",
       this.controller.getRestaurantReviewByReviewId.bind(this.controller)
     );
   }
