@@ -374,7 +374,15 @@ export class RestaurantRouter extends BaseRouter {
      */
     this.router.get(
       "/:restaurantId",
+      authMiddleware,
       this.restaurantController.getRestaurantProfileById.bind(
+        this.restaurantController
+      )
+    );
+    this.router.get(
+      "/favorite/:restaurantId",
+      authMiddleware,
+      this.restaurantController.checkFavoriteRestaurant.bind(
         this.restaurantController
       )
     );

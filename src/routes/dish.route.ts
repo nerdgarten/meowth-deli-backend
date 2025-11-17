@@ -328,5 +328,20 @@ export class DishRouter extends BaseRouter {
       authMiddleware,
       this.dishController.updateDishStockStatus.bind(this.dishController)
     );
+    this.router.get(
+      "/favorite/restaurant/:restaurantId",
+      authMiddleware,
+      this.dishController.getFavoriteDishesByUserId.bind(this.dishController)
+    );
+    this.router.post(
+      "/favorite",
+      authMiddleware,
+      this.dishController.updateFavoriteDishByUserId.bind(this.dishController)
+    );
+    this.router.get(
+      "/favorite/:dishId",
+      authMiddleware,
+      this.dishController.checkFavoriteDish.bind(this.dishController)
+    );
   }
 }

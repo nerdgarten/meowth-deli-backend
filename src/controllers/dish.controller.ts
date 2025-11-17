@@ -67,6 +67,27 @@ export class DishController {
     }
   }
 
+  async getFavoriteDishesByUserId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { restaurantId } = req.params;
+      console.log("restaurantId", restaurantId);
+      console.log("userId", userId);
+
+      if (!userId)
+        throw new AppError("User not authenticated", StatusCodes.UNAUTHORIZED);
+
+      const dishes = await this.dishService.getFavoriteDishesByUserId(
+        userId,
+        Number(restaurantId)
+      );
+
+      res.status(StatusCodes.OK).json(dishes);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
   async updateDish(req: Request, res: Response) {
     try {
       const userId = req.user!.id;
@@ -137,6 +158,53 @@ export class DishController {
       );
 
       res.status(StatusCodes.OK).json(updatedDish);
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async updateFavoriteDishByUserId(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { dishId, isFavorite } = req.body;
+
+      if (!userId)
+        throw new AppError("User not authenticated", StatusCodes.UNAUTHORIZED);
+
+      if (typeof isFavorite !== "boolean")
+        throw new AppError(
+          "isFavorite must be a boolean value",
+          StatusCodes.BAD_REQUEST
+        );
+
+      await this.dishService.updateFavoriteDishByUserId(
+        userId,
+        Number(dishId),
+        isFavorite
+      );
+
+      res
+        .status(StatusCodes.OK)
+        .json({ message: "Favorite dish status updated successfully" });
+    } catch (error: unknown) {
+      handleError(error, res);
+    }
+  }
+
+  async checkFavoriteDish(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const { dishId } = req.params;
+
+      if (!userId)
+        throw new AppError("User not authenticated", StatusCodes.UNAUTHORIZED);
+
+      const isFavorite = await this.dishService.checkFavoriteDish(
+        userId,
+        Number(dishId)
+      );
+
+      res.status(StatusCodes.OK).json({ isFavorite });
     } catch (error: unknown) {
       handleError(error, res);
     }

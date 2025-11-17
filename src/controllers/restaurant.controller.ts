@@ -156,4 +156,18 @@ export class RestaurantController {
       handleError(error, res);
     }
   }
+
+  async checkFavoriteRestaurant(req: Request, res: Response) {
+    try {
+      const userId = req.user!.id;
+      const restaurantId = Number(req.params.restaurantId);
+      const isFavorite = await this.restaurantService.checkFavoriteRestaurant(
+        userId,
+        restaurantId
+      );
+      res.status(StatusCodes.OK).json({ isFavorite });
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
 }

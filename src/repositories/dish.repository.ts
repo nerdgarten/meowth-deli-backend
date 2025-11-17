@@ -35,6 +35,19 @@ export default class DishRepository {
     });
   }
 
+  async getFavoriteDishByUserId(userId: number, restaurantId: number) {
+    return prisma.dish.findMany({
+      where: {
+        restaurant_id: restaurantId,
+        favorites: {
+          some: {
+            customer_id: userId,
+          },
+        },
+      },
+    });
+  }
+
   async createDish(data: Prisma.DishCreateInput) {
     return prisma.dish.create({ data });
   }
@@ -57,5 +70,37 @@ export default class DishRepository {
       where: { id },
       data: { is_out_of_stock },
     });
+  }
+
+  async updateFavoriteDishByUserId(
+    userId: number,
+    dishId: number,
+    isFavorite: boolean
+  ) {
+    if (isFavorite) {
+      await prisma.favoriteDish.create({
+        data: {
+          customer_id: userId,
+          dish_id: dishId,
+        },
+      });
+    } else {
+      await prisma.favoriteDish.deleteMany({
+        where: {
+          customer_id: userId,
+          dish_id: dishId,
+        },
+      });
+    }
+  }
+
+  async isFavoriteDishByUserId(userId: number, dishId: number) {
+    const favorite = await prisma.favoriteDish.findFirst({
+      where: {
+        customer_id: userId,
+        dish_id: dishId,
+      },
+    });
+    return !!favorite;
   }
 }

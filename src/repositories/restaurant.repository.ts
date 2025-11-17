@@ -136,4 +136,14 @@ export default class RestaurantRepository {
       });
     }
   }
+
+  async isFavoriteRestaurantByUserId(userId: number, restaurantId: number) {
+    const favorite = await prisma.favoriteRestaurant.findFirst({
+      where: {
+        customer_id: userId,
+        restaurant_id: restaurantId,
+      },
+    });
+    return favorite !== null;
+  }
 }

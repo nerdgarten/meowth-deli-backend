@@ -111,4 +111,26 @@ export default class RestaurantService {
       isFavorite
     );
   }
+
+  async checkFavoriteRestaurant(
+    userId: number,
+    restaurantId: number
+  ): Promise<boolean> {
+    const customer =
+      await this.customerRepository.getCustomerProfileById(userId);
+    if (!customer) {
+      throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
+    }
+    const restaurant =
+      await this.restaurantRepository.getRestaurantProfileById(restaurantId);
+    if (!restaurant) {
+      throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
+    }
+    const isFavorite =
+      await this.restaurantRepository.isFavoriteRestaurantByUserId(
+        userId,
+        restaurantId
+      );
+    return isFavorite;
+  }
 }
