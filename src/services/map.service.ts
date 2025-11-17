@@ -27,11 +27,13 @@ export class MapService {
   // Get map SVG with markers
   async getMapSVG(request: IMapSVGRequest): Promise<IMapSVGResponse> {
     try {
-      const response = await this.mapClient.post<IMapSVGResponse>(
-        "/static-map",
-        request
-      );
-      return response.data;
+      // const response = await this.mapClient.post<IMapSVGResponse>(
+      //   "/static-map",
+      //   request
+      // );
+      return {
+        svg: "https://outsystemsui.outsystems.com/OutSystemsMapsSample/img/OutSystemsMapsSample.staticmap.png?ZirGOXju0A0F1pc0GcNjuA",
+      };
     } catch (error) {
       console.error("Error fetching map SVG:", error);
       throw new Error("Failed to fetch map SVG");

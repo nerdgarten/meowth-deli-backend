@@ -269,5 +269,10 @@ export class OrderRouter extends BaseRouter {
       roleMiddleware(Role.customer),
       this.orderController.createOrder.bind(this.orderController)
     );
+    this.router.patch(
+      "/:id/status",
+      authMiddleware,
+      this.orderController.updateOrderStatus.bind(this.orderController)
+    );
   }
 }
