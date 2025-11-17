@@ -90,7 +90,7 @@ export default class RestaurantService {
 
   async updateFavoriteRestaurantByUserId(
     userId: number,
-    favoriteRestaurantId: number,
+    RestaurantId: number,
     isFavorite: boolean
   ): Promise<void> {
     const customer =
@@ -99,15 +99,13 @@ export default class RestaurantService {
       throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
     }
     const restaurant =
-      await this.restaurantRepository.getRestaurantProfileById(
-        favoriteRestaurantId
-      );
+      await this.restaurantRepository.getRestaurantProfileById(RestaurantId);
     if (!restaurant) {
       throw new AppError("Restaurant not found", StatusCodes.NOT_FOUND);
     }
     await this.restaurantRepository.updateFavoriteRestaurantByUserId(
       userId,
-      favoriteRestaurantId,
+      RestaurantId,
       isFavorite
     );
   }

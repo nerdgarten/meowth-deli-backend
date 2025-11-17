@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes/build/cjs/status-codes";
 
-import { OrderStatus, Prisma } from "@/generated/prisma/client";
+import { OrderStatus, Prisma, Role } from "@/generated/prisma/client";
 import CustomerRepository from "@/repositories/customer.repository";
 import DriverRepository from "@/repositories/driver.repository";
 import LocationRepository from "@/repositories/location.repository";
@@ -47,10 +47,22 @@ export default class OrderService {
     this.locationRepository = new LocationRepository();
   }
 
-  async getOrderById(orderId: number): Promise<GetOrderResponseDTO> {
+  async getOrderById(
+    orderId: number,
+    userId: number,
+    userRole: Role
+  ): Promise<GetOrderResponseDTO> {
     const order = await this.orderRepository.getOrderById(orderId);
     if (!order) {
       throw new AppError("Order not found", StatusCodes.NOT_FOUND);
+    }
+    if (
+      order.customer_id !== userId &&
+      order.restaurant.id !== userId &&
+      order.driver?.id !== userId &&
+      userRole !== Role.admin
+    ) {
+      throw new AppError("Access denied", StatusCodes.FORBIDDEN);
     }
     return {
       ...this.formatOrderResponse(order),
