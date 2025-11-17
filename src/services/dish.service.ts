@@ -72,6 +72,14 @@ export default class DishService {
     return dishes;
   }
 
+  async getFavoriteDishesByUserId(userId: number, restaurantId: number) {
+    const dishes = await this.dishRepository.getFavoriteDishByUserId(
+      userId,
+      restaurantId
+    );
+    return dishes;
+  }
+
   async updateDish(
     id: number,
     restaurantId: number,
@@ -110,5 +118,17 @@ export default class DishService {
       is_out_of_stock
     );
     return updatedDish;
+  }
+
+  async updateFavoriteDishByUserId(
+    userId: number,
+    dishId: number,
+    isFavorite: boolean
+  ) {
+    await this.dishRepository.updateFavoriteDishByUserId(
+      userId,
+      dishId,
+      isFavorite
+    );
   }
 }
