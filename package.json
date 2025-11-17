@@ -12,7 +12,7 @@
     "db:teardown": "docker compose down -v",
     "lint": "eslint src --ext .ts src --ignore-pattern src/__tests__/**",
     "lint:fix": "eslint --ext .ts src --fix --ignore-pattern src/__tests__/**",
-    "build": "tsc",
+    "build": "tsc && tsc-alias && tsc-esm-fix",
     "start": "node dist/server.js",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -50,6 +50,8 @@
     "nodemailer": "^7.0.6",
     "prisma": "^6.19.0",
     "swagger-jsdoc": "^6.2.8",
+    "tsc-alias": "^1.8.16",
+    "tsc-esm-fix": "^3.1.2",
     "yaml": "^2.8.1",
     "zod": "^4.1.7"
   },
