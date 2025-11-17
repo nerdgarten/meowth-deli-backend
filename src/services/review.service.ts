@@ -15,16 +15,19 @@ import {
 } from "@/validators/review.schema";
 import DriverRepository from "@/repositories/driver.repository";
 import RestaurantRepository from "@/repositories/restaurant.repository";
+import CustomerRepository from "@/repositories/customer.repository";
 
 export default class ReviewService {
   private reviewRepository: ReviewRepository;
   private driverRepository: DriverRepository;
   private restaurantRepository: RestaurantRepository;
+  private customerRepository: CustomerRepository;
 
   constructor() {
     this.reviewRepository = new ReviewRepository();
     this.driverRepository = new DriverRepository();
     this.restaurantRepository = new RestaurantRepository();
+    this.customerRepository = new CustomerRepository();
   }
 
   async createDriverReview(
@@ -37,6 +40,13 @@ export default class ReviewService {
       driver_id: Number(body.driver_id),
       rate: Number(body.rate),
     });
+
+    const customer = await this.customerRepository.getCustomerProfileById(
+      dto.customer_id
+    );
+    if (!customer) {
+      throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
+    }
 
     const driver = await this.driverRepository.getDriverProfileById(
       dto.driver_id
@@ -83,13 +93,19 @@ export default class ReviewService {
     userId: number,
     body: CreateRestaurantReviewRequestDTO
   ): Promise<CreateRestaurantReviewResponseDTO> {
-    console.log(body);
     const dto = createRestaurantReviewBodySchema.parse({
       ...body,
       customer_id: Number(body.customer_id),
       restaurant_id: Number(body.restaurant_id),
       rate: Number(body.rate),
     });
+
+    const customer = await this.customerRepository.getCustomerProfileById(
+      dto.customer_id
+    );
+    if (!customer) {
+      throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
+    }
 
     const restaurant = await this.restaurantRepository.getRestaurantProfileById(
       dto.restaurant_id

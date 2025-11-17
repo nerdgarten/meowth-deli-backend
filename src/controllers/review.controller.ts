@@ -23,6 +23,7 @@ export default class ReviewController {
 
     try {
       const review = await this.reviewService.createDriverReview(userId, {
+        customer_id: userId,
         ...req.body,
         image: filePath,
       });
@@ -45,6 +46,7 @@ export default class ReviewController {
 
     try {
       const review = await this.reviewService.createRestaurantReview(userId, {
+        customer_id: userId,
         ...req.body,
         image: filePath,
       });
