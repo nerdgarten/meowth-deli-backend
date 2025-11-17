@@ -113,17 +113,17 @@ export class AdminController {
   }
   async getFileIdPendingVerifiedRestaurants(req: Request, res: Response) {
     try {
-      const driverId = Number(req.params.id);
-      console.log(driverId);
-      if (isNaN(driverId)) {
+      const restaurantId = Number(req.params.id);
+      console.log(restaurantId);
+      if (isNaN(restaurantId)) {
         res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
-          message: "Invalid driver ID",
+          message: "Invalid restaurant ID",
         });
         return;
       }
       const result = await this.adminService.getFileIdPendingVerified(
-        driverId,
+        restaurantId,
         "restaurant"
       );
       res.status(StatusCodes.OK).json(result);
@@ -178,17 +178,17 @@ export class AdminController {
   }
   async getRestaurantFileById(req: Request, res: Response) {
     try {
-      const driverId = Number(req.params.id);
+      const restaurantId = Number(req.params.id);
       const fileId = String(req.params.fileId);
-      if (isNaN(driverId) || !fileId) {
+      if (isNaN(restaurantId) || !fileId) {
         res.status(StatusCodes.BAD_REQUEST).json({
           success: false,
-          message: "Invalid driver ID or file ID",
+          message: "Invalid restaurant ID or file ID",
         });
         return;
       }
       const result = await this.adminService.getFileById(
-        driverId,
+        restaurantId,
         fileId,
         "restaurant"
       );

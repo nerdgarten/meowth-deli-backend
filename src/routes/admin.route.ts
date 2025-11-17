@@ -1,14 +1,15 @@
 import { Router, Request, Response, NextFunction } from "express";
+
 import { AdminController } from "@/controllers/admin.controller";
-import { RestaurantController } from "@/controllers/restaurant.controller";
 import { ReportController } from "@/controllers/report.controller";
-import { BaseRouter } from "@/routes/baseRouter";
+import { RestaurantController } from "@/controllers/restaurant.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
-import { roleMiddleware } from "@/middlewares/role.middleware";
 import { fileMiddleware } from "@/middlewares/file.middleware";
-import { certificateFileConfig } from "@/utils/fileConfig";
-import { Role } from "@/types/role";
+import { roleMiddleware } from "@/middlewares/role.middleware";
+import { BaseRouter } from "@/routes/baseRouter";
 import { IJwtData } from "@/types/auth/jwt";
+import { Role } from "@/types/role";
+import { certificateFileConfig } from "@/utils/fileConfig";
 
 export class AdminRouter extends BaseRouter {
   private controller: AdminController;
@@ -32,16 +33,8 @@ export class AdminRouter extends BaseRouter {
       "/restaurants",
       this.controller.listRestaurants.bind(this.controller)
     );
-    this.router.get(
-      "/restaurant",
-      this.controller.listRestaurants.bind(this.controller)
-    );
     this.router.patch(
-      "/restaurants/:id/verify",
-      this.controller.verifyRestaurant.bind(this.controller)
-    );
-    this.router.patch(
-      "/restaurant/:id/verify",
+      "/restaurants/verify",
       this.controller.verifyRestaurant.bind(this.controller)
     );
 
@@ -50,16 +43,8 @@ export class AdminRouter extends BaseRouter {
       "/drivers",
       this.controller.listDrivers.bind(this.controller)
     );
-    this.router.get(
-      "/driver",
-      this.controller.listDrivers.bind(this.controller)
-    );
     this.router.patch(
-      "/drivers/:id/verify",
-      this.controller.verifyDriver.bind(this.controller)
-    );
-    this.router.patch(
-      "/driver/:id/verify",
+      "/drivers/verify",
       this.controller.verifyDriver.bind(this.controller)
     );
 
