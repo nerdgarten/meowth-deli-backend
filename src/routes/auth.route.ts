@@ -27,15 +27,13 @@ export class AuthRouter extends BaseRouter {
      *             properties:
      *               email:
      *                 type: string
+     *                 format: email
      *               password:
      *                 type: string
-     *               role:
-     *                 type: string
-     *                 enum: [customer, driver, restaurant, admin]
+     *                 minLength: 6
      *             required:
      *               - email
      *               - password
-     *               - role
      *     responses:
      *       200:
      *         description: Successful sign in
@@ -68,31 +66,46 @@ export class AuthRouter extends BaseRouter {
      *             properties:
      *               email:
      *                 type: string
+     *                 format: email
      *               password:
      *                 type: string
-     *               tel:
-     *                 type: string
+     *                 minLength: 6
      *               firstname:
      *                 type: string
      *               lastname:
      *                 type: string
-     *               image:
+     *               tel:
      *                 type: string
      *               accepted_term_of_service:
      *                 type: boolean
      *               accepted_pdpa:
      *                 type: boolean
-     *               accepted_cookie_tracking:
-     *                 type: boolean
      *             required:
      *               - email
      *               - password
-     *               - tel
      *               - firstname
      *               - lastname
+     *               - tel
      *     responses:
      *       201:
      *         description: Customer created successfully
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 email:
+     *                   type: string
+     *                 role:
+     *                   type: string
+     *                 firstname:
+     *                   type: string
+     *                 lastname:
+     *                   type: string
+     *                 tel:
+     *                   type: string
      *       400:
      *         description: Bad request
      */
@@ -115,39 +128,46 @@ export class AuthRouter extends BaseRouter {
      *             properties:
      *               email:
      *                 type: string
+     *                 format: email
      *               password:
      *                 type: string
-     *               tel:
-     *                 type: string
+     *                 minLength: 6
      *               firstname:
      *                 type: string
      *               lastname:
      *                 type: string
-     *               vehicle:
-     *                 type: string
-     *               licence:
-     *                 type: string
-     *               fee_rate:
-     *                 type: number
-     *               image:
+     *               tel:
      *                 type: string
      *               accepted_term_of_service:
      *                 type: boolean
      *               accepted_pdpa:
      *                 type: boolean
-     *               accepted_cookie_tracking:
-     *                 type: boolean
      *             required:
      *               - email
      *               - password
-     *               - tel
      *               - firstname
      *               - lastname
-     *               - vehicle
-     *               - licence
+     *               - tel
      *     responses:
      *       201:
      *         description: Driver created successfully
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 email:
+     *                   type: string
+     *                 role:
+     *                   type: string
+     *                 firstname:
+     *                   type: string
+     *                 lastname:
+     *                   type: string
+     *                 tel:
+     *                   type: string
      *       400:
      *         description: Bad request
      */
@@ -170,35 +190,45 @@ export class AuthRouter extends BaseRouter {
      *             properties:
      *               email:
      *                 type: string
+     *                 format: email
      *               password:
+     *                 type: string
+     *                 minLength: 6
+     *               name:
      *                 type: string
      *               tel:
      *                 type: string
-     *               name:
-     *                 type: string
-     *               location:
-     *                 type: string
      *               detail:
-     *                 type: string
-     *               fee_rate:
-     *                 type: number
-     *               image:
      *                 type: string
      *               accepted_term_of_service:
      *                 type: boolean
      *               accepted_pdpa:
      *                 type: boolean
-     *               accepted_cookie_tracking:
-     *                 type: boolean
      *             required:
      *               - email
      *               - password
-     *               - tel
      *               - name
-     *               - location
+     *               - tel
      *     responses:
      *       201:
      *         description: Restaurant created successfully
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 email:
+     *                   type: string
+     *                 role:
+     *                   type: string
+     *                 name:
+     *                   type: string
+     *                 tel:
+     *                   type: string
+     *                 detail:
+     *                   type: string
      *       400:
      *         description: Bad request
      */
@@ -221,11 +251,19 @@ export class AuthRouter extends BaseRouter {
      *             properties:
      *               email:
      *                 type: string
+     *                 format: email
      *             required:
      *               - email
      *     responses:
      *       200:
      *         description: Reset email sent
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
      *       400:
      *         description: Bad request
      */
@@ -254,11 +292,19 @@ export class AuthRouter extends BaseRouter {
      *             properties:
      *               password:
      *                 type: string
+     *                 minLength: 6
      *             required:
      *               - password
      *     responses:
      *       200:
      *         description: Password reset successfully
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
      *       400:
      *         description: Bad request
      */

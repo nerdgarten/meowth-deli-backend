@@ -63,7 +63,7 @@ export class CustomerRouter extends BaseRouter {
      *     requestBody:
      *       required: true
      *       content:
-     *         application/json:
+     *         multipart/form-data:
      *           schema:
      *             type: object
      *             properties:
@@ -75,9 +75,23 @@ export class CustomerRouter extends BaseRouter {
      *                 type: string
      *               image:
      *                 type: string
+     *                 format: binary
      *     responses:
      *       200:
      *         description: Profile updated
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 firstname:
+     *                   type: string
+     *                 lastname:
+     *                   type: string
+     *                 tel:
+     *                   type: string
+     *                 image:
+     *                   type: string
      */
     this.router.patch(
       "/profile",
@@ -88,20 +102,60 @@ export class CustomerRouter extends BaseRouter {
     );
     /**
      * @swagger
-     * /customer/my-orders-hist/statistics:
+     * /customer/allergy:
      *   get:
-     *     summary: Get order statistics
+     *     summary: Get customer allergies
      *     tags: [Customer]
      *     security:
      *       - cookieAuth: []
      *     responses:
      *       200:
-     *         description: Order statistics
+     *         description: List of allergies
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: string
+     *                 enum: [gluten, peanuts]
      */
     this.router.get(
       "/allergy",
       this.customerController.getAllergy.bind(this.customerController)
     );
+    /**
+     * @swagger
+     * /customer/allergy:
+     *   put:
+     *     summary: Update customer allergies
+     *     tags: [Customer]
+     *     security:
+     *       - cookieAuth: []
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               allergies:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                   enum: [gluten, peanuts]
+     *             required:
+     *               - allergies
+     *     responses:
+     *       200:
+     *         description: Allergies updated
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: string
+     *                 enum: [gluten, peanuts]
+     */
     this.router.put(
       "/allergy",
       this.customerController.updateAllergy.bind(this.customerController)
@@ -128,9 +182,22 @@ export class CustomerRouter extends BaseRouter {
      *               paymentMethod:
      *                 type: string
      *                 enum: [cash, mobilebanking, creditcard, meowth-wallet]
+     *             required:
+     *               - orderId
+     *               - amount
+     *               - paymentMethod
      *     responses:
      *       200:
      *         description: Payment processed successfully
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 success:
+     *                   type: boolean
+     *                 data:
+     *                   type: object
      */
     this.router.post(
       "/process-payment",

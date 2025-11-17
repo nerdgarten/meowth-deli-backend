@@ -17,22 +17,79 @@ export class DishRouter extends BaseRouter {
   private setUpRoutes() {
     /**
      * @swagger
-     * /dish/search:
+     * /dish:
      *   get:
-     *     summary: Search dishes
+     *     summary: Get all dishes
      *     tags: [Dish]
-     *     parameters:
-     *       - in: query
-     *         name: q
-     *         schema:
-     *           type: string
      *     responses:
      *       200:
      *         description: List of dishes
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   id:
+     *                     type: integer
+     *                   name:
+     *                     type: string
+     *                   description:
+     *                     type: string
+     *                   price:
+     *                     type: number
+     *                   image:
+     *                     type: string
+     *                   in_stock:
+     *                     type: boolean
+     *                   restaurant_id:
+     *                     type: integer
      */
     this.router.get(
       "/",
       this.dishController.getAllDishes.bind(this.dishController)
+    );
+    /**
+     * @swagger
+     * /dish/restaurant/{id}:
+     *   get:
+     *     summary: Get dishes by restaurant ID
+     *     tags: [Dish]
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: integer
+     *     responses:
+     *       200:
+     *         description: List of dishes
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   id:
+     *                     type: integer
+     *                   name:
+     *                     type: string
+     *                   description:
+     *                     type: string
+     *                   price:
+     *                     type: number
+     *                   image:
+     *                     type: string
+     *                   in_stock:
+     *                     type: boolean
+     *                   restaurant_id:
+     *                     type: integer
+     */
+    this.router.get(
+      "/restaurant/:id",
+      this.dishController.getDishesByRestaurantId.bind(this.dishController)
     );
     /**
      * @swagger
@@ -49,11 +106,26 @@ export class DishRouter extends BaseRouter {
      *     responses:
      *       200:
      *         description: Dish details
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 name:
+     *                   type: string
+     *                 description:
+     *                   type: string
+     *                 price:
+     *                   type: number
+     *                 image:
+     *                   type: string
+     *                 in_stock:
+     *                   type: boolean
+     *                 restaurant_id:
+     *                   type: integer
      */
-    this.router.get(
-      "/restaurant/:id",
-      this.dishController.getDishesByRestaurantId.bind(this.dishController)
-    );
     this.router.get(
       "/:id",
       this.dishController.getDishById.bind(this.dishController)
@@ -69,7 +141,7 @@ export class DishRouter extends BaseRouter {
      *     requestBody:
      *       required: true
      *       content:
-     *         application/json:
+     *         multipart/form-data:
      *           schema:
      *             type: object
      *             properties:
@@ -79,13 +151,34 @@ export class DishRouter extends BaseRouter {
      *                 type: string
      *               price:
      *                 type: number
-     *               restaurant_id:
-     *                 type: integer
      *               image:
      *                 type: string
+     *                 format: binary
+     *             required:
+     *               - name
+     *               - price
      *     responses:
      *       201:
      *         description: Dish created
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 name:
+     *                   type: string
+     *                 description:
+     *                   type: string
+     *                 price:
+     *                   type: number
+     *                 image:
+     *                   type: string
+     *                 in_stock:
+     *                   type: boolean
+     *                 restaurant_id:
+     *                   type: integer
      */
     this.router.post(
       "/",
@@ -110,7 +203,7 @@ export class DishRouter extends BaseRouter {
      *     requestBody:
      *       required: true
      *       content:
-     *         application/json:
+     *         multipart/form-data:
      *           schema:
      *             type: object
      *             properties:
@@ -122,9 +215,29 @@ export class DishRouter extends BaseRouter {
      *                 type: number
      *               image:
      *                 type: string
+     *                 format: binary
      *     responses:
      *       200:
      *         description: Dish updated
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 name:
+     *                   type: string
+     *                 description:
+     *                   type: string
+     *                 price:
+     *                   type: number
+     *                 image:
+     *                   type: string
+     *                 in_stock:
+     *                   type: boolean
+     *                 restaurant_id:
+     *                   type: integer
      */
     this.router.patch(
       "/:id",
@@ -149,6 +262,13 @@ export class DishRouter extends BaseRouter {
      *     responses:
      *       200:
      *         description: Dish deleted
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
      */
     this.router.delete(
       "/:id",
@@ -176,11 +296,32 @@ export class DishRouter extends BaseRouter {
      *           schema:
      *             type: object
      *             properties:
-     *               in_stock:
+     *               is_out_of_stock:
      *                 type: boolean
+     *             required:
+     *               - is_out_of_stock
      *     responses:
      *       200:
      *         description: Stock status updated
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 name:
+     *                   type: string
+     *                 description:
+     *                   type: string
+     *                 price:
+     *                   type: number
+     *                 image:
+     *                   type: string
+     *                 in_stock:
+     *                   type: boolean
+     *                 restaurant_id:
+     *                   type: integer
      */
     this.router.patch(
       "/:id/stock-status",

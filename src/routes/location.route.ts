@@ -20,50 +20,12 @@ export class LocationRouter extends BaseRouter {
   private initializeRoutes(): void {
     /**
      * @swagger
-     * /location/{id}/setDefault:
+     * /location/customer:
      *   post:
-     *     summary: Set default location
+     *     summary: Create customer location
      *     tags: [Location]
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: Default location set
-     */
-    this.router.post(
-      "/customer",
-      this.locationController.createCustomerLocation.bind(
-        this.locationController
-      )
-    );
-    this.router.get(
-      "/customer",
-      this.locationController.getLocationsByCustomerId.bind(
-        this.locationController
-      )
-    );
-    this.router.get(
-      "/customer/default",
-      this.locationController.getDefaultLocationByCustomerId.bind(
-        this.locationController
-      )
-    );
-    /**
-     * @swagger
-     * /location/{id}:
-     *   patch:
-     *     summary: Update location
-     *     tags: [Location]
-     *     parameters:
-     *       - in: path
-     *         name: id
-     *         required: true
-     *         schema:
-     *           type: integer
+     *     security:
+     *       - bearerAuth: []
      *     requestBody:
      *       required: true
      *       content:
@@ -77,9 +39,132 @@ export class LocationRouter extends BaseRouter {
      *                 type: number
      *               longitude:
      *                 type: number
+     *             required:
+     *               - address
+     *               - latitude
+     *               - longitude
+     *     responses:
+     *       201:
+     *         description: Location created
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 address:
+     *                   type: string
+     *                 latitude:
+     *                   type: number
+     *                 longitude:
+     *                   type: number
+     */
+    this.router.post(
+      "/customer",
+      this.locationController.createCustomerLocation.bind(
+        this.locationController
+      )
+    );
+    /**
+     * @swagger
+     * /location/customer:
+     *   get:
+     *     summary: Get customer locations
+     *     tags: [Location]
+     *     security:
+     *       - bearerAuth: []
      *     responses:
      *       200:
-     *         description: Location updated
+     *         description: List of locations
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: array
+     *               items:
+     *                 type: object
+     *                 properties:
+     *                   id:
+     *                     type: integer
+     *                   address:
+     *                     type: string
+     *                   latitude:
+     *                     type: number
+     *                   longitude:
+     *                     type: number
+     */
+    this.router.get(
+      "/customer",
+      this.locationController.getLocationsByCustomerId.bind(
+        this.locationController
+      )
+    );
+    /**
+     * @swagger
+     * /location/customer/default:
+     *   get:
+     *     summary: Get default customer location
+     *     tags: [Location]
+     *     security:
+     *       - bearerAuth: []
+     *     responses:
+     *       200:
+     *         description: Default location
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 address:
+     *                   type: string
+     *                 latitude:
+     *                   type: number
+     *                 longitude:
+     *                   type: number
+     */
+    this.router.get(
+      "/customer/default",
+      this.locationController.getDefaultLocationByCustomerId.bind(
+        this.locationController
+      )
+    );
+    /**
+     * @swagger
+     * /location/customer/default:
+     *   patch:
+     *     summary: Update default customer location
+     *     tags: [Location]
+     *     security:
+     *       - bearerAuth: []
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               location_id:
+     *                 type: integer
+     *             required:
+     *               - location_id
+     *     responses:
+     *       200:
+     *         description: Default location updated
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 address:
+     *                   type: string
+     *                 latitude:
+     *                   type: number
+     *                 longitude:
+     *                   type: number
      */
     this.router.patch(
       "/customer/default",
@@ -87,31 +172,84 @@ export class LocationRouter extends BaseRouter {
         this.locationController
       )
     );
+    /**
+     * @swagger
+     * /location/restaurant:
+     *   get:
+     *     summary: Get restaurant location
+     *     tags: [Location]
+     *     security:
+     *       - bearerAuth: []
+     *     responses:
+     *       200:
+     *         description: Restaurant location
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 address:
+     *                   type: string
+     *                 latitude:
+     *                   type: number
+     *                 longitude:
+     *                   type: number
+     */
     this.router.get(
       "/restaurant",
       this.locationController.getRestaurantLocationByRestaurantId.bind(
         this.locationController
       )
     );
+    /**
+     * @swagger
+     * /location/restaurant:
+     *   post:
+     *     summary: Create restaurant location
+     *     tags: [Location]
+     *     security:
+     *       - bearerAuth: []
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               address:
+     *                 type: string
+     *               latitude:
+     *                 type: number
+     *               longitude:
+     *                 type: number
+     *             required:
+     *               - address
+     *               - latitude
+     *               - longitude
+     *     responses:
+     *       201:
+     *         description: Location created
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 id:
+     *                   type: integer
+     *                 address:
+     *                   type: string
+     *                 latitude:
+     *                   type: number
+     *                 longitude:
+     *                   type: number
+     */
     this.router.post(
       "/restaurant",
       this.locationController.createRestaurantLocation.bind(
         this.locationController
       )
-    );
-    this.router.get(
-      "/driver",
-      this.locationController.getDriverLocationByDriverId.bind(
-        this.locationController
-      )
-    );
-    this.router.post(
-      "/driver",
-      this.locationController.createDriverLocation.bind(this.locationController)
-    );
-    this.router.put(
-      "/:id",
-      this.locationController.updateLocationById.bind(this.locationController)
     );
   }
 

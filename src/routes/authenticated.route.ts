@@ -24,10 +24,20 @@ export class AuthenticateRouter extends BaseRouter {
      *     summary: Get authenticated user info
      *     tags: [Authenticated]
      *     security:
-     *       - cookieAuth: []
+     *       - bearerAuth: []
      *     responses:
      *       200:
      *         description: User info
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                 role:
+     *                   type: string
+     *                   enum: [customer, driver, restaurant, admin]
      */
     this.router.get(
       "/",
@@ -43,10 +53,17 @@ export class AuthenticateRouter extends BaseRouter {
      *     summary: Logout user
      *     tags: [Authenticated]
      *     security:
-     *       - cookieAuth: []
+     *       - bearerAuth: []
      *     responses:
      *       200:
      *         description: Logged out
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
      */
     this.router.post(
       "/logout",
