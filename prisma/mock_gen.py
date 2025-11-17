@@ -397,12 +397,13 @@ for customer in customers:
             data["RestaurantReview"].append(
                 {
                     "id": next_id("RestaurantReview"),
-                    "user_id": cid,
+                    "customer_id": cid,
                     "restaurant_id": rest_id,
                     "order_id": order_id,
                     "rate": round(random.uniform(3.0, 5.0), 1),
-                    "images": text_array_literal([fake.image_url() for _ in range(random.randint(0, 2))]) if random.random() < 0.3 else text_array_literal([]),
+                    "title": fake.sentence(nb_words=4).rstrip('.'),
                     "review_text": fake.text(max_nb_chars=80) if random.random() < 0.5 else None,
+                    "image": fake.image_url() if random.random() < 0.3 else "",
                     "created_at": order_ts,
                     "updated_at": order_ts,
                 }
@@ -416,8 +417,9 @@ for customer in customers:
                     "driver_id": driver_id,
                     "order_id": order_id,
                     "rate": round(random.uniform(3.0, 5.0), 1),
-                    "images": text_array_literal([fake.image_url() for _ in range(random.randint(0, 2))]) if random.random() < 0.3 else text_array_literal([]),
+                    "title": fake.sentence(nb_words=4).rstrip('.'),
                     "review_text": fake.text(max_nb_chars=80) if random.random() < 0.4 else None,
+                    "image": fake.image_url() if random.random() < 0.3 else "",
                     "created_at": order_ts,
                     "updated_at": order_ts,
                 }

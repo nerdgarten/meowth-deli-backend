@@ -8,6 +8,8 @@ const DRIVER_REVIEW_INCLUDE = {
       id: true,
       firstname: true,
       lastname: true,
+      image: true,
+      tel: true,
     },
   },
   driver: {
@@ -15,30 +17,58 @@ const DRIVER_REVIEW_INCLUDE = {
       id: true,
       firstname: true,
       lastname: true,
+      image: true,
+      tel: true,
     },
   },
 };
 
 const RESTAURANT_REVIEW_INCLUDE = {
-  user: {
+  customer: {
     select: {
       id: true,
-      email: true,
+      firstname: true,
+      lastname: true,
+      image: true,
+      tel: true,
     },
   },
   restaurant: {
     select: {
       id: true,
       name: true,
+      banner: true,
+      tel: true,
     },
   },
 };
 
 export default class ReviewRepository {
+  async getDriverReviewByReviewId(reviewId: number) {
+    return prisma.driverReview.findUnique({
+      where: { id: reviewId },
+      include: DRIVER_REVIEW_INCLUDE,
+    });
+  }
+
+  async getRestaurantReviewByReviewId(reviewId: number) {
+    return prisma.restaurantReview.findUnique({
+      where: { id: reviewId },
+      include: RESTAURANT_REVIEW_INCLUDE,
+    });
+  }
+
   async getDriverReviewsById(driverId: number) {
     return prisma.driverReview.findMany({
       where: { driver_id: driverId },
       include: DRIVER_REVIEW_INCLUDE,
+    });
+  }
+
+  async getRestaurantReviewById(reviewId: number) {
+    return prisma.restaurantReview.findUnique({
+      where: { id: reviewId },
+      include: RESTAURANT_REVIEW_INCLUDE,
     });
   }
 

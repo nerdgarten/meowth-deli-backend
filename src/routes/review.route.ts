@@ -68,7 +68,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.get(
       "/driver/:driverId",
-      this.controller.listDriverReviews.bind(this.controller)
+      this.controller.getDriverReviewsById.bind(this.controller)
     );
     /**
      * @swagger
@@ -95,7 +95,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.get(
       "/driver/:reviewId",
-      this.controller.getDriverReview.bind(this.controller)
+      this.controller.getDriverReviewByReviewId.bind(this.controller)
     );
 
     // Restaurant Reviews
@@ -152,7 +152,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.get(
       "/restaurant/:restaurantId",
-      this.controller.listRestaurantReviews.bind(this.controller)
+      this.controller.getRestaurantReviewsById.bind(this.controller)
     );
     /**
      * @swagger
@@ -179,7 +179,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.get(
       "/restaurant/:reviewId",
-      this.controller.getRestaurantReview.bind(this.controller)
+      this.controller.getRestaurantReviewByReviewId.bind(this.controller)
     );
   }
 }

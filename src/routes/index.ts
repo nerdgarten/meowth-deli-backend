@@ -9,7 +9,7 @@ import { DriverRouter } from "@/routes/driver.route";
 import { LocationRouter } from "@/routes/location.route";
 import { MapRouter } from "@/routes/map.route";
 import { OrderRouter } from "@/routes/order.route";
-// import { ReviewRouter } from "@/routes/review.route";
+import { ReviewRouter } from "@/routes/review.route";
 import { RestaurantRouter } from "@/routes/restaurant.route";
 import { TestRouter } from "@/routes/test.route";
 
@@ -31,7 +31,7 @@ export class RouterManager {
     const dishRouter = new DishRouter();
     const orderRouter = new OrderRouter();
     const adminRouter = new AdminRouter();
-    // const reviewRouter = new ReviewRouter();
+    const reviewRouter = new ReviewRouter();
     const mapRouter = new MapRouter();
     const testRouter = new TestRouter();
 
@@ -44,7 +44,7 @@ export class RouterManager {
     this.router.use("/dish", dishRouter.getRouter());
     this.router.use("/order", orderRouter.getRouter());
     this.router.use("/admin", adminRouter.getRouter());
-    // this.router.use("/review", reviewRouter.getRouter());
+    this.router.use("/review", reviewRouter.getRouter());
     this.router.use("/map", mapRouter.getRouter());
     this.router.use("/api-test", testRouter.getRouter());
   }
