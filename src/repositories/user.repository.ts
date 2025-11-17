@@ -1,5 +1,6 @@
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
+import { Role } from "@/types/role";
 
 export default class UserRepository {
   async getUsers() {
@@ -10,6 +11,10 @@ export default class UserRepository {
 
   async getUserByEmail(email: string) {
     return await prisma.user.findUnique({ where: { email } });
+  }
+
+  async getUserById(id: number) {
+    return await prisma.user.findUnique({ where: { id } });
   }
 
   async createCustomerUser(data: Prisma.UserCreateInput) {

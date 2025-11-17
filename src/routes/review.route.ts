@@ -10,10 +10,10 @@ export class ReviewRouter extends BaseRouter {
   constructor() {
     super({ prefix: "/review", middleware: [authMiddleware] });
     this.controller = new ReviewController();
-    this.initializeRoutes();
+    this.setUpRoutes();
   }
 
-  private initializeRoutes(): void {
+  private setUpRoutes(): void {
     // Driver Reviews
     /**
      * @swagger
@@ -45,7 +45,7 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review created
      */
     this.router.post(
-      "/driver/:driverId",
+      "/driver",
       this.controller.createDriverReview.bind(this.controller)
     );
     /**
@@ -94,7 +94,7 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review details
      */
     this.router.get(
-      "/driver/:driverId/:reviewId",
+      "/driver/:reviewId",
       this.controller.getDriverReview.bind(this.controller)
     );
 
@@ -129,7 +129,7 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review created
      */
     this.router.post(
-      "/restaurant/:restaurantId",
+      "/restaurant",
       this.controller.createRestaurantReview.bind(this.controller)
     );
     /**
@@ -178,76 +178,8 @@ export class ReviewRouter extends BaseRouter {
      *         description: Review details
      */
     this.router.get(
-      "/restaurant/:restaurantId/:reviewId",
+      "/restaurant/:reviewId",
       this.controller.getRestaurantReview.bind(this.controller)
     );
-
-    // Order Reviews
-    /**
-     * @swagger
-     * /review/order/{orderId}:
-     *   post:
-     *     summary: Create order reviews
-     *     tags: [Review]
-     *     security:
-     *       - cookieAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: orderId
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     requestBody:
-     *       required: true
-     *       content:
-     *         application/json:
-     *           schema:
-     *             type: object
-     *             properties:
-     *               reviews:
-     *                 type: array
-     *                 items:
-     *                   type: object
-     *                   properties:
-     *                     dish_id:
-     *                       type: integer
-     *                     rating:
-     *                       type: integer
-     *                     comment:
-     *                       type: string
-     *     responses:
-     *       201:
-     *         description: Reviews created
-     */
-    this.router.post(
-      "/order/:orderId",
-      this.controller.createOrderReviews.bind(this.controller)
-    );
-    /**
-     * @swagger
-     * /review/order/{orderId}:
-     *   get:
-     *     summary: Get order reviews
-     *     tags: [Review]
-     *     security:
-     *       - cookieAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: orderId
-     *         required: true
-     *         schema:
-     *           type: integer
-     *     responses:
-     *       200:
-     *         description: List of reviews
-     */
-    this.router.get(
-      "/order/:orderId",
-      this.controller.getOrderReviews.bind(this.controller)
-    );
-  }
-
-  public getRouter(): Router {
-    return this.router;
   }
 }

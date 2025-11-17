@@ -28,6 +28,12 @@ export type ResetPasswordRequestDTO = {
   password: string;
 };
 
+export type ChangePasswordRequestDTO = {
+  userId: number;
+  oldPassword: string;
+  newPassword: string;
+};
+
 export type SignInRequestDTO = {
   email: string;
   password: string;

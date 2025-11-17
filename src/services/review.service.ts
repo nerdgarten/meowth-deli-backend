@@ -27,12 +27,8 @@ export default class ReviewService {
     this.reviewRepository = new ReviewRepository();
   }
 
-  async createDriverReview(
-    userId: number,
-    driverIdValue: unknown,
-    body: CreateDriverReviewBody
-  ) {
-    const driverId = this.parseId(driverIdValue, "driverId");
+  async createDriverReview(userId: number, body: CreateDriverReviewBody) {
+    const driverId = this.parseId(body.driverId, "driverId");
     const orderId = this.parseId(body.orderId, "orderId");
     const rate = this.parseRate(body.rate);
     const reviewText = this.extractReviewText(body);

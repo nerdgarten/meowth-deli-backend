@@ -2,8 +2,8 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 import ReviewService from "@/services/review.service";
-import { AppError } from "@/types/error";
 import { ReviewPaginationQuery } from "@/types/review/review";
+import { handleError } from "@/utils/handleError";
 
 export default class ReviewController {
   private reviewService: ReviewService;
@@ -22,7 +22,6 @@ export default class ReviewController {
     try {
       const review = await this.reviewService.createDriverReview(
         userId,
-        req.params.driverId,
         req.body
       );
 

@@ -19,6 +19,7 @@ import {
   ResetPasswordRequestDTO,
   SignInRequestDTO,
   GetUserResponseDTO,
+  ChangePasswordRequestDTO,
 } from "@/types/dto/user";
 import { IEmail } from "@/types/email/email";
 import { AppError } from "@/types/error";
@@ -188,6 +189,27 @@ export default class UserService {
     const hashedPassword = await this.hashPassword(resetBody.password);
     await this.userRepository.updateUserPassword(user.id, hashedPassword);
     await this.resetTokenRepository.deleteResetToken(resetBody.token);
+    return;
+  }
+
+  async changePassword(changeBody: ChangePasswordRequestDTO): Promise<void> {
+    const data = await this.userRepository.getUserById(changeBody.userId);
+    if (!data) {
+      throw new AppError("User not found", StatusCodes.NOT_FOUND);
+    }
+    const isMatch = await bcrypt.compare(changeBody.oldPassword, data.password);
+    if (!isMatch) {
+      throw new AppError(
+        "Current password is incorrect",
+        StatusCodes.BAD_REQUEST
+      );
+    }
+
+    const hashedPassword = await this.hashPassword(changeBody.newPassword);
+    await this.userRepository.updateUserPassword(
+      changeBody.userId,
+      hashedPassword
+    );
     return;
   }
 

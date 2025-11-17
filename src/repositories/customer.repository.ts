@@ -1,8 +1,13 @@
 import { Allergy, Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/libs/prisma";
 export default class CustomerRepository {
-  async getCustomers() {
+  async getCustomers(onlyActive = true) {
     return prisma.customer.findMany({
+      where: {
+        user: {
+          is_deleted: onlyActive ? false : undefined,
+        },
+      },
       orderBy: { id: "asc" },
     });
   }

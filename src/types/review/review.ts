@@ -1,15 +1,18 @@
 export interface BaseReviewPayload {
+  title: string;
   rate: number | string;
   reviewText?: string;
   review_text?: string;
 }
 
 export interface CreateDriverReviewBody extends BaseReviewPayload {
-  orderId: number | string;
+  driverId: number;
+  orderId: number;
 }
 
 export interface CreateRestaurantReviewBody extends BaseReviewPayload {
-  orderId: number | string;
+  restaurantId: number;
+  orderId: number;
 }
 
 export interface CreateOrderReviewBody {
