@@ -71,8 +71,6 @@ export class DishController {
     try {
       const userId = req.user!.id;
       const { restaurantId } = req.params;
-      console.log("restaurantId", restaurantId);
-      console.log("userId", userId);
 
       if (!userId)
         throw new AppError("User not authenticated", StatusCodes.UNAUTHORIZED);

@@ -76,8 +76,6 @@ export default class DishService {
   }
 
   async getFavoriteDishesByUserId(userId: number, restaurantId: number) {
-    console.log("restaurantId", restaurantId);
-    console.log("userId", userId);
     const dishes = await this.dishRepository.getFavoriteDishByUserId(
       userId,
       restaurantId
@@ -130,6 +128,15 @@ export default class DishService {
     dishId: number,
     isFavorite: boolean
   ) {
+    const customer =
+      await this.customerRepository.getCustomerProfileById(userId);
+    if (!customer) {
+      throw new AppError("Customer not found", StatusCodes.NOT_FOUND);
+    }
+    const dish = await this.dishRepository.getDishById(dishId);
+    if (!dish) {
+      throw new AppError("Dish not found", StatusCodes.NOT_FOUND);
+    }
     await this.dishRepository.updateFavoriteDishByUserId(
       userId,
       dishId,
