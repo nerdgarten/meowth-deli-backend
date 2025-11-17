@@ -1,7 +1,6 @@
 export interface BaseReviewPayload {
   title: string;
   customer_id: number;
-  order_id: number;
   rate: number;
   review_text?: string;
   image?: string;
@@ -18,7 +17,6 @@ export interface CreateDriverReviewRequestDTO extends BaseReviewPayload {
 export interface CreateRestaurantReviewResponseDTO extends BaseReviewPayload {
   id: number;
   restaurant_id: number;
-  order_id: number;
   restaurant: {
     id: number;
     name: string;
@@ -37,7 +35,6 @@ export interface CreateRestaurantReviewResponseDTO extends BaseReviewPayload {
 export interface CreateDriverReviewResponseDTO extends BaseReviewPayload {
   id: number;
   driver_id: number;
-  order_id: number;
   driver: {
     id: number;
     firstname: string;
@@ -59,7 +56,6 @@ export interface GetRestaurantReviewResponseDTO {
   title: string;
   customer_id: number;
   restaurant_id: number;
-  order_id: number;
   rate: number;
   review_text?: string;
   image?: string;

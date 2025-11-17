@@ -399,7 +399,6 @@ for customer in customers:
                     "id": next_id("RestaurantReview"),
                     "customer_id": cid,
                     "restaurant_id": rest_id,
-                    "order_id": order_id,
                     "rate": round(random.uniform(3.0, 5.0), 1),
                     "title": fake.sentence(nb_words=4).rstrip('.'),
                     "review_text": fake.text(max_nb_chars=80) if random.random() < 0.5 else None,
@@ -415,7 +414,6 @@ for customer in customers:
                     "id": next_id("DriverReview"),
                     "customer_id": cid,
                     "driver_id": driver_id,
-                    "order_id": order_id,
                     "rate": round(random.uniform(3.0, 5.0), 1),
                     "title": fake.sentence(nb_words=4).rstrip('.'),
                     "review_text": fake.text(max_nb_chars=80) if random.random() < 0.4 else None,
@@ -493,10 +491,10 @@ print("\n--- Uploading data to PostgreSQL database ---")
 
 db_params = {
     "dbname": "nerdgarten",
-    "user": "root",
-    "password": "12345",
-    "host": "localhost",
-    "port": "5434",
+    "user": "nerdgarten",
+    "password": "icyicyicy1234",
+    "host": "103.216.158.139",
+    "port": "5499",
 }
 
 tables = [

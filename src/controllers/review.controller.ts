@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 
 import ReviewService from "@/services/review.service";
 import { handleError } from "@/utils/handleError";
+import { resultingFilePath } from "@/utils/fileConfig";
 
 export default class ReviewController {
   private reviewService: ReviewService;
@@ -17,12 +18,14 @@ export default class ReviewController {
       res.status(StatusCodes.UNAUTHORIZED).json({ message: "Unauthorized" });
       return;
     }
+    let filePath: string | undefined = undefined;
+    if (req.file) filePath = resultingFilePath(req);
 
     try {
-      const review = await this.reviewService.createDriverReview(
-        userId,
-        req.body
-      );
+      const review = await this.reviewService.createDriverReview(userId, {
+        ...req.body,
+        image: filePath,
+      });
 
       res.status(StatusCodes.CREATED).json(review);
     } catch (error: unknown) {
@@ -37,11 +40,14 @@ export default class ReviewController {
       return;
     }
 
+    let filePath: string | undefined = undefined;
+    if (req.file) filePath = resultingFilePath(req);
+
     try {
-      const review = await this.reviewService.createRestaurantReview(
-        userId,
-        req.body
-      );
+      const review = await this.reviewService.createRestaurantReview(userId, {
+        ...req.body,
+        image: filePath,
+      });
 
       res.status(StatusCodes.CREATED).json(review);
     } catch (error: unknown) {

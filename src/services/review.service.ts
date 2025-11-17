@@ -31,7 +31,12 @@ export default class ReviewService {
     userId: number,
     body: CreateDriverReviewRequestDTO
   ): Promise<CreateDriverReviewResponseDTO> {
-    const dto = createDriverReviewBodySchema.parse(body);
+    const dto = createDriverReviewBodySchema.parse({
+      ...body,
+      customer_id: Number(body.customer_id),
+      driver_id: Number(body.driver_id),
+      rate: Number(body.rate),
+    });
 
     const driver = await this.driverRepository.getDriverProfileById(
       dto.driver_id
@@ -42,12 +47,11 @@ export default class ReviewService {
 
     const data = await this.reviewRepository.createDriverReview({
       title: dto.title,
-      customer: { connect: { id: userId } },
+      customer: { connect: { id: dto.customer_id } },
       driver: { connect: { id: dto.driver_id } },
-      order: { connect: { id: body.order_id } },
-      rate: body.rate,
-      review_text: body.review_text,
-      image: body.image ?? undefined,
+      rate: dto.rate,
+      review_text: dto.review_text,
+      image: dto.image ?? undefined,
     });
 
     return {
@@ -69,7 +73,6 @@ export default class ReviewService {
         image: data.driver.image ?? undefined,
         tel: data.driver.tel ?? undefined,
       },
-      order_id: data.order_id,
       rate: data.rate,
       review_text: data.review_text ?? undefined,
       image: data.image ?? undefined,
@@ -80,7 +83,13 @@ export default class ReviewService {
     userId: number,
     body: CreateRestaurantReviewRequestDTO
   ): Promise<CreateRestaurantReviewResponseDTO> {
-    const dto = createRestaurantReviewBodySchema.parse(body);
+    console.log(body);
+    const dto = createRestaurantReviewBodySchema.parse({
+      ...body,
+      customer_id: Number(body.customer_id),
+      restaurant_id: Number(body.restaurant_id),
+      rate: Number(body.rate),
+    });
 
     const restaurant = await this.restaurantRepository.getRestaurantProfileById(
       dto.restaurant_id
@@ -91,9 +100,8 @@ export default class ReviewService {
 
     const data = await this.reviewRepository.createRestaurantReview({
       title: dto.title,
-      customer: { connect: { id: userId } },
+      customer: { connect: { id: dto.customer_id } },
       restaurant: { connect: { id: dto.restaurant_id } },
-      order: { connect: { id: dto.order_id } },
       rate: dto.rate,
       review_text: dto.review_text,
       image: dto.image ?? null,
@@ -117,7 +125,6 @@ export default class ReviewService {
         banner: data.restaurant.banner ?? undefined,
         tel: data.restaurant.tel ?? undefined,
       },
-      order_id: data.order_id,
       rate: data.rate,
       review_text: data.review_text ?? undefined,
       image: data.image ?? undefined,
@@ -153,7 +160,6 @@ export default class ReviewService {
         banner: data.restaurant.banner ?? undefined,
         tel: data.restaurant.tel ?? undefined,
       },
-      order_id: data.order_id,
       rate: data.rate,
       review_text: data.review_text ?? undefined,
       image: data.image ?? undefined,
@@ -188,7 +194,6 @@ export default class ReviewService {
         image: data.driver.image ?? undefined,
         tel: data.driver.tel ?? undefined,
       },
-      order_id: data.order_id,
       rate: data.rate,
       review_text: data.review_text ?? undefined,
       image: data.image ?? undefined,
@@ -219,7 +224,6 @@ export default class ReviewService {
         banner: data.restaurant.banner ?? undefined,
         tel: data.restaurant.tel ?? undefined,
       },
-      order_id: data.order_id,
       rate: data.rate,
       review_text: data.review_text ?? undefined,
       image: data.image ?? undefined,
@@ -253,7 +257,6 @@ export default class ReviewService {
         image: data.driver.image ?? undefined,
         tel: data.driver.tel ?? undefined,
       },
-      order_id: data.order_id,
       rate: data.rate,
       review_text: data.review_text ?? undefined,
       image: data.image ?? undefined,

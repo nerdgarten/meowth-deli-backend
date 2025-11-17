@@ -288,14 +288,12 @@ model Order {
   created_at           DateTime    @default(now()) @db.Timestamptz
   updated_at           DateTime    @updatedAt @db.Timestamptz
 
-  location          Location           @relation(fields: [delivery_location_id], references: [id])
-  customer          Customer           @relation(fields: [customer_id], references: [id])
-  restaurant        Restaurant         @relation(fields: [restaurant_id], references: [id])
-  driver            Driver?            @relation(fields: [driver_id], references: [id])
-  orderDishes       OrderDish[]
-  payments          Payment[]
-  restaurantReviews RestaurantReview[]
-  driverReviews     DriverReview[]
+  location    Location    @relation(fields: [delivery_location_id], references: [id])
+  customer    Customer    @relation(fields: [customer_id], references: [id])
+  restaurant  Restaurant  @relation(fields: [restaurant_id], references: [id])
+  driver      Driver?     @relation(fields: [driver_id], references: [id])
+  orderDishes OrderDish[]
+  payments    Payment[]
 
   @@index([customer_id])
   @@index([driver_id])
@@ -319,7 +317,6 @@ model RestaurantReview {
   id            Int      @id @default(autoincrement())
   customer_id   Int
   restaurant_id Int
-  order_id      Int
   rate          Float
   title         String
   review_text   String?
@@ -329,18 +326,15 @@ model RestaurantReview {
 
   customer   Customer   @relation(fields: [customer_id], references: [id])
   restaurant Restaurant @relation(fields: [restaurant_id], references: [id])
-  order      Order      @relation(fields: [order_id], references: [id])
   userId     Int?
 
   @@index([restaurant_id])
-  @@index([order_id])
 }
 
 model DriverReview {
   id          Int      @id @default(autoincrement())
   customer_id Int
   driver_id   Int
-  order_id    Int
   rate        Float
   title       String
   review_text String?
@@ -350,10 +344,8 @@ model DriverReview {
 
   customer Customer @relation(fields: [customer_id], references: [id])
   driver   Driver   @relation(fields: [driver_id], references: [id])
-  order    Order    @relation(fields: [order_id], references: [id])
 
   @@index([driver_id])
-  @@index([order_id])
 }
 
 model Report {

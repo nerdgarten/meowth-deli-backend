@@ -3,6 +3,8 @@ import { Router } from "express";
 import ReviewController from "@/controllers/review.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
 import { BaseRouter } from "@/routes/baseRouter";
+import { fileMiddleware } from "@/middlewares/file.middleware";
+import { reviewConfig } from "@/utils/fileConfig";
 
 export class ReviewRouter extends BaseRouter {
   private controller: ReviewController;
@@ -46,6 +48,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.post(
       "/driver",
+      fileMiddleware(reviewConfig),
       this.controller.createDriverReview.bind(this.controller)
     );
     /**
@@ -130,6 +133,7 @@ export class ReviewRouter extends BaseRouter {
      */
     this.router.post(
       "/restaurant",
+      fileMiddleware(reviewConfig),
       this.controller.createRestaurantReview.bind(this.controller)
     );
     /**

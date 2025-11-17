@@ -4,7 +4,6 @@ import { z } from "zod";
 export const createRestaurantReviewBodySchema = z.object({
   customer_id: z.number().int().positive(),
   restaurant_id: z.number().int().positive(),
-  order_id: z.number().int().positive(),
   rate: z
     .number()
     .int()
@@ -18,7 +17,6 @@ export const createRestaurantReviewBodySchema = z.object({
 export const createDriverReviewBodySchema = z.object({
   customer_id: z.number().int().positive(),
   driver_id: z.number().int().positive(),
-  order_id: z.number().int().positive(),
   rate: z
     .number()
     .int()
