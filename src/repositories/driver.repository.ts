@@ -1,34 +1,59 @@
-import { Prisma } from "@/generated/prisma/browser";
+import { Prisma } from "@/generated/prisma/client";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
+import { AppError } from "@/types/error";
+import { StatusCodes } from "http-status-codes";
 
 export default class DriverRepository {
   async getDrivers() {
-    return prisma.driver.findMany({
-      orderBy: { id: "desc" },
-    });
+    try {
+      return prisma.driver.findMany({ orderBy: { id: "desc" } });
+    } catch (err: unknown) {
+      console.error("DriverRepository.getDrivers error", err);
+      throw new AppError(
+        "Failed to fetch drivers",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async getDriverProfileById(id: number) {
-    return prisma.driver.findUnique({
-      where: { id },
-    });
+    try {
+      return prisma.driver.findUnique({ where: { id } });
+    } catch (err: unknown) {
+      console.error("DriverRepository.getDriverProfileById error", err);
+      throw new AppError(
+        "Failed to fetch driver profile",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async getDriverByStatus(status: VerificationStatus) {
-    return prisma.driver.findMany({
-      where: { verification_status: status },
-    });
+    try {
+      return prisma.driver.findMany({ where: { verification_status: status } });
+    } catch (err: unknown) {
+      console.error("DriverRepository.getDriverByStatus error", err);
+      throw new AppError(
+        "Failed to fetch drivers by status",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async updateDriverProfileById(
     driverId: number,
     data: Prisma.DriverUpdateInput
   ) {
-    return prisma.driver.update({
-      where: { id: driverId },
-      data: data,
-    });
+    try {
+      return prisma.driver.update({ where: { id: driverId }, data: data });
+    } catch (err: unknown) {
+      console.error("DriverRepository.updateDriverProfileById error", err);
+      throw new AppError(
+        "Failed to update driver profile",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async updateDriverAvailabilityById(id: number, is_available: boolean) {

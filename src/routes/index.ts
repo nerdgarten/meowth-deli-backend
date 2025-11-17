@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-// import { AdminRouter } from "@/routes/admin.route";
+import { AdminRouter } from "@/routes/admin.route";
 import { AuthRouter } from "@/routes/auth.route";
 import { AuthenticateRouter } from "@/routes/authenticated.route";
 import { CustomerRouter } from "@/routes/customer.route";
@@ -30,7 +30,7 @@ export class RouterManager {
     const locationRouter = new LocationRouter();
     const dishRouter = new DishRouter();
     const orderRouter = new OrderRouter();
-    // const adminRouter = new AdminRouter();
+    const adminRouter = new AdminRouter();
     // const reviewRouter = new ReviewRouter();
     const mapRouter = new MapRouter();
     const testRouter = new TestRouter();
@@ -43,7 +43,7 @@ export class RouterManager {
     this.router.use("/location", locationRouter.getRouter());
     this.router.use("/dish", dishRouter.getRouter());
     this.router.use("/order", orderRouter.getRouter());
-    // this.router.use("/admin", adminRouter.getRouter());
+    this.router.use("/admin", adminRouter.getRouter());
     // this.router.use("/review", reviewRouter.getRouter());
     this.router.use("/map", mapRouter.getRouter());
     this.router.use("/api-test", testRouter.getRouter());

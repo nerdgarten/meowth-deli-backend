@@ -1,24 +1,43 @@
-import { Prisma } from "@/generated/prisma/browser";
+import { StatusCodes } from "http-status-codes";
+
+import { Prisma } from "@/generated/prisma/client";
 import { VerificationStatus } from "@/generated/prisma/enums";
 import { prisma } from "@/libs/prisma";
+import { AppError } from "@/types/error";
 
 export default class RestaurantRepository {
   async getRestaurants() {
-    return prisma.restaurant.findMany({
-      include: {
-        location: true,
-      },
-      orderBy: { id: "desc" },
-    });
+    try {
+      return prisma.restaurant.findMany({
+        include: {
+          location: true,
+        },
+        orderBy: { id: "desc" },
+      });
+    } catch (err: unknown) {
+      console.error("RestaurantRepository.getRestaurants error", err);
+      throw new AppError(
+        "Failed to fetch restaurants",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async getRestaurantProfileById(id: number) {
-    return prisma.restaurant.findUnique({
-      include: {
-        location: true,
-      },
-      where: { id },
-    });
+    try {
+      return prisma.restaurant.findUnique({
+        include: {
+          location: true,
+        },
+        where: { id },
+      });
+    } catch (err: unknown) {
+      console.error("RestaurantRepository.getRestaurantProfileById error", err);
+      throw new AppError(
+        "Failed to fetch restaurant profile",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async getFavoriteRestaurantByUserId(userId: number) {
@@ -37,25 +56,44 @@ export default class RestaurantRepository {
   }
 
   async getRestaurantsByStatus(status: VerificationStatus) {
-    return prisma.restaurant.findMany({
-      where: { verification_status: status },
-      include: {
-        location: true,
-      },
-    });
+    try {
+      return prisma.restaurant.findMany({
+        where: { verification_status: status },
+        include: {
+          location: true,
+        },
+      });
+    } catch (err: unknown) {
+      console.error("RestaurantRepository.getRestaurantsByStatus error", err);
+      throw new AppError(
+        "Failed to fetch restaurants by status",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async updateRestaurnatProfileById(
     id: number,
     data: Prisma.RestaurantUpdateInput
   ) {
-    return prisma.restaurant.update({
-      where: { id },
-      data: data,
-      include: {
-        location: true,
-      },
-    });
+    try {
+      return prisma.restaurant.update({
+        where: { id },
+        data: data,
+        include: {
+          location: true,
+        },
+      });
+    } catch (err: unknown) {
+      console.error(
+        "RestaurantRepository.updateRestaurnatProfileById error",
+        err
+      );
+      throw new AppError(
+        "Failed to update restaurant profile",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async updateRestaurantAvailabilityById(id: number, is_available: boolean) {
