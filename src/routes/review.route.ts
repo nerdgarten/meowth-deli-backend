@@ -1,9 +1,7 @@
-import { Router } from "express";
-
 import ReviewController from "@/controllers/review.controller";
 import { authMiddleware } from "@/middlewares/auth.middleware";
-import { BaseRouter } from "@/routes/baseRouter";
 import { fileMiddleware } from "@/middlewares/file.middleware";
+import { BaseRouter } from "@/routes/baseRouter";
 import { reviewConfig } from "@/utils/fileConfig";
 
 export class ReviewRouter extends BaseRouter {
@@ -19,29 +17,33 @@ export class ReviewRouter extends BaseRouter {
     // Driver Reviews
     /**
      * @swagger
-     * /review/driver/{driverId}:
+     * /review/driver:
      *   post:
      *     summary: Create driver review
      *     tags: [Review]
      *     security:
      *       - cookieAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: driverId
-     *         required: true
-     *         schema:
-     *           type: integer
      *     requestBody:
      *       required: true
      *       content:
-     *         application/json:
+     *         multipart/form-data:
      *           schema:
      *             type: object
      *             properties:
+     *               driverId:
+     *                 type: integer
      *               rating:
      *                 type: integer
      *               comment:
      *                 type: string
+     *               files:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                   format: binary
+     *             required:
+     *               - driverId
+     *               - rating
      *     responses:
      *       201:
      *         description: Review created
@@ -75,18 +77,13 @@ export class ReviewRouter extends BaseRouter {
     );
     /**
      * @swagger
-     * /review/driver/{driverId}/{reviewId}:
+     * /review/driver/{reviewId}:
      *   get:
      *     summary: Get driver review
      *     tags: [Review]
      *     security:
      *       - cookieAuth: []
      *     parameters:
-     *       - in: path
-     *         name: driverId
-     *         required: true
-     *         schema:
-     *           type: integer
      *       - in: path
      *         name: reviewId
      *         required: true
@@ -104,29 +101,33 @@ export class ReviewRouter extends BaseRouter {
     // Restaurant Reviews
     /**
      * @swagger
-     * /review/restaurant/{restaurantId}:
+     * /review/restaurant:
      *   post:
      *     summary: Create restaurant review
      *     tags: [Review]
      *     security:
      *       - cookieAuth: []
-     *     parameters:
-     *       - in: path
-     *         name: restaurantId
-     *         required: true
-     *         schema:
-     *           type: integer
      *     requestBody:
      *       required: true
      *       content:
-     *         application/json:
+     *         multipart/form-data:
      *           schema:
      *             type: object
      *             properties:
+     *               restaurantId:
+     *                 type: integer
      *               rating:
      *                 type: integer
      *               comment:
      *                 type: string
+     *               files:
+     *                 type: array
+     *                 items:
+     *                   type: string
+     *                   format: binary
+     *             required:
+     *               - restaurantId
+     *               - rating
      *     responses:
      *       201:
      *         description: Review created
@@ -160,18 +161,13 @@ export class ReviewRouter extends BaseRouter {
     );
     /**
      * @swagger
-     * /review/restaurant/{restaurantId}/{reviewId}:
+     * /review/restaurant/{reviewId}:
      *   get:
      *     summary: Get restaurant review
      *     tags: [Review]
      *     security:
      *       - cookieAuth: []
      *     parameters:
-     *       - in: path
-     *         name: restaurantId
-     *         required: true
-     *         schema:
-     *           type: integer
      *       - in: path
      *         name: reviewId
      *         required: true
