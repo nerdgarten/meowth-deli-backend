@@ -13,7 +13,13 @@ export class OrderController {
   async getOrderById(req: Request, res: Response) {
     try {
       const { id } = req.params;
-      const order = await this.orderService.getOrderById(Number(id));
+      const userId = req.user!.id;
+      const userRole = req.user!.role;
+      const order = await this.orderService.getOrderById(
+        Number(id),
+        userId,
+        userRole
+      );
       res.status(200).json(order);
     } catch (error) {
       handleError(error, res);
