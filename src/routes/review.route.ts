@@ -30,20 +30,23 @@ export class ReviewRouter extends BaseRouter {
      *           schema:
      *             type: object
      *             properties:
-     *               driverId:
-     *                 type: integer
-     *               rating:
-     *                 type: integer
-     *               comment:
+     *               title:
      *                 type: string
-     *               files:
+     *               driver_id:
+     *                 type: integer
+     *               rate:
+     *                 type: integer
+     *               review_text:
+     *                 type: string
+     *               images:
      *                 type: array
      *                 items:
      *                   type: string
      *                   format: binary
      *             required:
-     *               - driverId
-     *               - rating
+     *               - driver_id
+     *               - rate
+     *               - title
      *     responses:
      *       201:
      *         description: Review created
@@ -114,20 +117,23 @@ export class ReviewRouter extends BaseRouter {
      *           schema:
      *             type: object
      *             properties:
-     *               restaurantId:
+     *               title:
+     *                type: string
+     *               restaurant_id:
      *                 type: integer
-     *               rating:
+     *               rate:
      *                 type: integer
-     *               comment:
+     *               review_text:
      *                 type: string
-     *               files:
+     *               images:
      *                 type: array
      *                 items:
      *                   type: string
      *                   format: binary
      *             required:
-     *               - restaurantId
-     *               - rating
+     *               - restaurant_id
+     *               - rate
+     *               - title
      *     responses:
      *       201:
      *         description: Review created

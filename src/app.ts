@@ -12,6 +12,7 @@ import { RouterManager } from "@/routes";
 
 const allowedOrigins = [
   "http://localhost:3000",
+  "http://localhost:3030",
   "https://meowth.borworntat.com",
 ];
 
