@@ -106,5 +106,58 @@ export class CustomerRouter extends BaseRouter {
       "/allergy",
       this.customerController.updateAllergy.bind(this.customerController)
     );
+    /**
+     * @swagger
+     * /customer/process-payment:
+     *   post:
+     *     summary: Process mock payment for an order
+     *     tags: [Customer]
+     *     security:
+     *       - cookieAuth: []
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               orderId:
+     *                 type: integer
+     *               amount:
+     *                 type: number
+     *               paymentMethod:
+     *                 type: string
+     *                 enum: [cash, mobilebanking, creditcard, meowth-wallet]
+     *     responses:
+     *       200:
+     *         description: Payment processed successfully
+     */
+    this.router.post(
+      "/process-payment",
+      this.customerController.processMockPayment.bind(this.customerController)
+    );
+    /**
+     * @swagger
+     * /customer/wallet-balance:
+     *   get:
+     *     summary: Get customer wallet balance
+     *     tags: [Customer]
+     *     security:
+     *       - cookieAuth: []
+     *     responses:
+     *       200:
+     *         description: Wallet balance
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 balance:
+     *                   type: number
+     */
+    this.router.get(
+      "/wallet-balance",
+      this.customerController.getWalletBalance.bind(this.customerController)
+    );
   }
 }
