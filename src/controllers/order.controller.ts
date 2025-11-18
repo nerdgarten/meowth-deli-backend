@@ -74,4 +74,18 @@ export class OrderController {
       handleError(error, res);
     }
   }
+
+  async updateOrderStatus(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      const updatedOrder = await this.orderService.updateOrderStatus(
+        Number(id),
+        status
+      );
+      res.status(200).json(updatedOrder);
+    } catch (error) {
+      handleError(error, res);
+    }
+  }
 }
